@@ -1,0 +1,9 @@
+# This is normal, we're shipping cross-compiling libraries
+mingw-w64-i686-dev: arch-independent-package-contains-binary-or-object
+
+# For now files are in /usr/${target}
+mingw-w64-i686-dev: file-in-unusual-dir
+mingw-w64-i686-dev: non-standard-dir-in-usr
+
+# DLLs exported via Samba need to be executable (see #796224)
+mingw-w64-i686-dev: executable-not-elf-or-script usr/i686-w64-mingw32/lib/*.dll

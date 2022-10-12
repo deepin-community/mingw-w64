@@ -1,0 +1,108 @@
+Source: mingw-w64
+Maintainer: Stephen Kitt <skitt@debian.org>
+Section: devel
+Priority: optional
+Build-Depends: debhelper (>= 9),
+               dh-autoreconf,
+               automake (>= 1:1.14)
+Build-Depends-Indep: gcc-mingw-w64-i686 | gcc-mingw-w64-bootstrap (>= 4.6.0),
+                     gcc-mingw-w64-x86-64 | gcc-mingw-w64-bootstrap (>= 4.6.0)
+Standards-Version: 4.5.0
+Vcs-Browser: https://salsa.debian.org/mingw-w64-team/mingw-w64
+Vcs-Git: https://salsa.debian.org/mingw-w64-team/mingw-w64.git
+Homepage: http://mingw-w64.sf.net
+Rules-Requires-Root: no
+
+Package: mingw-w64-common
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Description: Common files for Mingw-w64
+ MinGW-w64 provides a development and runtime environment for 32- and
+ 64-bit (x86 and x64) Windows applications using the Windows API and
+ the GNU Compiler Collection (gcc).
+ .
+ This package contains files common to both 32- and 64-bit targets.
+
+Package: mingw-w64-i686-dev
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+         mingw-w64-common
+Suggests: wine
+Breaks: gcc-mingw-w64 (<< 4.6.0),
+        mingw-w64-dev (<< 2.0.3-1),
+        mingw-w64-dev (= 3.0~svn4933-1),
+        libpthreads-mingw-w64
+Replaces: mingw-w64-dev (<< 2.0.3-1),
+          mingw-w64-dev (= 3.0~svn4933-1),
+          libpthreads-mingw-w64
+Description: Development files for MinGW-w64 targeting Win32
+ MinGW-w64 provides a development and runtime environment for 32- and
+ 64-bit (x86 and x64) Windows applications using the Windows API and
+ the GNU Compiler Collection (gcc).
+ .
+ This package contains the headers and libraries required to build
+ 32-bit software using MinGW-w64.
+ .
+ The wine package can be used to test software built using MinGW-w64
+ without using Windows.
+
+Package: mingw-w64-x86-64-dev
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+         mingw-w64-common
+Suggests: wine64
+Breaks: gcc-mingw-w64 (<< 4.6.0),
+        mingw-w64-dev (<< 2.0.3-1),
+        mingw-w64-dev (= 3.0~svn4933-1),
+        libpthreads-mingw-w64
+Replaces: mingw-w64-dev (<< 2.0.3-1),
+          mingw-w64-dev (= 3.0~svn4933-1),
+          libpthreads-mingw-w64
+Description: Development files for MinGW-w64 targeting Win64
+ MinGW-w64 provides a development and runtime environment for 32- and
+ 64-bit (x86 and x64) Windows applications using the Windows API and
+ the GNU Compiler Collection (gcc).
+ .
+ This package contains the headers and libraries required to build
+ 64-bit software using MinGW-w64.
+ .
+ The wine64 package can be used to test software built using MinGW-w64
+ without using Windows.
+
+Package: mingw-w64
+Architecture: all
+Depends: gcc-mingw-w64,
+         g++-mingw-w64,
+         ${misc:Depends}
+Description: Development environment targeting 32- and 64-bit Windows
+ MinGW-w64 provides a development and runtime environment for 32- and
+ 64-bit (x86 and x64) Windows applications using the Windows API and
+ the GNU Compiler Collection (gcc).
+ .
+ This metapackage provides the MinGW-w64 development environment,
+ including C and C++ compilers. Ada, Fortran, Objective-C and
+ Objective-C++ compilers are available respectively in the
+ gnat-mingw-w64, gfortran-mingw-w64, gobjc-mingw-w64 and
+ gojbc++-mingw-w64 packages.
+
+Package: mingw-w64-tools
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         pkg-config
+Provides: pkg-config-mingw-w64-i686,
+          pkg-config-mingw-w64-x86-64
+Description: Development tools for 32- and 64-bit Windows
+ MinGW-w64 provides a development and runtime environment for 32- and
+ 64-bit (x86 and x64) Windows applications using the Windows API and
+ the GNU Compiler Collection (gcc).
+ .
+ This package contains:
+  * gendef, which extracts DLL exports from Windows executables;
+  * genidl, which extracts IDL information from Windows executables;
+  * genpeimg, which manipulates PE flags in Windows executables;
+  * widl, which generates build files from IDL descriptions;
+  * pkg-config symlinks to allow .pc-based libraries to be used.

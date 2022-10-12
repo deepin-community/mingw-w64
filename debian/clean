@@ -1,0 +1,6 @@
+build/
+autotools_files
+series
+tmp
+*-stamp
+debian/autoreconf

@@ -1,0 +1,186 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Build mingw-w64.
+
+SHELL=/bin/bash
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+top_dir := $(shell pwd)
+build_dir := $(top_dir)/build
+
+# Target architectures
+target32 := i686-w64-mingw32
+target64 := x86_64-w64-mingw32
+targets := $(target32) $(target64)
+
+# Host architecture
+host := $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+
+# Host-based tools
+HOST_TOOLS := gendef genidl genlib genpeimg
+# Targetted tools
+TARGET_TOOLS := widl
+
+# Targetted projects
+ifeq ($(filter stage1,$(DEB_BUILD_PROFILES)),)
+TARGET_PROJECTS := crt libraries-winstorecompat libraries-winpthreads
+TARGET32_PROJECTS := libraries-pseh
+else
+TARGET_PROJECTS := crt libraries-winpthreads
+TARGET32_PROJECTS :=
+endif
+
+# No hardening support for now, except in the tools (build-arch-stamp)
+dpkg_soft_buildflags = DEB_BUILD_MAINT_OPTIONS="hardening=-all" dpkg-buildflags
+dpkg_hard_buildflags = DEB_BUILD_MAINT_OPTIONS="hardening=+all" dpkg-buildflags
+
+CFLAGS = $(shell $(dpkg_soft_buildflags) --get CFLAGS)
+CPPFLAGS = $(shell $(dpkg_soft_buildflags) --get CPPFLAGS)
+CXXFLAGS = $(shell $(dpkg_soft_buildflags) --get CXXFLAGS)
+FFLAGS = $(shell $(dpkg_soft_buildflags) --get FFLAGS)
+LDFLAGS = $(shell $(dpkg_soft_buildflags) --get LDFLAGS)
+export CFLAGS CPPFLAGS CXXFLAGS FFLAGS LDFLAGS
+
+CONFFLAGS = --prefix=/usr
+
+clean:
+	dh $@ --with autoreconf
+
+debian/autoreconf:
+	find $(top_dir) -name configure.ac ! -path '*/.pc/*' | xargs -n 1 dirname > $@
+
+autoreconf-stamp: debian/autoreconf
+	dh_autoreconf
+	touch $@
+
+# General rules
+# Format: host~target~source-folder
+# E.g. i486-linux-gnu~i686-w64-mingw32~tools/widl to build a 32-bit
+# Linux-hosted widl targeting 32-bit Windows
+rulehost = $(word 1,$(subst ~, ,$(1)))
+ruletarget = $(word 2,$(subst ~, ,$(1)))
+rulepart = $(word 1,$(subst -, ,$(word 3,$(subst ~, ,$(1)))))
+rulefolder = $(word 2,$(subst -, ,$(word 3,$(subst ~, ,$(1)))))
+sourcefolder = $(top_dir)/mingw-w64-$(call rulepart,$(1))/$(call rulefolder,$(1))
+buildfolder = $(build_dir)/$(call rulehost,$(1))-$(call ruletarget,$(1))-$(call rulepart,$(1))$(call rulefolder,$(1))
+
+######################################################################
+# Tools
+
+# gendef requires libmangle
+$(host)~$(host)~tools-gendef-configure-stamp: autoreconf-stamp $(host)~$(host)~libraries-libmangle-install-stamp
+	mkdir -p $(call buildfolder,$(host)~$(host)~tools-gendef) && \
+	cd $(call buildfolder,$(host)~$(host)~tools-gendef) && \
+	$(call sourcefolder,$(host)~$(host)~tools-gendef)/configure --prefix=/usr --with-mangle=$(top_dir)/debian/tmp/usr $(shell $(dpkg_hard_buildflags) --export=configure) --host=$(host) --target=$(host)
+	touch $@
+
+# genlib requires libmangle and is installed as mingw-genlib
+# to avoid a conflict with alliance
+$(host)~$(host)~tools-genlib-configure-stamp: autoreconf-stamp $(host)~$(host)~libraries-libmangle-install-stamp
+	mkdir -p $(call buildfolder,$(host)~$(host)~tools-genlib) && \
+	cd $(call buildfolder,$(host)~$(host)~tools-genlib) && \
+	$(call sourcefolder,$(host)~$(host)~tools-genlib)/configure --prefix=/usr --with-mangle=$(top_dir)/debian/tmp/usr $(shell $(dpkg_hard_buildflags) --export=configure) --program-prefix=mingw- --host=$(host) --target=$(host)
+	touch $@
+
+build-arch-stamp: $(patsubst %,$(host)~$(host)~tools-%-install-stamp,$(HOST_TOOLS)) $(foreach target,$(targets),$(patsubst %,$(host)~$(target)~tools-%-install-stamp,$(TARGET_TOOLS)))
+	touch $@
+
+######################################################################
+# Libraries
+
+# Override the header configuration
+%~headers-configure-stamp: autoreconf-stamp
+	mkdir -p $(call buildfolder,$*~headers) && \
+	cd $(call buildfolder,$*~headers) && \
+	$(call sourcefolder,$*~headers)/configure --prefix=/usr/$(call ruletarget,$*~headers) --host=$(call rulehost,$*~headers) --enable-sdk=all --enable-secure-api
+	touch $*-headers-configure-stamp
+
+# Override CRT configuration to avoid multilib builds
+target32crt := $(target32)~$(target32)~crt
+$(target32crt)-configure-stamp: $(target32)~$(target32)~headers-install-stamp autoreconf-stamp
+	mkdir -p $(call buildfolder,$(target32crt)) && \
+	cd $(call buildfolder,$(target32crt)) && \
+	$(call sourcefolder,$(target32crt))/configure --prefix=/usr/$(call ruletarget,$(target32crt)) --host=$(call rulehost,$(target32crt)) --target=$(call ruletarget,$(target32crt)) --enable-lib32 --disable-lib64 CPPFLAGS="$(CPPFLAGS) -I$(top_dir)/debian/tmp/usr/$(call ruletarget,$(target32crt))/include"
+	touch $@
+target64crt := $(target64)~$(target64)~crt
+$(target64crt)-configure-stamp: $(target64)~$(target64)~headers-install-stamp autoreconf-stamp
+	mkdir -p $(call buildfolder,$(target64crt)) && \
+	cd $(call buildfolder,$(target64crt)) && \
+	$(call sourcefolder,$(target64crt))/configure --prefix=/usr/$(call ruletarget,$(target64crt)) --host=$(call rulehost,$(target64crt)) --target=$(call ruletarget,$(target64crt)) --disable-lib32 --enable-lib64 CPPFLAGS="$(CPPFLAGS) -I$(top_dir)/debian/tmp/usr/$(call ruletarget,$(target64crt))/include"
+	touch $@
+
+build-indep-stamp: $(foreach target,$(targets),$(patsubst %,$(target)~$(target)~%-install-stamp,$(TARGET_PROJECTS))) $(patsubst %,$(target32)~$(target32)~%-install-stamp,$(TARGET32_PROJECTS))
+	# Move DLLs to lib, drop .la files
+	for target in $(targets); do \
+		mv $(top_dir)/debian/tmp/usr/$$target/bin/*.dll $(top_dir)/debian/tmp/usr/$$target/lib/; \
+		rmdir $(top_dir)/debian/tmp/usr/$$target/bin; \
+		rm $(top_dir)/debian/tmp/usr/$$target/lib/*.la; \
+	done
+	touch $@
+
+build: build-indep build-arch
+build-arch: build-arch-stamp
+build-indep: build-indep-stamp
+
+binary-indep: build-indep
+	dh $@
+
+binary-arch: build-arch
+	dh $@
+
+binary: binary-indep binary-arch
+
+# If we're targetting the build host, configure for hardening
+# If we're targetting the target host, disable hardening (see above),
+# change the prefix and use the new headers and libraries
+%-configure-stamp: autoreconf-stamp %-specs
+	mkdir -p $(call buildfolder,$*) && \
+	cd $(call buildfolder,$*) && \
+	if [ "$(call rulehost,$*)" = "$(host)" ]; then \
+		$(call sourcefolder,$*)/configure --prefix=/usr $(shell $(dpkg_hard_buildflags) --export=configure) --host=$(call rulehost,$*) --target=$(call ruletarget,$*); \
+	else \
+		$(call sourcefolder,$*)/configure --prefix=/usr/$(call ruletarget,$*) --host=$(call rulehost,$*) --target=$(call ruletarget,$*) CPPFLAGS="$(CPPFLAGS) -I$(top_dir)/debian/tmp/usr/$(call ruletarget,$*)/include" LDFLAGS="-specs=$(build_dir)/$(call ruletarget,$*)-specs $(LDFLAGS) -L$(top_dir)/debian/tmp/usr/$(call ruletarget,$*)/lib"; \
+	fi
+	touch $*-configure-stamp
+
+# Generate a spec file to ensure that we use the newly-built startup files
+%-specs:
+	mkdir -p $(build_dir)
+	sed 's!@@PATH@@!$(top_dir)/debian/tmp/usr/$(call ruletarget,$*)/lib/!g' < $(top_dir)/debian/specs.in > $(build_dir)/$(call ruletarget,$*)-specs
+
+%-build-stamp: %-configure-stamp
+	dh_auto_build -D$(call sourcefolder,$*) -B$(call buildfolder,$*)
+	touch $*-build-stamp
+
+%-install-stamp: %-build-stamp
+	dh_auto_install -D$(call sourcefolder,$*) -B$(call buildfolder,$*)
+	touch $*-install-stamp
+
+override_dh_install-indep:
+# Move duplicate files to mingw-w64-common
+	reftarget=$$(echo $(targets) | cut -d\  -f1); \
+	testtargets=$$(echo $(targets) | cut -d\  -f2-); \
+	for file in $$(cd debian/tmp/usr/$$reftarget; find . -type f ! -name \*.a); do \
+		duptargets=$$reftarget; \
+		for testtarget in $$testtargets; do \
+			if [ -f debian/tmp/usr/$$testtarget/$$file ]; then \
+				if cmp debian/tmp/usr/$$reftarget/$$file debian/tmp/usr/$$testtarget/$$file; then \
+					duptargets="$$duptargets $$testtarget"; \
+				fi; \
+			fi; \
+		done; \
+		if [ "$$duptargets" != "$$reftarget" ]; then \
+			mkdir -p debian/mingw-w64-common/usr/share/mingw-w64/$$(dirname $$file); \
+			cp debian/tmp/usr/$$reftarget/$$file debian/mingw-w64-common/usr/share/mingw-w64/$$file; \
+			for duptarget in $$duptargets; do \
+				rm -f debian/tmp/usr/$$duptarget/$$file; \
+				ln -sf /usr/share/mingw-w64/$$file debian/tmp/usr/$$duptarget/$$file; \
+			done; \
+		fi; \
+	done
+# Do the rest of the installation
+	dh_install -i
+
+.PHONY: binary-indep binary-arch binary clean build-indep build-arch build install

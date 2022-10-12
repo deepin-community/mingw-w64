@@ -1,0 +1,11 @@
+spelling-fixes.patch
+widl-no-context.patch
+disable-werror.patch
+missing-cpu-info.patch
+basetsd-hppa.patch
+dlltool-temp-prefix.patch
+reproducible-gendef.patch
+widl-pathtools-bsd.patch
+widl-windef-aarch64.patch
+widl-cpu.patch
+genpeimg-file.patch

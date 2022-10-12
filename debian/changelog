@@ -1,0 +1,527 @@
+mingw-w64 (8.0.0-1) unstable; urgency=medium
+
+  * New upstream release, merging comutil-checkerror.patch and
+    genlib-lm.patch.
+
+ -- Stephen Kitt <skitt@debian.org>  Fri, 18 Sep 2020 18:18:53 +0200
+
+mingw-w64 (7.0.0-4) unstable; urgency=medium
+
+  * Fix the broken + handling in genpeimg.
+
+ -- Stephen Kitt <skitt@debian.org>  Thu, 30 Apr 2020 21:38:34 +0200
+
+mingw-w64 (7.0.0-3) unstable; urgency=medium
+
+  * Ship our own pkg-config-crosswrapper, and use that for
+    i686-w64-mingw32-pkg-config and x86-64-w64-mingw32-pkg-config.
+    Closes: #930492.
+  * Handle multiple files in genpeimg. Closes: #953213.
+  * Standards-Version 4.5.0, no change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Thu, 30 Apr 2020 21:15:36 +0200
+
+mingw-w64 (7.0.0-2) unstable; urgency=medium
+
+  * Avoid erroring out in the build on CPUs which aren’t used on Windows;
+    instead, require that the target be specified when widl is used on
+    such systems. This allows building the package on architectures other
+    than x86, ARM and PowerPC.
+
+ -- Stephen Kitt <skitt@debian.org>  Fri, 15 Nov 2019 22:53:07 +0100
+
+mingw-w64 (7.0.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Use dh clean to clean.
+  * Standards-Version 4.4.1, no change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Mon, 11 Nov 2019 23:13:04 +0100
+
+mingw-w64 (6.0.0-4) unstable; urgency=medium
+
+  * Add missing host/target specifiers for Canadian-cross builds. Thanks
+    to Helmut Grohne for the patch! Closes: #927053.
+  * Add a stage1 build profile to build with the bootstrapping compiler.
+  * libmangle is only useful as a host library, drop it from the target
+    builds.
+  * Standards-Version 4.4.0, no change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Tue, 17 Sep 2019 07:57:29 +0200
+
+mingw-w64 (6.0.0-3) unstable; urgency=medium
+
+  * Fix widl build on aarch64.
+
+ -- Stephen Kitt <skitt@debian.org>  Sun, 11 Nov 2018 20:47:29 +0100
+
+mingw-w64 (6.0.0-2) unstable; urgency=medium
+
+  * Ensure the build directory is created before writing to it.
+
+ -- Stephen Kitt <skitt@debian.org>  Wed, 24 Oct 2018 22:20:36 +0200
+
+mingw-w64 (6.0.0-1) unstable; urgency=medium
+
+  * New upstream release. Closes: #911579.
+  * Share more files in mingw-w64-common.
+  * Set “Rules-Requires-Root: no”.
+  * Standards-Version 4.2.1, no further change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Wed, 24 Oct 2018 19:44:32 +0200
+
+mingw-w64 (5.0.4-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Stephen Kitt <skitt@debian.org>  Thu, 07 Jun 2018 00:54:40 +0200
+
+mingw-w64 (5.0.3-2) unstable; urgency=medium
+
+  * Migrate to Salsa.
+  * Mark mingw-w64-i686-dev and mingw-w64-x86-64-dev as “Multi-Arch:
+    foreign”.
+  * Standards-Version 4.1.4, no further change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Sun, 20 May 2018 19:03:33 +0200
+
+mingw-w64 (5.0.3-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Move to “Priority: optional”, “extra” is obsolete.
+  * Mark mingw-w64-common as “Multi-Arch: foreign”.
+  * Apply Simon Tatham’s fix for IsPlatformNT in multimon.h. (Along with
+    upstream fixes for the pointer issues, this closes: #863064.)
+  * Ensure alloca() is available on kFreeBSD.
+
+ -- Stephen Kitt <skitt@debian.org>  Sat, 18 Nov 2017 21:16:23 +0100
+
+mingw-w64 (5.0.2-2) unstable; urgency=medium
+
+  * Install genlib as mingw-genlib to avoid conflicting with alliance.
+    (Closes: #865571.)
+
+ -- Stephen Kitt <skitt@debian.org>  Thu, 22 Jun 2017 23:01:52 +0200
+
+mingw-w64 (5.0.2-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Stop parsing dpkg-changelog, we don’t need the version information
+    anyway.
+  * Install genlib.
+  * Standards-Version 4.0.0, no further change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Wed, 21 Jun 2017 21:05:34 +0200
+
+mingw-w64 (5.0.1-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Stephen Kitt <skitt@debian.org>  Thu, 05 Jan 2017 23:34:24 +0100
+
+mingw-w64 (5.0.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Drop pthreads-libgomp.patch, merged upstream.
+
+ -- Stephen Kitt <skitt@debian.org>  Fri, 21 Oct 2016 13:25:05 +0200
+
+mingw-w64 (5.0~rc2-1) experimental; urgency=medium
+
+  * New upstream release candidate.
+  * Clean up debian/control using cme.
+  * Standards-Version 3.9.8, no change required.
+  * Remove the empty exception declaration from CheckError(); thanks to
+    Sam Morris for the hint. (Closes: #816427.)
+  * Enable all hardening options for the tools.
+  * Update the spelling fixes.
+
+ -- Stephen Kitt <skitt@debian.org>  Tue, 26 Apr 2016 21:58:43 +0200
+
+mingw-w64 (5.0~rc1-1) experimental; urgency=medium
+
+  * New upstream release candidate, merging the pthreads libgomp patch.
+
+ -- Stephen Kitt <skitt@debian.org>  Sat, 27 Feb 2016 15:01:56 +0100
+
+mingw-w64 (4.0.5-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Switch to https: VCS URIs (see #810378).
+  * Standards-Version 3.9.7, no change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Sat, 27 Feb 2016 14:25:01 +0100
+
+mingw-w64 (4.0.4-2) unstable; urgency=medium
+
+  * Rely on binutils-mingw-w64's support of SOURCE_DATE_EPOCH to build
+    reproducibly (instead of explicitly specifying PE timestamps). Thus
+    this package no longer needs to build-depend on binutils-mingw-w64.
+  * Ship executable DLLs. (Closes: #796224.)
+  * Switch to debhelper compatibility level 9.
+
+ -- Stephen Kitt <skitt@debian.org>  Sat, 02 Jan 2016 17:16:26 +0100
+
+mingw-w64 (4.0.4-1) unstable; urgency=medium
+
+  * New upstream release, merging the patch to shlobj.h.
+  * Handle libgomp's sloppy initialisation.
+
+ -- Stephen Kitt <skitt@debian.org>  Sat, 08 Aug 2015 01:09:35 +0200
+
+mingw-w64 (4.0.2-5) unstable; urgency=medium
+
+  * Specify the PE timestamp using the changelog's date.
+
+ -- Stephen Kitt <skitt@debian.org>  Thu, 11 Jun 2015 21:03:39 +0200
+
+mingw-w64 (4.0.2-4) unstable; urgency=medium
+
+  * Apply upstream patch to fix shlobj.h. (Closes: #787546.) Thanks to
+    Markus Koschany for pointing out the bug and the fix!
+
+ -- Stephen Kitt <skitt@debian.org>  Tue, 02 Jun 2015 19:02:37 +0200
+
+mingw-w64 (4.0.2-3) unstable; urgency=medium
+
+  * Drop __DATE__ from gendef so it builds reproducibly.
+
+ -- Stephen Kitt <skitt@debian.org>  Fri, 29 May 2015 07:12:25 +0200
+
+mingw-w64 (4.0.2-2) unstable; urgency=medium
+
+  * Build the extra libraries using the newly provided runtime
+    libraries.
+  * Fix debian/copyright (no empty license names, unique license names
+    throughout).
+  * Avoid inserting timestamps in PE binaries.
+  * Specify dlltool's temp prefix so it generates reproducible files.
+  * Upload to unstable.
+
+ -- Stephen Kitt <skitt@debian.org>  Tue, 26 May 2015 00:18:10 +0200
+
+mingw-w64 (4.0.2-1) experimental; urgency=medium
+
+  * New upstream release.
+
+ -- Stephen Kitt <skitt@debian.org>  Sat, 18 Apr 2015 20:15:20 +0200
+
+mingw-w64 (4.0.1-1) experimental; urgency=medium
+
+  * New upstream release.
+
+ -- Stephen Kitt <skitt@debian.org>  Wed, 25 Mar 2015 07:17:32 +0100
+
+mingw-w64 (4.0.0-1) experimental; urgency=medium
+
+  * New upstream release.
+
+ -- Stephen Kitt <skitt@debian.org>  Sat, 14 Mar 2015 21:46:51 +0100
+
+mingw-w64 (4.0~rc3-1) experimental; urgency=medium
+
+  * New upstream release candidate.
+
+ -- Stephen Kitt <skitt@debian.org>  Fri, 06 Mar 2015 21:17:40 +0100
+
+mingw-w64 (4.0~rc2-1) experimental; urgency=medium
+
+  * New upstream release candidate.
+
+ -- Stephen Kitt <skitt@debian.org>  Mon, 09 Feb 2015 07:39:22 +0100
+
+mingw-w64 (4.0~rc1-1) experimental; urgency=medium
+
+  * New upstream release candidate.
+  * Add upstream signing info.
+  * Update license information.
+  * Refresh patches.
+  * Standards-Version 3.9.6, no change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Wed, 28 Jan 2015 00:50:06 +0100
+
+mingw-w64 (3.3.0-1) experimental; urgency=medium
+
+  * New upstream release, uploaded to experimental for the Jessie freeze.
+  * Drop strtok_r.patch and fix-mingw-headers.patch, merged upstream.
+  * Update licensing information.
+
+ -- Stephen Kitt <skitt@debian.org>  Fri, 31 Oct 2014 07:46:22 +0100
+
+mingw-w64 (3.2.0-2) unstable; urgency=medium
+
+  * Add missing / to open boilerplate in a few headers. (Closes:
+    #761191.)
+
+ -- Stephen Kitt <skitt@debian.org>  Thu, 11 Sep 2014 23:29:57 +0200
+
+mingw-w64 (3.2.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Refresh patches, and drop libvfw32.patch and wcstold.patch, both
+    merged upstream.
+
+ -- Stephen Kitt <skitt@debian.org>  Thu, 04 Sep 2014 06:31:33 +0200
+
+mingw-w64 (3.1.0-4) unstable; urgency=medium
+
+  * Update strtok_r.patch as done upstream, to remove the conditions on
+    strtok_r's availability.
+
+ -- Stephen Kitt <skitt@debian.org>  Sun, 27 Jul 2014 23:39:29 +0200
+
+mingw-w64 (3.1.0-3) unstable; urgency=medium
+
+  * g++-mingw-w64 exists separately in stable, drop obsolete alternate
+    dependency on old versions of gcc-mingw-w64.
+  * Merge upstream implementation of strtok_r, so it's available on
+    Windows XP. Thanks to Gianluigi Tiesi for pointing out the problem,
+    and to Jonathan Young for pointing out that he'd fixed it upstream.
+    (Closes: #755448.)
+  * Small typo fix on 'targeting' in mingw-w64's description, thanks
+    Lintian!
+
+ -- Stephen Kitt <skitt@debian.org>  Mon, 21 Jul 2014 22:55:23 +0200
+
+mingw-w64 (3.1.0-2) unstable; urgency=medium
+
+  * Use strtok_s to implement strtok_r instead of the non-reentrant
+    version provided in pthread.h. Thanks to Bill Alombert for pointing
+    out the problem. (Closes: #736253.)
+  * Apply upstream patch to __mingw_wcstold to handle NULL _EndPtr.
+    (Closes: #750768.)
+  * Suggest wine and wine64. (Closes: #745345.)
+
+ -- Stephen Kitt <skitt@debian.org>  Sun, 08 Jun 2014 23:02:28 +0200
+
+mingw-w64 (3.1.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Add support for hppa; thanks to John David Anglin for the patch.
+    (Closes: #730398.)
+  * Standards-Version 3.9.5, no change required.
+  * Drop Makefile.in patch from libvfw32.patch; it's regenerated during
+    the build (this allows building twice in a row without errors).
+
+ -- Stephen Kitt <skitt@debian.org>  Fri, 10 Jan 2014 07:14:19 +0100
+
+mingw-w64 (3.0.0-3) unstable; urgency=low
+
+  * Explicitly build-depend on automake 1.14 or later.
+  * Ship common header files in a new mingw-w64-common package.
+  * Make the build target in debian/rules depend on build-indep as well
+    as build-arch, so it builds everything.
+
+ -- Stephen Kitt <skitt@debian.org>  Sun, 10 Nov 2013 14:46:24 +0100
+
+mingw-w64 (3.0.0-2) unstable; urgency=low
+
+  * Restore libvfw32.a in the 32-bit package (thanks to Eugen Dedu for
+    pointing out that it had been dropped).
+
+ -- Stephen Kitt <skitt@debian.org>  Tue, 24 Sep 2013 00:00:55 +0200
+
+mingw-w64 (3.0.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Add links to the pkg-config manpage.
+  * Import widl manpage from the Wine project.
+
+ -- Stephen Kitt <skitt@debian.org>  Sat, 21 Sep 2013 13:27:01 +0200
+
+mingw-w64 (3.0~svn6246-1) unstable; urgency=low
+
+  * New upstream snapshot.
+  * Drop obsolete mingw-w64-dev package.
+  * Provide pkg-config symlinks in mingw-w64-tools.
+  * Improve mingw-w64-tools package description.
+
+ -- Stephen Kitt <skitt@debian.org>  Sun, 08 Sep 2013 20:16:43 +0200
+
+mingw-w64 (3.0~svn5915-1) unstable; urgency=low
+
+  * New upstream snapshot.
+  * Merge from experimental, tracking upstream trunk (required for
+    wine-gecko 1.6 and later, and gcc 4.8 and later). Other than the
+    different upstream, the changes are as follows:
+    - Build genpeimg, libwinpthreads (which replaces
+      libpthreads-mingw-w64), libwinstorecompat and widl.
+    - Drop unused contexts and add missing CPU information for widl on
+      ia64, s390 and s390x.
+    - Rework debian/rules to use declarative rules and recipes, working
+      towards making parallel builds possible.
+    - Specify the full target prefix as required since 5197.
+  * Fix target mangling to build on hurd-i386.
+  * Make DLLs non-executable and drop .la files.
+
+ -- Stephen Kitt <skitt@debian.org>  Mon, 24 Jun 2013 19:25:37 +0200
+
+mingw-w64 (2.0.8-1) unstable; urgency=low
+
+  * New upstream release.
+  * Switch to my Debian address and drop DM-Upload-Allowed.
+  * Use dh_autoreconf to update all the autotools-generated files and
+    allow multiple builds in a row.
+  * Use canonical VCS URIs.
+  * Build libmangle for the current architecture, it's intended for
+    gendef; use it to build gendef.
+  * Enable hardened builds for gendef and genidl.
+  * Fix another spelling mistake in gendef (via libmangle).
+  * Standards-Version 3.9.4, no change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Sat, 11 May 2013 23:37:22 +0200
+
+mingw-w64 (2.0.3-1) unstable; urgency=low
+
+  * New upstream release.
+  * Split the -dev package into 32- and 64-bit variants.
+  * Fix "Error when including dshow.h" by ensuring all SDKs are enabled
+    throughout the build. (Closes: #661442)
+
+ -- Stephen Kitt <steve@sk2.org>  Thu, 10 May 2012 17:56:59 +0200
+
+mingw-w64 (2.0.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Following the gcc-mingw-w64 package split, make mingw-w64 depend on
+    gcc-mingw-w64 and g++-mingw-w64, and correct the description
+    appropriately.
+  * Update watch file to take into account any upstream tarball.
+  * Standards-Version 3.9.3, no change required.
+  * Make sure we get the split gcc-mingw-w64 packages (to avoid
+    attempting a build with only the architecture-independent gcc-mingw-
+    w64 package).
+
+ -- Stephen Kitt <steve@sk2.org>  Wed, 18 Apr 2012 00:33:40 +0200
+
+mingw-w64 (2.0.1+svn4784-2) unstable; urgency=low
+
+  * Mention "x86" and "x64" as used on Windows (see thread starting at
+    http://lists.debian.org/4EBA730A.7060707@greffrath.com for
+    rationale; the 32-/64-bit split will come later).
+  * Enable secure API (required in particular for newer versions of Wine
+    Gecko).
+  * Allow bootstrapping again (thanks to Sam Morris for pointing out
+    that bootstrapping the mingw-w64 package set no longer worked!).
+
+ -- Stephen Kitt <steve@sk2.org>  Wed, 15 Feb 2012 01:00:43 +0100
+
+mingw-w64 (2.0.1+svn4784-1) unstable; urgency=low
+
+  * New upstream snapshot.
+    - Builds libmsi.a for i686. (Closes: #652362.)
+    - Includes fixed asprintf as requested by Rafaël Carré.
+
+ -- Stephen Kitt <steve@sk2.org>  Tue, 31 Jan 2012 22:57:13 +0100
+
+mingw-w64 (2.0.1-1) unstable; urgency=low
+
+  * New upstream release (notably adding GDI+ support).
+  * Drop imagehlp-fix.patch, included upstream.
+
+ -- Stephen Kitt <steve@sk2.org>  Mon, 21 Nov 2011 23:05:31 +0100
+
+mingw-w64 (2.0-2) unstable; urgency=low
+
+  * Disable dpkg-buildflags hardening. (LP: #880726.)
+  * Apply upstream fix for imagehlp.h's extern "C" declarations (in
+    particular this is required to build Ekiga).
+
+ -- Stephen Kitt <steve@sk2.org>  Mon, 24 Oct 2011 22:39:43 +0200
+
+mingw-w64 (2.0-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Stephen Kitt <steve@sk2.org>  Thu, 13 Oct 2011 00:41:25 +0200
+
+mingw-w64 (2.0~rc3-1) unstable; urgency=low
+
+  [ Stephen Kitt ]
+  * New upstream release candidate.
+
+  [ Didier Raboud ]
+  * Confidently setting the DM-Upload-Allowed flag to yes.
+
+ -- Stephen Kitt <steve@sk2.org>  Mon, 10 Oct 2011 10:39:38 +0200
+
+mingw-w64 (2.0~rc2-1) unstable; urgency=low
+
+  * New upstream release candidate.
+    - Includes fixed d2d1.h. (Closes: #638620.)
+  * Simplify debian/rules.
+  * Add "Architecture: any" mingw-w64-tools package to ship gendef and
+    genidl.
+  * Provide manpages for gendef and genidl.
+  * Ship libmangle and libpseh in mingw-w64-dev (32-bit only for
+    libpseh).
+  * Correct debian/copyright ("Upstream-Name" instead of "Name", correct
+    license for mingw-w64-headers/ddk/include/ddk/csq.h).
+  * Add spelling-fix.patch to fix small spelling mistake in gendef.
+
+ -- Stephen Kitt <steve@sk2.org>  Thu, 06 Oct 2011 23:32:07 +0200
+
+mingw-w64 (2.0~rc1-1) unstable; urgency=low
+
+  * New upstream release candidate.
+  * mingw-w64 now provides __uuidof() where necessary. (Closes: #625497.)
+  * Removed patches:
+    - 01-guiddef-svn-3715.patch, originally taken from upstream;
+    - 02-get_codepage.patch, fixed differently;
+    - 03-gcc-4.6-float.patch, no longer relevant (mingw-w64 no longer
+      ships float.h).
+  * Add empty build-arch target (policy 4.9).
+
+ -- Stephen Kitt <steve@sk2.org>  Sun, 07 Aug 2011 23:02:01 +0200
+
+mingw-w64 (1.0+20110523-1) unstable; urgency=low
+
+  * New upstream snapshot.
+  * This version and the previous breaks the gcc-4.5-based gcc-mingw-
+    w64.
+  * Properly specify the format of debian/copyright.
+
+ -- Stephen Kitt <steve@sk2.org>  Mon, 13 Jun 2011 23:06:42 +0200
+
+mingw-w64 (1.0+20110428-1) unstable; urgency=low
+
+  * New upstream snapshot.
+  * Enable all SDKs, including DirectX. (Closes: #625496.)
+  * Correctly define arch and indep targets and dependencies.
+  * Standards-Version 3.9.2, no change required.
+  * Use MinGW version of mb_wc_common.h. (Closes: #626437.)
+  * Update float.h to include gcc 4.6 changes.
+
+ -- Stephen Kitt <steve@sk2.org>  Sat, 04 Jun 2011 00:52:35 +0200
+
+mingw-w64 (1.0+20101003-1) unstable; urgency=low
+
+  * New maintainer. (Closes: #594371.)
+  * New upstream snapshot:
+    - Includes getopt.h. (Closes: #569914.)
+  * Build g++ for Win64. (Closes: #600451.)
+  * Standards-Version 3.9.1 (new packaging).
+  * Include patch from
+    http://mingw-w64.svn.sourceforge.net/viewvc/mingw-w64?view=revision&revision=3715
+    as suggested by Rafaël Carré.
+
+ -- Stephen Kitt <steve@sk2.org>  Thu, 18 Nov 2010 00:04:46 +0100
+
+mingw-w64 (0~20100125-3) unstable; urgency=low
+
+  * Switch to Architecture: all.  It's meant to have the same content
+    regardless of the Debian arch that hosts it.
+
+ -- Robert Millan <rmh.debian@aybabtu.com>  Sat, 30 Jan 2010 02:08:57 +0100
+
+mingw-w64 (0~20100125-2) unstable; urgency=low
+
+  * Match directory name used by gcc-mingw32.
+
+ -- Robert Millan <rmh.debian@aybabtu.com>  Tue, 26 Jan 2010 16:17:25 +0100
+
+mingw-w64 (0~20100125-1) unstable; urgency=low
+
+  * Initial release.  (Closes: #566907)
+
+ -- Robert Millan <rmh.debian@aybabtu.com>  Mon, 25 Jan 2010 22:58:25 +0100

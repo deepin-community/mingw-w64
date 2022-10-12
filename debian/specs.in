@@ -1,0 +1,5 @@
+*endfile:
+%{Ofast|ffast-math|funsafe-math-optimizations:@@PATH@@/crtfastmath%O}    %{!shared:%:if-exists(@@PATH@@/default-manifest.%O)}   %{fvtable-verify=none:%s;     fvtable-verify=preinit:@@PATH@@/vtv_end%O;     fvtable-verify=std:@@PATH@@/vtv_end%O}   @@PATH@@/crtend%O
+
+*startfile:
+%{shared|mdll:@@PATH@@/dllcrt2%O}   %{!shared:%{!mdll:%{!municode:@@PATH@@/crt2%O}}}   %{!shared:%{!mdll:%{municode:@@PATH@@/crt2u%O}}}   %{pg:@@PATH@@/gcrt2%O}   @@PATH@@/crtbegin%O   %{fvtable-verify=none:%s;     fvtable-verify=preinit:@@PATH@@/vtv_start%O;     fvtable-verify=std:@@PATH@@/vtv_start%O}

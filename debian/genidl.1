@@ -1,0 +1,34 @@
+.TH genidl 1 "Oct  6, 2011" genidl
+.SH NAME
+genidl \- Windows typelib information extractor
+.SH SYNOPSIS
+.BR genidl
+.RI "[" options "] <" file ">"
+.SH DESCRIPTION
+.B genidl
+dumps IDL information found in typelib data present in 32- and 64-bit
+Windows executables and TLB files.
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+Briefly describe the syntax and options.
+.TP
+.BR \-b " <" \fIarg\fP ">, " \-\-basedumpname= < \fIarg\fP >
+Use \fIarg\fP as prefix of generated .idl files.
+.TP
+.BR \-H ", " \-\-header
+Generate a header.
+.TP
+.BR \-d ", " \-\-dump
+Dump additional debugging information.
+.TP
+.BR \-v ", " \-\-verbose
+Show additional status information.
+.SH SEE ALSO
+\fBgendef\fP(1)
+.SH AUTHORS
+.B genidl
+was written by Kai Tietz and Jonathan Yong of the MinGW-w64 project.
+.PP
+This manual page was written by Stephen Kitt <steve@sk2.org> for the
+Debian GNU/Linux system (but may be used by others).

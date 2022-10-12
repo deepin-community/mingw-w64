@@ -1,0 +1,46 @@
+Description: Don’t error out on non-Windows CPUs
+Author: Stephen Kitt <skitt@debian.org>
+
+--- a/mingw-w64-tools/widl/src/widl.c
++++ b/mingw-w64-tools/widl/src/widl.c
+@@ -105,7 +105,7 @@
+ #elif defined(__aarch64__)
+ enum target_cpu target_cpu = CPU_ARM64;
+ #else
+-#error Unsupported CPU
++enum target_cpu target_cpu = CPU_UNKNOWN;
+ #endif
+ 
+ int debuglevel = DEBUGLEVEL_NONE;
+@@ -791,13 +791,17 @@
+       if (pointer_size == 4) target_cpu = CPU_x86;
+       else pointer_size = 8;
+       break;
++  case CPU_ARM:
++  case CPU_POWERPC:
++      if (pointer_size == 8) error( "Cannot build 64-bit code for this CPU\n" );
++      pointer_size = 4;
++      break;
+   case CPU_ARM64:
+       if (pointer_size == 4) error( "Cannot build 32-bit code for this CPU\n" );
+       pointer_size = 8;
+       break;
+   default:
+-      if (pointer_size == 8) error( "Cannot build 64-bit code for this CPU\n" );
+-      pointer_size = 4;
++      error("Undetermined target, please specify one\n");
+       break;
+   }
+ 
+--- a/mingw-w64-tools/widl/src/widl.h
++++ b/mingw-w64-tools/widl/src/widl.h
+@@ -76,7 +76,8 @@
+ 
+ enum target_cpu
+ {
+-    CPU_x86, CPU_x86_64, CPU_POWERPC, CPU_ARM, CPU_ARM64, CPU_LAST = CPU_ARM64
++    CPU_x86, CPU_x86_64, CPU_POWERPC, CPU_ARM, CPU_ARM64, CPU_LAST = CPU_ARM64,
++    CPU_UNKNOWN
+ };
+ 
+ extern enum target_cpu target_cpu;
