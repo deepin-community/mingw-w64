@@ -2,12 +2,10 @@ Source: mingw-w64
 Maintainer: Stephen Kitt <skitt@debian.org>
 Section: devel
 Priority: optional
-Build-Depends: debhelper (>= 9),
-               dh-autoreconf,
-               automake (>= 1:1.14)
+Build-Depends: debhelper-compat (= 13),
 Build-Depends-Indep: gcc-mingw-w64-i686 | gcc-mingw-w64-bootstrap (>= 4.6.0),
                      gcc-mingw-w64-x86-64 | gcc-mingw-w64-bootstrap (>= 4.6.0)
-Standards-Version: 4.5.0
+Standards-Version: 4.6.2
 Vcs-Browser: https://salsa.debian.org/mingw-w64-team/mingw-w64
 Vcs-Git: https://salsa.debian.org/mingw-w64-team/mingw-w64.git
 Homepage: http://mingw-w64.sf.net
@@ -30,13 +28,6 @@ Multi-Arch: foreign
 Depends: ${misc:Depends},
          mingw-w64-common
 Suggests: wine
-Breaks: gcc-mingw-w64 (<< 4.6.0),
-        mingw-w64-dev (<< 2.0.3-1),
-        mingw-w64-dev (= 3.0~svn4933-1),
-        libpthreads-mingw-w64
-Replaces: mingw-w64-dev (<< 2.0.3-1),
-          mingw-w64-dev (= 3.0~svn4933-1),
-          libpthreads-mingw-w64
 Description: Development files for MinGW-w64 targeting Win32
  MinGW-w64 provides a development and runtime environment for 32- and
  64-bit (x86 and x64) Windows applications using the Windows API and
@@ -54,13 +45,6 @@ Multi-Arch: foreign
 Depends: ${misc:Depends},
          mingw-w64-common
 Suggests: wine64
-Breaks: gcc-mingw-w64 (<< 4.6.0),
-        mingw-w64-dev (<< 2.0.3-1),
-        mingw-w64-dev (= 3.0~svn4933-1),
-        libpthreads-mingw-w64
-Replaces: mingw-w64-dev (<< 2.0.3-1),
-          mingw-w64-dev (= 3.0~svn4933-1),
-          libpthreads-mingw-w64
 Description: Development files for MinGW-w64 targeting Win64
  MinGW-w64 provides a development and runtime environment for 32- and
  64-bit (x86 and x64) Windows applications using the Windows API and
@@ -90,6 +74,7 @@ Description: Development environment targeting 32- and 64-bit Windows
 
 Package: mingw-w64-tools
 Architecture: any
+Multi-Arch: foreign
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          pkg-config

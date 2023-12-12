@@ -1,0 +1,14 @@
+Description: Add loongarch support
+Author: JiaLing Zhang <zhangjialing@loongson.cn>
+
+--- mingw-w64-11.0.1.orig/mingw-w64-tools/widl/include/basetsd.h
++++ mingw-w64-11.0.1/mingw-w64-tools/widl/include/basetsd.h
+@@ -331,6 +331,8 @@ typedef ULONG_PTR KAFFINITY, *PKAFFINITY
+ # define WORDS_BIGENDIAN
+ #elif defined(__hppa__)
+ # undef  WORDS_BIGENDIAN
++#elif defined(__loongarch__) && defined(__loongarch64)
++# undef  WORDS_BIGENDIAN
+ #elif defined(__m68k__)
+ # define WORDS_BIGENDIAN
+ #elif defined(__riscv) && __riscv_xlen == 64

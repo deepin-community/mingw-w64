@@ -4,7 +4,7 @@ Origin: http://bugs.debian.org/730398
 
 --- a/mingw-w64-tools/widl/include/basetsd.h
 +++ b/mingw-w64-tools/widl/include/basetsd.h
-@@ -293,6 +293,8 @@
+@@ -329,6 +329,8 @@
  # undef  WORDS_BIGENDIAN
  #elif defined(__s390__) || defined(__s390x__)
  # define WORDS_BIGENDIAN

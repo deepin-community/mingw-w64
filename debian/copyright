@@ -41,7 +41,8 @@ License: ZPL-2.1
  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-Files: mingw-w64-crt/crt/*
+Files: mingw-w64-crt/cfguard/*
+       mingw-w64-crt/crt/*
        mingw-w64-crt/include/*
        mingw-w64-crt/intrincs/cpuid.c
        mingw-w64-crt/intrincs/in*.c
@@ -51,8 +52,7 @@ Files: mingw-w64-crt/crt/*
        mingw-w64-crt/intrincs/readmsr.c
        mingw-w64-crt/intrincs/writecr*.c
        mingw-w64-crt/intrincs/writemsr.c
-       mingw-w64-crt/lib32/crtdll.def
-       mingw-w64-crt/lib64/moldname-msvcrt.def
+       mingw-w64-crt/lib32/crtdll.def.in
        mingw-w64-crt/libsrc/agt*.c
        mingw-w64-crt/libsrc/cdo*.c
        mingw-w64-crt/libsrc/dxva-uuid.c
@@ -64,7 +64,6 @@ Files: mingw-w64-crt/crt/*
        mingw-w64-crt/libsrc/scrnsave.c
        mingw-w64-crt/libsrc/tsuserex_i.c
        mingw-w64-crt/math/cbrt*.c
-       mingw-w64-crt/math/cephes_emath.*
        mingw-w64-crt/math/copysign*
        mingw-w64-crt/math/cosh*.c
        mingw-w64-crt/math/erfl.c
@@ -385,6 +384,10 @@ Files: mingw-w64-headers/include/audevcod.h
 Copyright: 2002 Alexandre Julliard
 License: LGPL-2.1+
 
+Files: mingw-w64-headers/include/ctxtcall.idl
+Copyright: 2008 Louis Lenders
+License: LGPL-2.1+
+
 Files: mingw-w64-headers/include/d3d10_1.idl
        mingw-w64-headers/include/d3d11_1.idl
        mingw-w64-headers/include/d3d11sdklayers.idl
@@ -413,6 +416,7 @@ License: LGPL-2.1+
 
 Files: mingw-w64-headers/include/d3d10sdklayers.idl
        mingw-w64-headers/include/drmexternals.idl
+       mingw-w64-headers/include/mftransform.idl
        mingw-w64-headers/include/wmdrmsdk.idl
 Copyright: 2016, 2017 Alistair Leslie-Hughes
 License: LGPL-2.1+
@@ -566,6 +570,27 @@ Copyright: 2002 Alexandre Julliard
 	   2004 Vincent Béron
 License: LGPL-2.1+
 
+Files: mingw-w64-headers/include/msxml.idl
+Copyright: 2005 Mike McCormack
+           2005 Vijay Kiran Kamuju
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/msxml2.idl
+       mingw-w64-headers/include/msxml6.idl
+Copyright: 2005 Vijay Kiran Kamuju
+           2008 Alistair Leslie-Hughes
+           2010 Nikolay Sivov for CodeWeavers
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/msxml2did.h
+Copyright: 2005 Vijay Kiran Kamuju
+           2008 Alistair Leslie-Hughes
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/msxml6did.h
+Copyright: 2010 Nikolay Sivov for CodeWeavers
+License: LGPL-2.1+
+
 Files: mingw-w64-headers/include/qedit.idl
 Copyright: 2008 Google (Lei Zhang)
 License: LGPL-2.1+
@@ -644,37 +669,13 @@ Copyright: 2009 Andrew Nguyen
 License: LGPL-2.1+
 
 Files: mingw-w64-headers/include/taskschd.idl
-       mingw-w64-headers/tlb/oleacc.idl
+       mingw-w64-headers/tlb/oleacc.dll.idl
 Copyright: 2013 Dmitry Timoshkov
 License: LGPL-2.1+
 
 Files: mingw-w64-headers/include/textstor.idl
 Copyright: 2009 Aric Stewart, CodeWeavers
-License: BSD-3-clause-MinGW-w64
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions
- are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-      copyright notice, this list of conditions and the following
-      disclaimer in the documentation and/or other materials provided
-      with the distribution.
-    * Neither the name of the mingw-w64 nor the names of its
-      contributors may be used to endorse or promote products derived
-      from this software without specific prior written permission.
- .
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- HOLDERS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+License: LGPL-2.1+
 
 Files: mingw-w64-headers/include/wincodec.idl
 Copyright: 2009 Vincent Povirk for CodeWeavers
@@ -684,14 +685,87 @@ Files: mingw-w64-headers/include/winddiui.h
 Copyright: 2007 Marcel Partap
 License: LGPL-2.1+
 
+Files: mingw-w64-headers/include/windows.devices.enumeration.idl
+Copyright: 2021 Gijs Vermeulen
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/windows.devices.haptics.idl
+       mingw-w64-headers/include/windows.devices.power.idl
+       mingw-w64-headers/include/windows.foundation.numerics.idl
+       mingw-w64-headers/include/windows.gaming.input.custom.idl
+       mingw-w64-headers/include/windows.gaming.input.forcefeedback.idl
+       mingw-w64-headers/include/windows.gaming.input.idl
+       mingw-w64-headers/include/windows.globalization.idl
+       mingw-w64-headers/include/windows.system.idl
+       mingw-w64-headers/include/windows.system.power.idl
+       mingw-w64-headers/include/windows.system.userprofile.idl
+Copyright: 2021-2022 Rémi Bernon for CodeWeavers
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/windows.foundation.metadata.idl
+Copyright: 2022 Zhiyi Zhang for CodeWeavers
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/windows.gaming.ui.idl
+Copyright: 2022 Paul Gofman for CodeWeavers
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/windows.graphics.capture.idl
+       mingw-w64-headers/include/windows.graphics.directx.direct3d11.idl
+       mingw-w64-headers/include/windows.graphics.directx.idl
+       mingw-w64-headers/include/windows.graphics.effects.idl
+       mingw-w64-headers/include/windows.graphics.holographic.idl
+       mingw-w64-headers/include/windows.media.closedcaptioning.idl
+       mingw-w64-headers/include/windows.perception.spatial.idl
+       mingw-w64-headers/include/windows.perception.spatial.surfaces.idl
+       mingw-w64-headers/include/windows.security.credentials.idl
+       mingw-w64-headers/include/windows.system.profile.systemmanufacturers.idl
+       mingw-w64-headers/include/windows.ui.composition.idl
+       mingw-w64-headers/include/windows.ui.composition.interop.idl
+       mingw-w64-headers/include/windows.ui.core.idl
+       mingw-w64-headers/include/windows.ui.idl
+       mingw-w64-headers/include/windows.ui.viewmanagement.idl
+Copyright: 2022-2023 Mohamad Al-Jaf
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/windows.media.devices.idl
+Copyright: 2020 Rémi Bernon for CodeWeavers
+           2021 Andrew Eikum for CodeWeavers
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/windows.media.speechrecognition.idl
+Copyright: 2022 Bernhard Kölbl
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/windows.security.cryptography.idl
+       mingw-w64-headers/include/windows.system.threading.idl
+Copyright: 2022 Nikolay Sivov for CodeWeavers
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/windows.storage.streams.idl
+Copyright: 2021 Jactry Zeng for CodeWeavers
+License: LGPL-2.1+
+
 Files: mingw-w64-headers/include/wmsbuffer.idl
        mingw-w64-headers/include/wmsdkidl.idl
 Copyright: 2012 André Hentschel
 License: LGPL-2.1+
 
+Files: mingw-w64-headers/include/xmldom.idl
+Copyright: 2005 Mike McCormack
+License: LGPL-2.1+
+
+Files: mingw-w64-headers/include/xmldso.idl
+Copyright: 2005 Vijay Kiran Kamuju
+License: LGPL-2.1+
+
 Files: mingw-w64-headers/include/xmllite.idl
 Copyright: 2010 Nikolay Sivov
 License: LGPL-2.1+
+
+Files: mingw-w64-headers/testcases/test_windowsnumerics.cpp
+Copyright: 2022 Alvin Wong
+License: expat
 
 Files: mingw-w64-headers/tlb/stdole2.idl
 Copyright: 2003 Robert Shearman
@@ -756,7 +830,7 @@ Copyright: 1998 John E. Bossom
 License: LGPL-2+
 
 Files: mingw-w64-libraries/winstorecompat/*
-Copyright: 2013-2016, 2018 mingw-w64 project
+Copyright: 2013-2016, 2018, 2022 mingw-w64 project
 License: expat
 
 Files: mingw-w64-tools/gendef/*
@@ -769,10 +843,6 @@ License: GPL-3+
 
 Files: mingw-w64-tools/genpeimg/*
 Copyright: 2009-2016 mingw-w64 project
-License: GPL-3+
-
-Files: mingw-w64-tools/genstubdll/*
-Copyright: 2014-2016 mingw-w64 project
 License: GPL-3+
 
 Files: mingw-w64-tools/widl/*
@@ -789,6 +859,7 @@ Copyright: 1996, 2000, 2002, 2010, 2017 Alexandre Julliard
            2005-2006 Eric Kohl
            2005-2008 Robert Shearman
            2006 Jacek Caban for CodeWeavers
+           2023 Mohamad Al-Jaf
            The Wine project
 License: LGPL-2.1+
 
@@ -802,7 +873,9 @@ License: LGPL-2+
 
 Files: debian/*
 Copyright: 2009, 2010 Robert Millan
-           2010-2018 Stephen Kitt <skitt@debian.org>
+           2010-2020, 2022-2023 Stephen Kitt <skitt@debian.org>
+           2022 Konstantin Demin
+           2023 John Scott <jscott@posteo.net>
 License: GPL-2+
 
 Files: debian/pkg-config-crosswrapper

@@ -1,0 +1,20 @@
+#!/bin/sh -e
+# SPDX-FileCopyrightText: 2023 John Scott <jscott@posteo.net>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+export DEBIAN_FRONTEND=noninteractive
+export DEBCONF_DEBUG='user|developer'
+export WINEDEBUG='warn+all'
+
+debconf-set-selections --verbose <<EOF
+slapd slapd/password1 password Password
+slapd slapd/password2 password Password
+slapd slapd/domain string localhost
+slapd slapd/organization string Debian
+EOF
+dpkg-reconfigure --frontend=noninteractive --priority=critical slapd
+service slapd restart
+
+x86_64-w64-mingw32-gcc debian/tests/ldap-test.c -o "$AUTOPKGTEST_TMP"/ldap-test.exe -lwldap32
+wine "$AUTOPKGTEST_TMP"/ldap-test.exe
+

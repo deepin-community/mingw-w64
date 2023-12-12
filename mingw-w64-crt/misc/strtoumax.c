@@ -31,10 +31,8 @@
 #define valid(n, b)	((n) >= 0 && (n) < (b))
 
 uintmax_t
-strtoumax(nptr, endptr, base)
-	register const char * __restrict__	nptr;
-	char ** __restrict__			endptr;
-	register int				base;
+__cdecl
+strtoumax(const char * __restrict__ nptr, char ** __restrict__ endptr, int base)
 	{
 	register uintmax_t	accum;	/* accumulates converted value */
 	register uintmax_t	next;	/* for computing next value of accum */
@@ -110,6 +108,14 @@ strtoumax(nptr, endptr, base)
 	else
 		return minus ? -accum : accum;	/* (yes!) */
 	}
+uintmax_t (__cdecl *__MINGW_IMP_SYMBOL(strtoumax))(const char* __restrict__, char ** __restrict__, int) = strtoumax;
 
 unsigned long long __attribute__ ((alias ("strtoumax")))
+__cdecl
 strtoull (const char* __restrict__ nptr, char ** __restrict__ endptr, int base);
+unsigned long long (__cdecl *__MINGW_IMP_SYMBOL(strtoull))(const char* __restrict__, char ** __restrict__, int) = strtoull;
+
+unsigned __int64 __attribute__ ((alias ("strtoumax")))
+__cdecl
+_strtoui64 (const char* __restrict__ nptr, char ** __restrict__ endptr, int base);
+unsigned __int64 (__cdecl *__MINGW_IMP_SYMBOL(_strtoui64))(const char* __restrict__, char ** __restrict__, int) = _strtoui64;

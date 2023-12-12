@@ -1,3 +1,95 @@
+mingw-w64 (11.0.1-3) unstable; urgency=medium
+
+  * Add support for loongarch; thanks to JiaLing Zhang for the patch!
+    Closes: #1051916.
+
+ -- Stephen Kitt <skitt@debian.org>  Thu, 14 Sep 2023 13:53:03 +0200
+
+mingw-w64 (11.0.1-2) unstable; urgency=medium
+
+  [ John Scott ]
+  * Add a DEP-8 test checking that MinGW can make functioning LDAP
+    applications with the Windows LDAP API
+
+ -- Stephen Kitt <skitt@debian.org>  Thu, 17 Aug 2023 19:01:04 +0200
+
+mingw-w64 (11.0.1-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Remove all generated files when cleaning. Closes: #1048994.
+
+ -- Stephen Kitt <skitt@debian.org>  Thu, 17 Aug 2023 08:48:44 +0200
+
+mingw-w64 (11.0.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Standards-Version 4.6.2, no change required.
+  * Ignore no-code-sections Lintian errors, Lintian doesn’t know about
+    non-ELF libraries.
+
+ -- Stephen Kitt <skitt@debian.org>  Sun, 18 Jun 2023 16:00:17 +0200
+
+mingw-w64 (10.0.0-3) unstable; urgency=medium
+
+  [ Stephen Kitt ]
+  * Fix up a number of architecture definitions in basetsd.h, using the
+    information in https://wiki.debian.org/ArchitectureSpecificsMemo.
+    Closes: #1014392.
+
+  [ Konstantin Demin ]
+  * Fix indentation and wording in genpeimg-file.patch.
+  * pkg-config-crosswrapper: style fixes.
+  * Drop obsolete Breaks/Replaces.
+  * Adjust build flags.
+  * Make genlib reproducible in the same way as gendef.
+  * Switch to debhelper compatibility level 13:
+    - remove obsolete debian/clean entries;
+    - force autoreconf;
+    - provide extra “-ffile-prefix-map” in CFLAGS;
+    - specify RCFLAGS for *-w64-mingw32 targets (fixes “stage1” builds).
+  * Adjust CFLAGS to pass --debug-prefix-map for “as”.
+
+  [ Stephen Kitt ]
+  * Standards-Version 4.6.1, no further change required.
+
+ -- Stephen Kitt <skitt@debian.org>  Wed, 14 Dec 2022 18:32:07 +0100
+
+mingw-w64 (10.0.0-2) unstable; urgency=medium
+
+  * Restore widl-cpu.patch, adjusted for the new release, so that we can
+    build on non-Windows CPU architectures.
+
+ -- Stephen Kitt <skitt@debian.org>  Mon, 11 Apr 2022 17:08:32 +0200
+
+mingw-w64 (10.0.0-1) unstable; urgency=medium
+
+  * New upstream release.
+
+  [ Debian Janitor ]
+  * Remove constraints unnecessary since buster:
+    + Build-Depends: Drop versioned constraint on automake.
+    + mingw-w64-i686-dev: Drop versioned constraint on gcc-mingw-w64 in Breaks.
+    + mingw-w64-x86-64-dev: Drop versioned constraint on gcc-mingw-w64 in
+      Breaks.
+
+  [ Stephen Kitt ]
+  * Fix the “Multi-Arch” case in debian/control.
+  * Update debian/copyright.
+
+ -- Stephen Kitt <skitt@debian.org>  Mon, 11 Apr 2022 12:41:14 +0200
+
+mingw-w64 (9.0.0-1) unstable; urgency=medium
+
+  * New upstream release, merging widl-windef-aarch64.patch.
+  * Since the results of the binaries shipped mingw-w64-tools don’t vary
+    depending on their architecture (these are all cross-compilation-
+    style tools), the package is “Multi-arch: foreign”. This allows the
+    native package to be used when cross-building. Closes: #1004973.
+  * Standards-Version 4.6.0, no change required.
+  * Bump debian/watch to version 4.
+
+ -- Stephen Kitt <skitt@debian.org>  Sun, 27 Feb 2022 16:55:34 +0100
+
 mingw-w64 (8.0.0-1) unstable; urgency=medium
 
   * New upstream release, merging comutil-checkerror.patch and
