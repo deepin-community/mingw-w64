@@ -47,20 +47,16 @@
  * C++ linkage (when GCC headers are explicitly included before intrin.h), but at least their
  * guards will prevent duplicated declarations and avoid conflicts.
  *
- * On GCC 4.9 we may always include those headers. On older GCCs, we may do it only if CPU
+ * On GCC 4.9 and Clang we may always include those headers. On older GCCs, we may do it only if CPU
  * features used by them are enabled, so we need to check macros like __SSE__ or __MMX__ first.
  */
-#if __MINGW_GNUC_PREREQ(4, 9)
+#if __MINGW_GNUC_PREREQ(4, 9) || defined(__clang__)
 #define __MINGW_FORCE_SYS_INTRINS
 #endif
 
 #if defined(__GNUC__) && \
    (defined(__i386__) || defined(__x86_64__))
-  extern unsigned int __builtin_ia32_crc32qi (unsigned int, unsigned char);
-  extern unsigned int __builtin_ia32_crc32hi (unsigned int, unsigned short);
-  extern unsigned int __builtin_ia32_crc32si (unsigned int, unsigned int);
 #ifndef _MM_MALLOC_H_INCLUDED
-#define _MM_MALLOC_H_INCLUDED
 #include <stdlib.h>
 #include <errno.h>
 /* Make sure _mm_malloc and _mm_free are defined.  */
@@ -71,6 +67,10 @@ extern "C" {
 #endif
 
 #include <x86intrin.h>
+#include <cpuid.h>
+
+/* Undefine the GCC one taking 5 parameters to prefer the mingw-w64 one. */
+#undef __cpuid
 
 /* Before 4.9.2, x86intrin.h had broken versions of these. */
 #undef _lrotl
@@ -185,6 +185,9 @@ extern "C" {
 #define __MACHINESA __MACHINE
 #define __MACHINEIW64 __MACHINE
 #define __MACHINEW64 __MACHINE
+#define __MACHINEARM __MACHINE
+#define __MACHINEARM64 __MACHINE
+#define __MACHINEARM_ARM64 __MACHINE
 
 #define __MACHINE(X) X;
 #define __MACHINEZ(X)
@@ -229,13 +232,25 @@ extern "C" {
 #define __MACHINEX86X_NOWIN64 __MACHINEZ
 #endif
 
-#if !(_M_ARM)
+#if !(defined(__arm__))
 #undef __MACHINESA
+#undef __MACHINEARM
 #undef __MACHINEARMX
 #undef __MACHINECC
 #define __MACHINESA __MACHINEZ
+#define __MACHINEARM __MACHINEZ
 #define __MACHINEARMX __MACHINEZ
 #define __MACHINECC __MACHINEZ
+#endif
+
+#if !(defined(__aarch64__))
+#undef __MACHINEARM64
+#define __MACHINEARM64 __MACHINEZ
+#endif
+
+#if !(defined(__arm__) || defined(__aarch64__))
+#undef __MACHINEARM_ARM64
+#define __MACHINEARM_ARM64 __MACHINEZ
 #endif
 
 #if !(defined(__x86_64))
@@ -310,6 +325,7 @@ extern "C" {
     __MACHINEI(__MINGW_EXTENSION unsigned __int64 __emulu(unsigned int,unsigned int))
     __MACHINEI(void __cdecl _enable(void))
     __MACHINEIA64(void __cdecl _enable(void))
+    __MACHINE(void __cdecl __MINGW_ATTRIB_NORETURN __fastfail(unsigned int code))
     __MACHINEIA64(__MINGW_EXTENSION void __fc(__int64))
     __MACHINEIA64(void __fclrf(void))
     __MACHINEIA64(void __fsetc(int,int))
@@ -488,6 +504,7 @@ extern "C" {
     __MACHINEI(unsigned short __cdecl _outpw(unsigned short,unsigned short))
     __MACHINEI(unsigned short __cdecl outpw(unsigned short,unsigned short))
     __MACHINECE(void __cdecl __prefetch(unsigned long *addr))
+    __MACHINEARM_ARM64(void __cdecl __prefetch(const void *addr))
     __MACHINEIA64(__MINGW_EXTENSION void __ptcl(__int64,__int64))
     __MACHINEIA64(__MINGW_EXTENSION void __ptcg(__int64,__int64))
     __MACHINEIA64(__MINGW_EXTENSION void __ptcga(__int64,__int64))

@@ -1,1 +1,3 @@
-usr/i686-w64-mingw32
+usr/i686-w64-mingw32/include
+usr/i686-w64-mingw32/lib
+

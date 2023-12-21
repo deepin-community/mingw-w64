@@ -1,0 +1,9 @@
+# Setting skip-not-installable and not specifying the Architecture field
+# is the right thing to do since, if one were using qemu-user with binfmt-support
+# for example, they could use wine64:amd64 even if on a non-amd64 machine.
+# Thus using the Architecture field is too strict, but we need to set
+# skip-not-installable still so that ordinary non-amd64 test runners don't freak out.
+
+Tests: ldap-wine
+Depends: wine:amd64, wine64:amd64, slapd, gcc-mingw-w64-x86-64
+Restrictions: allow-stderr, isolation-container, needs-root, skip-not-installable

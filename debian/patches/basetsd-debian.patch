@@ -1,0 +1,29 @@
+Description: Add support for multiple Debian architectures
+Author: Stephen Kitt <skitt@debian.org>
+
+--- a/mingw-w64-tools/widl/include/basetsd.h
++++ b/mingw-w64-tools/widl/include/basetsd.h
+@@ -311,7 +311,7 @@
+ # undef  WORDS_BIGENDIAN
+ #elif defined(__powerpc__)
+ # define WORDS_BIGENDIAN
+-#elif defined(__ALPHA__)
++#elif defined(__alpha__)
+ # undef  WORDS_BIGENDIAN
+ #elif defined(__ARMEB__)
+ # define WORDS_BIGENDIAN
+@@ -331,6 +331,14 @@
+ # define WORDS_BIGENDIAN
+ #elif defined(__hppa__)
+ # undef  WORDS_BIGENDIAN
++#elif defined(__m68k__)
++# define WORDS_BIGENDIAN
++#elif defined(__riscv) && __riscv_xlen == 64
++# undef  WORDS_BIGENDIAN
++#elif defined(__sh__)
++# undef  WORDS_BIGENDIAN
++#elif defined(__sparc__) && defined(__arch64__)
++# define WORDS_BIGENDIAN
+ #elif !defined(RC_INVOKED) && !defined(__WIDL__) && !defined(__midl)
+ # error Unknown CPU architecture!
+ #endif

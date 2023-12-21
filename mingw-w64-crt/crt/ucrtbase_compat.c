@@ -21,6 +21,7 @@
 #include <sect_attribs.h>
 #include <stdio.h>
 #include <time.h>
+#include <corecrt_startup.h>
 
 #undef __getmainargs
 #undef __wgetmainargs
@@ -46,8 +47,6 @@ _CRTIMP wchar_t*** __cdecl __p___wargv(void);
 _CRTIMP char*** __cdecl __p__environ(void);
 _CRTIMP wchar_t*** __cdecl __p__wenviron(void);
 
-_CRTIMP int __cdecl _crt_atexit(_onexit_t func);
-
 _CRTIMP int __cdecl _initialize_narrow_environment(void);
 _CRTIMP int __cdecl _initialize_wide_environment(void);
 _CRTIMP int __cdecl _configure_narrow_argv(int mode);
@@ -55,6 +54,8 @@ _CRTIMP int __cdecl _configure_wide_argv(int mode);
 
 // Declared in new.h, but only visible to C++
 _CRTIMP int __cdecl _set_new_mode(int _NewMode);
+
+extern char __mingw_module_is_dll;
 
 
 // Wrappers with legacy msvcrt.dll style API, based on the new ucrtbase.dll functions.
@@ -84,24 +85,32 @@ int __cdecl __wgetmainargs(int * _Argc, wchar_t *** _Argv, wchar_t ***_Env, int 
 
 _onexit_t __cdecl _onexit(_onexit_t func)
 {
-  return _crt_atexit(func) == 0 ? func : NULL;
+  return _crt_atexit((_PVFV)func) == 0 ? func : NULL;
 }
 
 _onexit_t __cdecl (*__MINGW_IMP_SYMBOL(_onexit))(_onexit_t func) = _onexit;
 
+int __cdecl at_quick_exit(void (__cdecl *func)(void))
+{
+  // In a DLL, we can't register a function with _crt_at_quick_exit, because
+  // we can't unregister it when the DLL is unloaded. This matches how
+  // at_quick_exit/quick_exit work with MSVC with a dynamically linked CRT.
+  if (__mingw_module_is_dll)
+    return 0;
+  return _crt_at_quick_exit(func);
+}
+
+int __cdecl (*__MINGW_IMP_SYMBOL(at_quick_exit))(void (__cdecl *)(void)) = at_quick_exit;
+
 void __cdecl _amsg_exit(int ret) {
   fprintf(stderr, "runtime error %d\n", ret);
+  _exit(255);
 }
 
 unsigned int __cdecl _get_output_format(void)
 {
   return 0;
 }
-
-static char ** local__initenv;
-static wchar_t ** local__winitenv;
-char *** __MINGW_IMP_SYMBOL(__initenv) = &local__initenv;
-wchar_t *** __MINGW_IMP_SYMBOL(__winitenv) = &local__winitenv;
 
 
 // These are required to provide the unrepfixed data symbols "timezone"

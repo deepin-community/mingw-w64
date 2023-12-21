@@ -372,6 +372,8 @@ __wgetmainargs
 __winitenv DATA
 _abnormal_termination
 _abs64
+llabs == _abs64
+imaxabs == _abs64
 _access
 _access_s
 _acmdln DATA
@@ -414,7 +416,9 @@ _atof_l
 _atoflt
 _atoflt_l
 _atoi64
+atoll == _atoi64
 _atoi64_l
+_atoll_l == _atoi64_l
 _atoi_l
 _atol_l
 _atoldbl
@@ -486,6 +490,7 @@ _cwscanf
 _cwscanf_l
 _cwscanf_s
 _cwscanf_s_l
+_daylight DATA
 _decode_pointer
 _difftime32
 _difftime64
@@ -526,6 +531,7 @@ _fdopen
 _fflush_nolock
 _fgetchar
 _fgetwc_nolock
+_getwc_nolock == _fgetwc_nolock
 _fgetwchar
 _filbuf
 _filelength
@@ -619,6 +625,7 @@ _get_tzname
 _get_unexpected
 _get_wpgmptr
 _getc_nolock
+_fgetc_nolock == _getc_nolock
 _getch
 _getch_nolock
 _getche
@@ -1082,6 +1089,7 @@ _stricmp_l
 _stricoll
 _stricoll_l
 _strlwr
+strlwr == _strlwr
 _strlwr_l
 _strlwr_s
 _strlwr_s_l
@@ -1100,10 +1108,18 @@ _strtime
 _strtime_s
 _strtod_l
 _strtoi64
+strtoll == _strtoi64
+strtoimax == _strtoi64
 _strtoi64_l
+_strtoll_l == _strtoi64_l
+_strtoimax_l == _strtoi64_l
 _strtol_l
 _strtoui64
+strtoull == _strtoui64
+strtoumax == _strtoui64
 _strtoui64_l
+_strtoull_l == _strtoui64_l
+_strtoumax_l == _strtoui64_l
 _strtoul_l
 _strupr
 _strupr_l
@@ -1128,12 +1144,14 @@ _tempnam_dbg
 _time32
 time == _time32
 _time64
+_timezone DATA
 _tolower
 _tolower_l
 _toupper
 _toupper_l
 _towlower_l
 _towupper_l
+_tzname DATA
 _tzset
 _ui64toa
 _ui64toa_s
@@ -1234,6 +1252,7 @@ _wcsicmp_l
 _wcsicoll
 _wcsicoll_l
 _wcslwr
+wcslwr == _wcslwr
 _wcslwr_l
 _wcslwr_s
 _wcslwr_s_l
@@ -1478,6 +1497,7 @@ localeconv
 log DATA
 ; If we implement log10 too, we can set this to DATA only.
 log10
+longjmp
 malloc
 mblen
 mbrlen

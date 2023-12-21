@@ -5,7 +5,7 @@ set -e
 WINE_DIR=$1
 
 if test -z $WINE_DIR; then
-    echo "Usage: wine-impot.sh wine_dir"
+    echo "Usage: wine-import.sh wine_dir"
     exit 1
 fi
 
@@ -109,10 +109,14 @@ for f in \
 	errors.h \
 	evcode.h \
 	exdispid.h \
+	fontsub.h \
 	mediaerr.h \
 	mscat.h \
+	msxml2did.h \
+	msxml6did.h \
 	propkeydef.h \
 	propkey.h \
+	propvarutil.h \
 	rpcsal.h \
 	t2embapi.h \
 	uiautomationcoreapi.h \
@@ -120,6 +124,7 @@ for f in \
 	vfwmsgs.h \
 	winhttp.h \
 	winineti.h \
+	wmpids.h \
 	xapofx.h \
 	xinput.h; do
     import_header $f include
@@ -129,23 +134,34 @@ done
 for f in \
 	amstream \
 	amvideo \
+	asyncinfo \
 	austream \
+	bits \
+	bits1_5 \
+	bits2_0 \
+	bits2_5 \
+	bits3_0 \
+	bits5_0 \
 	ctfutb \
+	ctxtcall \
 	d3d10 \
 	d3d10_1 \
 	d3d10sdklayers \
 	d3d11 \
+	d3d11on12 \
 	d3d11_1 \
 	d3d11_2 \
 	d3d11_3 \
 	d3d11_4 \
 	d3d11sdklayers \
 	d3d12 \
+	d3d12sdklayers \
 	d3d12shader \
 	d3dcommon \
 	dcommon \
 	ddstream \
 	devicetopology \
+	directmanipulation \
 	downloadmgr \
 	drmexternals \
 	dvdif \
@@ -165,21 +181,34 @@ for f in \
 	dxgitype \
 	dxva2api \
 	endpointvolume \
+	eventtoken \
+	evr9 \
 	exdisp \
 	fusion \
 	icftypes \
+	ivectorchangedeventargs \
 	mediaobj \
+	mfreadwrite \
+	mftransform \
 	mmdeviceapi \
 	mmstream \
 	mscoree \
 	msctf \
+	msxml \
+	msxml2 \
+	msxml6 \
+	mulres \
 	netfw \
 	netlistmgr \
 	objectarray \
 	optary \
+	proofofpossessioncookieinfo \
 	qedit \
+	relogger \
+	rtworkq \
 	spatialaudioclient \
 	taskschd \
+	textstor \
 	thumbcache \
 	uiautomationclient \
 	uiautomationcore \
@@ -187,13 +216,58 @@ for f in \
 	vmr9 \
 	wincodec \
 	wincodecsdk \
+	windowscontracts \
+	windows.devices.enumeration \
+	windows.devices.haptics \
+	windows.devices.power \
+	windows.foundation \
+	windows.foundation.collections \
+	windows.foundation.metadata \
+	windows.foundation.numerics \
+	windows.gaming.input \
+	windows.gaming.input.custom \
+	windows.gaming.input.forcefeedback \
+	windows.gaming.ui \
+	windows.globalization \
+	windows.graphics.capture \
+	windows.graphics.directx \
+	windows.graphics.directx.direct3d11 \
+	windows.graphics.effects \
+	windows.graphics.holographic \
+	windows.media \
+	windows.media.closedcaptioning \
+	windows.media.devices \
+	windows.media.speechrecognition \
+	windows.media.speechsynthesis \
+	windows.perception.spatial \
+	windows.perception.spatial.surfaces \
+	windows.security.credentials \
+	windows.security.cryptography \
+	windows.storage.streams \
+	windows.system \
+	windows.system.power \
+	windows.system.profile.systemmanufacturers \
+	windows.system.threading \
+	windows.system.userprofile \
+	windows.ui \
+	windows.ui.composition \
+	windows.ui.composition.interop \
+	windows.ui.core \
+	windows.ui.viewmanagement \
 	wmdrmsdk \
+	wmp \
+	wmprealestate \
+	wmpservices \
 	wmsbuffer \
 	wmsdkidl \
+	wmsecure \
 	wpcapi \
+	wuapi \
 	xapo \
 	xaudio2 \
 	xaudio2fx \
+	xmldom \
+	xmldso \
 	xmllite; do
     import_idl $f.idl include
 done

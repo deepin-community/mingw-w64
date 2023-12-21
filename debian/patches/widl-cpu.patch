@@ -1,46 +1,27 @@
 Description: Don’t error out on non-Windows CPUs
 Author: Stephen Kitt <skitt@debian.org>
 
---- a/mingw-w64-tools/widl/src/widl.c
-+++ b/mingw-w64-tools/widl/src/widl.c
-@@ -105,7 +105,7 @@
+This works for Debian because widl is always prefixed, so the default
+target CPU can be determined from the executable name. We don't case
+about the build architecture.
+
+--- a/mingw-w64-tools/widl/tools.h
++++ b/mingw-w64-tools/widl/tools.h
+@@ -88,7 +88,7 @@
+ 
+ struct target
+ {
+-    enum { CPU_i386, CPU_x86_64, CPU_ARM, CPU_ARM64 } cpu;
++    enum { CPU_i386, CPU_x86_64, CPU_ARM, CPU_ARM64, CPU_UNSPECIFIED } cpu;
+ 
+     enum
+     {
+@@ -450,7 +450,7 @@
  #elif defined(__aarch64__)
- enum target_cpu target_cpu = CPU_ARM64;
+     target.cpu = CPU_ARM64;
  #else
 -#error Unsupported CPU
-+enum target_cpu target_cpu = CPU_UNKNOWN;
++    target.cpu = CPU_UNSPECIFIED;
  #endif
  
- int debuglevel = DEBUGLEVEL_NONE;
-@@ -791,13 +791,17 @@
-       if (pointer_size == 4) target_cpu = CPU_x86;
-       else pointer_size = 8;
-       break;
-+  case CPU_ARM:
-+  case CPU_POWERPC:
-+      if (pointer_size == 8) error( "Cannot build 64-bit code for this CPU\n" );
-+      pointer_size = 4;
-+      break;
-   case CPU_ARM64:
-       if (pointer_size == 4) error( "Cannot build 32-bit code for this CPU\n" );
-       pointer_size = 8;
-       break;
-   default:
--      if (pointer_size == 8) error( "Cannot build 64-bit code for this CPU\n" );
--      pointer_size = 4;
-+      error("Undetermined target, please specify one\n");
-       break;
-   }
- 
---- a/mingw-w64-tools/widl/src/widl.h
-+++ b/mingw-w64-tools/widl/src/widl.h
-@@ -76,7 +76,8 @@
- 
- enum target_cpu
- {
--    CPU_x86, CPU_x86_64, CPU_POWERPC, CPU_ARM, CPU_ARM64, CPU_LAST = CPU_ARM64
-+    CPU_x86, CPU_x86_64, CPU_POWERPC, CPU_ARM, CPU_ARM64, CPU_LAST = CPU_ARM64,
-+    CPU_UNKNOWN
- };
- 
- extern enum target_cpu target_cpu;
+ #ifdef __APPLE__

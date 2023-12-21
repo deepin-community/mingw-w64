@@ -142,18 +142,22 @@ extern "C" {
 #define _malloc_dbg(s,t,f,l) malloc(s)
 #define _calloc_dbg(c,s,t,f,l) calloc(c,s)
 #define _realloc_dbg(p,s,t,f,l) realloc(p,s)
-#define _recalloc_dbg(p,c,s,t,f,l) _recalloc(p,c,s)
 #define _expand_dbg(p,s,t,f,l) _expand(p,s)
 #define _free_dbg(p,t) free(p)
 #define _msize_dbg(p,t) _msize(p)
 
 #define _aligned_malloc_dbg(s,a,f,l) _aligned_malloc(s,a)
 #define _aligned_realloc_dbg(p,s,a,f,l) _aligned_realloc(p,s,a)
-#define _aligned_recalloc_dbg(p,c,s,a,f,l) _aligned_realloc(p,c,s,a)
 #define _aligned_free_dbg(p) _aligned_free(p)
 #define _aligned_offset_malloc_dbg(s,a,o,f,l) _aligned_offset_malloc(s,a,o)
 #define _aligned_offset_realloc_dbg(p,s,a,o,f,l) _aligned_offset_realloc(p,s,a,o)
+
+#if __MSVCRT_VERSION__ >= 0x900
+#define _recalloc_dbg(p,c,s,t,f,l) _recalloc(p,c,s)
+#define _aligned_recalloc_dbg(p,c,s,a,f,l) _aligned_realloc(p,c,s,a)
 #define _aligned_offset_recalloc_dbg(p,c,s,a,o,f,l) _aligned_offset_recalloc(p,c,s,a,o)
+#define _aligned_msize_dbg(p,a,o) _aligned_msize(p,a,o)
+#endif
 
 #define _malloca_dbg(s,t,f,l) _malloca(s)
 #define _freea_dbg(p,t) _freea(p)
@@ -169,8 +173,10 @@ extern "C" {
 #define _wgetcwd_dbg(s,le,t,f,l) _wgetcwd(s,le)
 #define _getdcwd_dbg(d,s,le,t,f,l) _getdcwd(d,s,le)
 #define _wgetdcwd_dbg(d,s,le,t,f,l) _wgetdcwd(d,s,le)
+#if __MSVCRT_VERSION__ >= 0x800
 #define _getdcwd_lk_dbg(d,s,le,t,f,l) _getdcwd_nolock(d,s,le)
 #define _wgetdcwd_lk_dbg(d,s,le,t,f,l) _wgetdcwd_nolock(d,s,le)
+#endif
 
 #define _CrtSetReportHook(f) ((_CRT_REPORT_HOOK)0)
 #define _CrtGetReportHook() ((_CRT_REPORT_HOOK)0)

@@ -1,0 +1,57 @@
+Author: Konstantin Demin <rockdrilla@gmail.com>
+Description: adjust build flags across source
+Forwarded: no
+
+--- a/mingw-w64-crt/Makefile.am
++++ b/mingw-w64-crt/Makefile.am
+@@ -20,7 +20,7 @@
+ endif
+ 
+ AM_CPPFLAGS=$(sysincludes)
+-AM_CFLAGS=-pipe -std=gnu99 -D_CRTBLD -D_WIN32_WINNT=0x0f00 -D__MSVCRT_VERSION__=0x700 -D__USE_MINGW_ANSI_STDIO=0 @CFGUARD_CFLAGS@ @ADD_C_CXX_WARNING_FLAGS@ @ADD_C_ONLY_WARNING_FLAGS@
++AM_CFLAGS=-pipe -D_CRTBLD -D_WIN32_WINNT=0x0f00 -D__MSVCRT_VERSION__=0x700 -D__USE_MINGW_ANSI_STDIO=0 @CFGUARD_CFLAGS@ @ADD_C_CXX_WARNING_FLAGS@ @ADD_C_ONLY_WARNING_FLAGS@
+ AM_CXXFLAGS=@ADD_C_CXX_WARNING_FLAGS@ @ADD_CXX_ONLY_WARNING_FLAGS@
+ CPPFLAGSARM32=-mfpu=vfpv3
+ CPPFLAGS32=-m32 -masm=att
+--- a/mingw-w64-tools/genidl/Makefile.am
++++ b/mingw-w64-tools/genidl/Makefile.am
+@@ -5,7 +5,7 @@
+   src/genidl_config.c  src/genidl_typinfo.c  src/genidl_typeinfo.c  src/genidl_readpe.c \
+   src/genidl_dumpidl.c src/fsredir.c         src/fsredir.h \
+   src/genidl.c
+-genidl_CFLAGS = -O3 -g -std=gnu99 -Wall -Wextra -Wshadow -Wformat -Wpacked -Wredundant-decls -Winline -pedantic -Wno-pedantic-ms-format -Wmissing-declarations -Wredundant-decls -Wimplicit-function-declaration -Wmissing-noreturn -Wmissing-prototypes -Wstrict-aliasing=2
++genidl_CFLAGS = -Wall -Wextra -Wshadow -Wformat -Wpacked -Wredundant-decls -Winline -pedantic -Wno-pedantic-ms-format -Wmissing-declarations -Wredundant-decls -Wimplicit-function-declaration -Wmissing-noreturn -Wmissing-prototypes -Wstrict-aliasing=2
+ 
+ #" -Wstrict-aliasing=2 -Wsystem-headers "
+ 
+--- a/mingw-w64-tools/genlib/Makefile.am
++++ b/mingw-w64-tools/genlib/Makefile.am
+@@ -4,7 +4,7 @@
+ 
+ genlib_SOURCES = src/genlib.h src/genlib.c src/deffun.c src/deflex.c src/defparse.c \
+                  src/deflex.h src/defparse.h
+-genlib_CFLAGS = $(AM_CFLAGS) -O3 -g -Wall -Wextra
++genlib_CFLAGS = $(AM_CFLAGS) -Wall -Wextra
+ 
+ EXTRA_DIST = $(srcdir)/ChangeLog*
+ DISTCHECK_CONFIGURE_FLAGS = --host=$(host) --with-mangle=@with_mangle@
+--- a/mingw-w64-tools/genpeimg/Makefile.am
++++ b/mingw-w64-tools/genpeimg/Makefile.am
+@@ -1,6 +1,6 @@
+ bin_PROGRAMS = genpeimg
+ genpeimg_SOURCES = src/img.h src/img.c src/img_pe.c src/genpeimg.c
+ genpeimg_CPPFLAGS = -Isrc
+-genpeimg_CFLAGS = $(AM_CFLAGS) -O3 -g -Werror -Wall -Wextra
++genpeimg_CFLAGS = $(AM_CFLAGS) -Werror -Wall -Wextra
+ 
+ DISTCHECK_CONFIGURE_FLAGS = --host=$(host)
+--- a/mingw-w64-tools/widl/Makefile.am
++++ b/mingw-w64-tools/widl/Makefile.am
+@@ -57,6 +57,6 @@
+   include/winnt.rh
+ 
+ widl_CPPFLAGS = -I$(top_srcdir)/include -DINCLUDEDIR=\""@WIDL_INCLUDEDIR@"\" -DBIN_TO_INCLUDEDIR=\""@BIN_TO_INCLUDEDIR@"\" -DBIN_TO_DLLDIR=\""@BIN_TO_INCLUDEDIR@"\" -DDLLDIR="\"@prefix@/lib\""
+-widl_CFLAGS = -O3 -g -Wall -Wformat -Wpacked -Wmissing-declarations -Wimplicit-function-declaration -Wmissing-prototypes -Wstrict-aliasing=2
++widl_CFLAGS = -Wall -Wformat -Wpacked -Wmissing-declarations -Wimplicit-function-declaration -Wmissing-prototypes -Wstrict-aliasing=2
+ 
+ DISTCHECK_CONFIGURE_FLAGS = --host=$(host) --target=$(target)

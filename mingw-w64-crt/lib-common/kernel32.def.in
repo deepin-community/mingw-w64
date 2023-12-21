@@ -236,8 +236,9 @@ CreatePipe
 CreatePrivateNamespaceA
 CreatePrivateNamespaceW
 CreateProcessA
-CreateProcessAsUserA
-CreateProcessAsUserW
+; MSDN says these are exported from ADVAPI32.DLL.
+; CreateProcessAsUserA
+; CreateProcessAsUserW
 CreateProcessInternalA
 CreateProcessInternalW
 CreateProcessW
@@ -323,7 +324,6 @@ EndUpdateResourceW
 EnterCriticalSection
 F_X64(EnterUmsSchedulingMode)
 EnterSynchronizationBarrier
-EnterUmsSchedulingMode
 EnumCalendarInfoA
 EnumCalendarInfoExA
 EnumCalendarInfoExEx
@@ -716,7 +716,6 @@ GetProcAddress
 GetProcessAffinityMask
 GetProcessDefaultCpuSets
 GetProcessDEPPolicy
-GetProcessDefaultCpuSets
 GetProcessGroupAffinity
 GetProcessHandleCount
 GetProcessHeap
@@ -1081,7 +1080,8 @@ OpenSemaphoreW
 OpenState
 OpenStateExplicit
 OpenThread
-;OpenThreadToken
+; MSDN says this is exported from ADVAPI32.DLL.
+; OpenThreadToken
 OpenWaitableTimerA
 OpenWaitableTimerW
 OutputDebugStringA
@@ -1182,7 +1182,6 @@ ReadFileEx
 ReadFileScatter
 ReadProcessMemory
 ReadThreadProfilingData
-ReclaimVirtualMemory
 ;
 ; MSDN says these functions are exported
 ; from advapi32.dll. Commented out for
@@ -1439,7 +1438,8 @@ SetThreadPriority
 SetThreadPriorityBoost
 SetThreadSelectedCpuSets
 SetThreadStackGuarantee
-SetThreadToken
+; MSDN says this is exported from ADVAPI32.DLL.
+; SetThreadToken
 SetThreadUILanguage
 SetThreadpoolStackInformation
 SetThreadpoolThreadMaximum

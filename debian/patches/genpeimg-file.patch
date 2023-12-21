@@ -6,15 +6,15 @@ fixes that.
 
 --- a/mingw-w64-tools/genpeimg/src/genpeimg.c
 +++ b/mingw-w64-tools/genpeimg/src/genpeimg.c
-@@ -26,7 +26,6 @@
- unsigned short set_pe_opt_hdr_dll_chara = 0;
+@@ -49,7 +49,6 @@
  unsigned short mask_pe_opt_hdr_dll_chara = 0xffff;
+ unsigned short set_subsystem = 0xffff;
  int dump_information = 0;
 -static char *file_name = NULL;
  
  static void __attribute__((noreturn))
  show_usage (void)
-@@ -74,7 +73,6 @@
+@@ -108,7 +107,6 @@
        if (h[0] != '-')
          {
  	  has_file = 1;
@@ -22,7 +22,7 @@ fixes that.
  	  continue;
  	}
        switch (h[1])
-@@ -224,24 +222,30 @@
+@@ -301,26 +299,32 @@
  
  int main (int argc, char **argv)
  {
@@ -42,26 +42,30 @@ fixes that.
 +    if (file_name[0] != '-' && file_name[0] != '+') {
 +      pe = peimg_load (file_name);
 +      if (!pe)
-+	{
-+	  fprintf (stderr, "File %s not found, or not a PE-image\n", file_name);
-+	  return 0;
-+	}
++      {
++        fprintf (stderr, "File %s not found, or not a PE-image\n", file_name);
++        return 0;
++      }
  
 -  if (dump_information)
 -    peimg_show (pe, stdout);
 -  /* First we need to do actions which aren't modifying image's size.  */
 -  peimg_set_hdr_characeristics (pe, set_pe_hdr_chara, mask_pe_hdr_chara);
 -  peimg_set_hdr_opt_dll_characteristics (pe, set_pe_opt_hdr_dll_chara, mask_pe_opt_hdr_dll_chara);
+-  if (set_subsystem != 0xffff)
+-    peimg_set_hdr_opt_subsystem (pe, set_subsystem);
 -  if (pe->pimg->is_modified)
 -    pe->pimg->want_save = 1;
 -  peimg_free (pe);
 +      if (dump_information)
-+	peimg_show (pe, stdout);
++        peimg_show (pe, stdout);
 +      /* First we need to do actions which aren't modifying image's size.  */
 +      peimg_set_hdr_characeristics (pe, set_pe_hdr_chara, mask_pe_hdr_chara);
 +      peimg_set_hdr_opt_dll_characteristics (pe, set_pe_opt_hdr_dll_chara, mask_pe_opt_hdr_dll_chara);
++      if (set_subsystem != 0xffff)
++        peimg_set_hdr_opt_subsystem (pe, set_subsystem);
 +      if (pe->pimg->is_modified)
-+	pe->pimg->want_save = 1;
++        pe->pimg->want_save = 1;
 +      peimg_free (pe);
 +    }
 +  }

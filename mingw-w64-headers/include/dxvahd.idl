@@ -212,10 +212,16 @@ typedef struct _DXVAHD_BLT_STATE_CONSTRICTION_DATA {
 } DXVAHD_BLT_STATE_CONSTRICTION_DATA;
 
 typedef struct _DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA {
-  UINT Usage  :1;
-  UINT RGB_Range  :1;
-  UINT YCbCr_Matrix  :1;
-  UINT YCbCr_xvYCC  :1;
+  union {
+    struct {
+      UINT Usage  :1;
+      UINT RGB_Range  :1;
+      UINT YCbCr_Matrix  :1;
+      UINT YCbCr_xvYCC  :1;
+      UINT Reserved : 28;
+    };
+    UINT Value;
+  };
 } DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA;
 
 typedef struct _DXVAHD_BLT_STATE_PRIVATE_DATA {
@@ -308,10 +314,16 @@ typedef struct _DXVAHD_STREAM_STATE_FRAME_FORMAT_DATA {
 } DXVAHD_STREAM_STATE_FRAME_FORMAT_DATA;
 
 typedef struct _DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA {
-  UINT Type  :1;
-  UINT RGB_Range  :1;
-  UINT YCbCr_Matrix  :1;
-  UINT YCbCr_xvYCC  :1;
+  union {
+    struct {
+      UINT Type  :1;
+      UINT RGB_Range  :1;
+      UINT YCbCr_Matrix  :1;
+      UINT YCbCr_xvYCC  :1;
+      UINT Reserved  :28;
+    };
+    UINT Value;
+  };
 } DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA;
 
 typedef struct _DXVAHD_STREAM_STATE_LUMA_KEY_DATA {
@@ -388,13 +400,9 @@ cpp_quote("} DXVAHDSW_CALLBACKS;")
 cpp_quote("")
 cpp_quote("HRESULT DXVAHD_CreateDevice(IDirect3DDevice9Ex *pD3DDevice,const DXVAHD_CONTENT_DESC *pContentDesc,DXVAHD_DEVICE_USAGE Usage,PDXVAHDSW_Plugin pPlugin,IDXVAHD_Device **ppDevice);")
 cpp_quote("")
-cpp_quote("#ifdef __GNUC__")
-cpp_quote("#warning COM interfaces layout in this header has not been verified.")
-cpp_quote("#warning COM interfaces with incorrect layout may not work at all.")
-cpp_quote("__MINGW_BROKEN_INTERFACE(INTERFACE)")
-cpp_quote("#endif")
 [
     object,
+    uuid(95f12dfd-d77e-49be-815f-57d579634d6d),
     local
 ]
 interface IDXVAHD_Device : IUnknown
@@ -409,13 +417,9 @@ interface IDXVAHD_Device : IUnknown
     HRESULT CreateVideoProcessor(const GUID *pVPGuid,IDXVAHD_VideoProcessor **ppVideoProcessor);
 };
 
-cpp_quote("#ifdef __GNUC__")
-cpp_quote("#warning COM interfaces layout in this header has not been verified.")
-cpp_quote("#warning COM interfaces with incorrect layout may not work at all.")
-cpp_quote("__MINGW_BROKEN_INTERFACE(INTERFACE)")
-cpp_quote("#endif")
 [
     object,
+    uuid(95f4edf4-6e03-4cd7-be1b-3075d665aa52),
     local
 ]
 interface IDXVAHD_VideoProcessor : IUnknown

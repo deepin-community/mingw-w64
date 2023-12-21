@@ -822,7 +822,9 @@ _atof_l
 _atoflt
 _atoflt_l
 _atoi64
+atoll == _atoi64
 _atoi64_l
+_atoll_l == _atoi64_l
 _atoi_l
 _atol_l
 _atoldbl
@@ -889,6 +891,7 @@ _cwscanf
 _cwscanf_l
 _cwscanf_s
 _cwscanf_s_l
+_daylight DATA
 _difftime32
 _difftime64
 _dosmaperr
@@ -1454,6 +1457,7 @@ _stricmp_l
 _stricoll
 _stricoll_l
 _strlwr
+strlwr == _strlwr
 _strlwr_l
 _strlwr_s
 _strlwr_s_l
@@ -1472,10 +1476,18 @@ _strtime
 _strtime_s
 _strtod_l
 _strtoi64
+strtoll == _strtoi64
+strtoimax == _strtoi64
 _strtoi64_l
+_strtoll_l == _strtoi64_l
+_strtoimax_l == _strtoi64_l
 _strtol_l
 _strtoui64
+strtoull == _strtoui64
+strtoumax == _strtoui64
 _strtoui64_l
+_strtoull_l == _strtoui64_l
+_strtoumax_l == _strtoui64_l
 _strtoul_l
 _strupr
 _strupr_l
@@ -1499,12 +1511,14 @@ _tempnam
 _time32
 _time64
 time == _time64
+_timezone DATA
 _tolower
 _tolower_l
 _toupper
 _toupper_l
 _towlower_l
 _towupper_l
+_tzname DATA
 _tzset
 _ui64toa
 _ui64toa_s
@@ -1605,6 +1619,7 @@ _wcsicmp_l
 _wcsicoll
 _wcsicoll_l
 _wcslwr
+wcslwr == _wcslwr
 _wcslwr_l
 _wcslwr_s
 _wcslwr_s_l
@@ -1849,12 +1864,15 @@ labs
 ldexp
 ldiv
 llabs
+imaxabs == llabs
 lldiv
+imaxdiv == lldiv
 localeconv
 log
 log10
 log10f
 logf
+longjmp
 malloc
 mblen
 mbrlen

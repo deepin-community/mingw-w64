@@ -20,7 +20,19 @@
 #include <d3d9.h>
 #include <d3d10.h>
 #include <d3d11.h>
+#include <d3d11sdklayers.h>
 #include <d3d11shader.h>
+#include <d3d12.h>
+#include <d3d12sdklayers.h>
+#include <d3d12shader.h>
+
+#include <dxgidebug.h>
+#include <dxgi.h>
+#include <dxgi1_2.h>
+#include <dxgi1_3.h>
+#include <dxgi1_4.h>
+#include <dxgi1_5.h>
+#include <dxgi1_6.h>
 
 DEFINE_GUID(CLSID_CDirect3DRM,0x4516ec41,0x8f20,0x11d0,0x9b,0x6d,0x0,0x0,0xc0,0x78,0x1b,0xc3);
 DEFINE_GUID(CLSID_CDirect3DRMAnimation,0x4fa35698,0x623f,0x11cf,0xac,0x4a,0x0,0x0,0xc0,0x38,0x25,0xa1);

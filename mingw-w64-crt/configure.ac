@@ -2,11 +2,11 @@
 # Process this file with autoconf to produce a configure script.
 # Use AM_MAINTANER_MODE somewhere in this file once reconfigurations settle down.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.71])
 AC_INIT([mingw-w64-runtime],[4.0b],[mingw-w64-public@lists.sourceforge.net])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_SRCDIR([ChangeLog])
-AC_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([1.14 foreign subdir-objects])
 AM_MAINTAINER_MODE
@@ -46,6 +46,37 @@ dnl Remove this once automake fixes the bug where AS is not defined according to
 AC_CHECK_TOOL([AS], [as], [:])
 dnl ---
 AM_PROG_CC_C_O
+
+AC_MSG_CHECKING([whether dlltool supports --temp-prefix])
+cat > test.def <<EOF
+LIBRARY test.dll
+EXPORTS
+myfunc
+EOF
+
+AS_VAR_SET([test_dlltool_flags],[])
+AC_DEFUN([TEST_DLLTOOL], [
+  test_dlltool_flags_save="$test_dlltool_flags"
+  test_dlltool_flags="$test_dlltool_flags $1"
+  AS_ECHO([["$DLLTOOL $test_dlltool_flags -d test.def -l libtest.a"]]) >&AS_MESSAGE_LOG_FD
+  AS_IF($DLLTOOL $test_dlltool_flags -d test.def -l libtest.a >&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD, [
+    $2
+  ], [
+    test_dlltool_flags="$test_dlltool_flags_save"
+  ])
+])
+
+# First check if $DLLTOOL supports the -m option. LLVM dlltool might not
+# have a default arch (in older versions), so make sure we specify one.
+TEST_DLLTOOL([--as-flags=--64 -m i386:x86-64])
+# Now check if --temp-prefix is supported. GNU dlltool supports it,
+# LLVM dlltool doesn't, yet at least (but doesn't need it either).
+AS_VAR_SET([dlltool_has_temp_prefix],[no])
+TEST_DLLTOOL([--temp-prefix myprefix], [dlltool_has_temp_prefix=yes])
+
+rm -f test.def libtest.a
+AC_MSG_RESULT([$dlltool_has_temp_prefix])
+AM_CONDITIONAL([DLLTOOL_HAS_TEMP_PREFIX],[test $dlltool_has_temp_prefix = yes])
 
 AC_MSG_CHECKING([whether to build a w32api package for Cygwin])
 AC_ARG_ENABLE([w32api],
@@ -246,6 +277,21 @@ AC_MSG_RESULT([$with_default_msvcrt])
 AS_VAR_SET([MSVCRT_LIB],[lib${with_default_msvcrt}.a])
 AC_SUBST([MSVCRT_LIB])
 
+AC_MSG_CHECKING([whether to include support for Control Flow Guard])
+AC_ARG_ENABLE([cfguard],
+  [AS_HELP_STRING([--enable-cfguard],
+    [Enable building with Control Flow Guard support (Clang)])],
+  [],
+  [AS_VAR_SET([enable_cfguard],[no])])
+AC_MSG_RESULT([$enable_cfguard])
+AS_CASE([$enable_cfguard],
+  [no],[],
+  [yes],[AS_VAR_SET([CFGUARD])
+	 AS_VAR_SET([CFGUARD_CFLAGS],[-mguard=cf])],
+  [AC_MSG_ERROR([invalid argument.  Must be either yes or no.])])
+AM_CONDITIONAL([CFGUARD], [AS_VAR_TEST_SET([CFGUARD])])
+AC_SUBST([CFGUARD_CFLAGS])
+
 AC_MSG_CHECKING([whether to enable experimental features])
 AC_ARG_ENABLE([experimental],
   [AS_HELP_STRING([--enable-experimental],
@@ -269,7 +315,7 @@ AS_CASE([$arg],
   [all], [enable_dfp=yes; enable_printf128=yes; enable_registeredprintf=yes; enable_softmath=yes; ],
   [yes], [enable_dfp=yes; enable_printf128=yes; enable_registeredprintf=yes; enable_softmath=yes; ],
   [no],  [enable_dfp=no; enable_printf128=no; enable_registeredprintf=no; enable_softmath=no; ],
-  [AC_MSG_ERROR([Unknown option \"$experiment\"])]
+  [AC_MSG_ERROR([Unknown option "$arg"])]
 )
 done
 
@@ -301,65 +347,6 @@ AC_ARG_ENABLE([tests-unicode],
 AM_CONDITIONAL([ENABLE_TESTS_UNICODE],[test x$enable_tests_unicode = xyes])
 AC_MSG_RESULT([$enable_tests_unicode])
 
-AC_MSG_CHECKING([whether the linker provides __CTOR_LIST__])
-saved_LDFLAGS="$LDFLAGS"
-saved_ac_no_link="$ac_no_link"
-LDFLAGS="$LDFLAGS -nostdlib"
-# Note that binutils 2.30 is broken with respect to __CTOR_LIST__ (the change
-# was reverted for 2.31); it does provide __CTOR_LIST__ automatically only if
-# necessary. But as long as there's no other definition of it, a fallback
-# __CTOR_LIST__ gets pulled in from libgcc, and this fallback is only a dummy
-# to prevent linker errors (in general) and isn't assigned to the right
-# sections. Therefore, it'd be better to test whether we can/should provide
-# our own __CTOR_LIST__.
-
-# But we can't test whether we can provide our own __CTOR_LIST__ with binutils
-# ld either; even if our test provides its own symbol __CTOR_LIST__, ld will
-# include it but silently use its own provided __CTOR_LIST__ instead, and
-# won't error out. For actual real use, that'd mean a stray broken pointer in
-# the .ctors section.
-
-# This test uses both mainCRTStartup and main functions, to let lld deduce
-# entry point and subsystem automatically without having to manually specify,
-# anything. And as long as main() is provided, we need to implicitly provide
-# __main as well, since the compiler injects a call to it.
-
-# Run this test manually instead of wrapping it in AC_LINK_IFELSE; when
-# bootstrapping an environment, an earlier linking test will have failed,
-# which both causes autoconf to refuse to run any linker test at all,
-# and even if $ac_no_link is overridden, the linker test iteslf will explicitly
-# check that the linker actually produced output in the given output file.
-# If $ac_exeext is empty, as it is when the earlier linker test failed, gcc
-# will behave differently depending on version. If run with "gcc conftest.c
-# -o conftest", old versions will produce explicitly a file named "conftest",
-# while modern GCC versions will produce "conftest.exe". AC_LINK_IFELSE will
-# explicitly look for the output file named "conftest$ac_exeext", which isn't
-# found, and the test fails even though linking succeeded.
-#
-# Therefore, just do a manual test; run the linking command and check the return
-# code whether it was successful or not.
-cat <<_ACEOF >conftest.$ac_ext
-#include <stdint.h>
-extern const void * __CTOR_LIST__;
-void __main(void) {
-}
-int main(void) {
-  return (int)(intptr_t)__CTOR_LIST__;
-}
-int mainCRTStartup(void) {
-  return main();
-}
-_ACEOF
-
-echo "$as_me:$LINENO: $CC conftest.$ac_ext $LDFLAGS -o conftest$ac_exeext" >&AS_MESSAGE_LOG_FD
-if $CC conftest.$ac_ext $LDFLAGS -o conftest$ac_exeext >&AS_MESSAGE_LOG_FD 2>&1; then
-  AC_DEFINE([HAVE_CTOR_LIST],[1],[Whether the linker provides __CTOR_LIST__])
-  AC_MSG_RESULT(yes)
-else
-  AC_MSG_RESULT(no)
-fi
-LDFLAGS="$saved_LDFLAGS"
-
 # Checks for libraries.
 
 # Checks for header files.
@@ -386,7 +373,7 @@ AC_CHECK_HEADER([_mingw_mac.h], [], [AC_MSG_ERROR([Please check if the mingw-w64
 #Warnings and errors, default level is 3
 AC_MSG_CHECKING([for warning levels])
 AC_ARG_ENABLE([warnings],
-  [AS_HELP_STRING([[--enable-warnings[=0-5]]], 
+  [AS_HELP_STRING([[--enable-warnings[=0-5]]],
     [Enable compile time warnings @<:@default=3@:>@])],
   [AS_CASE([$enableval],
     [yes], [warning_level=3],
@@ -403,16 +390,16 @@ AS_CASE([$warning_level],
     ADD_C_CXX_WARNING_FLAGS="-Wall -Wextra"
     ADD_C_ONLY_WARNING_FLAGS="-Wimplicit-function-declaration"],
   [2],[
-    ADD_C_CXX_WARNING_FLAGS="-Wall -Wextra -Wformat -Wstrict-aliasing -Wshadow -Wpacked -Winline" 
+    ADD_C_CXX_WARNING_FLAGS="-Wall -Wextra -Wformat -Wstrict-aliasing -Wshadow -Wpacked -Winline"
     ADD_C_ONLY_WARNING_FLAGS="-Wimplicit-function-declaration"],
   [3],[
-    ADD_C_CXX_WARNING_FLAGS="-Wall -Wextra -Wformat -Wstrict-aliasing -Wshadow -Wpacked -Winline" 
+    ADD_C_CXX_WARNING_FLAGS="-Wall -Wextra -Wformat -Wstrict-aliasing -Wshadow -Wpacked -Winline"
     ADD_C_ONLY_WARNING_FLAGS="-Wimplicit-function-declaration -Wmissing-noreturn -Wmissing-prototypes"],
   [4],[
-    ADD_C_CXX_WARNING_FLAGS="-Wall -Wextra -Wformat -Wstrict-aliasing=2 -Wsystem-headers -Wshadow -Wmissing-declarations -Wpacked -Winline -Werror -pedantic" 
+    ADD_C_CXX_WARNING_FLAGS="-Wall -Wextra -Wformat -Wstrict-aliasing=2 -Wsystem-headers -Wshadow -Wmissing-declarations -Wpacked -Winline -Werror -pedantic"
     ADD_C_ONLY_WARNING_FLAGS="-Wimplicit-function-declaration -Wmissing-noreturn -Wmissing-prototypes"],
   [5],[
-    ADD_C_CXX_WARNING_FLAGS="-Wall -Wextra -Wformat -Wstrict-aliasing=2 -Wsystem-headers -Wshadow -Wmissing-declarations -Wpacked -Wredundant-decls -Winline -Werror -Wfatal-errors -pedantic -pedantic-errors" 
+    ADD_C_CXX_WARNING_FLAGS="-Wall -Wextra -Wformat -Wstrict-aliasing=2 -Wsystem-headers -Wshadow -Wmissing-declarations -Wpacked -Wredundant-decls -Winline -Werror -Wfatal-errors -pedantic -pedantic-errors"
     ADD_C_ONLY_WARNING_FLAGS="-Wimplicit-function-declaration -Wmissing-noreturn -Wmissing-prototypes"]
    )
 
@@ -441,6 +428,7 @@ AC_MSG_NOTICE([  C Warning Flags......: $ADD_C_ONLY_WARNING_FLAGS])
 AC_MSG_NOTICE([  C++ Warning Flags....: $ADD_CXX_ONLY_WARNING_FLAGS])
 AC_MSG_NOTICE([  Common Warning Flags.: $ADD_C_CXX_WARNING_FLAGS])
 AC_MSG_NOTICE([  Default msvcrt.......: $with_default_msvcrt])
+AC_MSG_NOTICE([  Control Flow Guard...: $enable_cfguard])
 AC_MSG_NOTICE([])
 AC_MSG_NOTICE([  DFP printf...........: $enable_dfp])
 AC_MSG_NOTICE([  128-bit printf.......: $enable_printf128])

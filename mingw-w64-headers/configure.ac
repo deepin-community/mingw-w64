@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
+AC_PREREQ([2.71])
 AC_INIT([mingw-w64-headers],[4.0b],[mingw-w64-public@lists.sourceforge.net])
 AC_CONFIG_SRCDIR([crt/_mingw.h.in])
 AC_CONFIG_AUX_DIR([build-aux])
@@ -134,9 +134,9 @@ AC_SUBST([IDLHEAD_LIST])
 AC_MSG_CHECKING([default _WIN32_WINNT version])
 AC_ARG_WITH([default-win32-winnt],
   [AS_HELP_STRING([--with-default-win32-winnt=VER],
-    [Default value of _WIN32_WINNT (default: 0x502)])],
+    [Default value of _WIN32_WINNT (default: 0xa00)])],
   [],
-  [with_default_win32_winnt=0x502])
+  [with_default_win32_winnt=0xa00])
 AC_MSG_RESULT([$with_default_win32_winnt])
 AS_VAR_SET([DEFAULT_WIN32_WINNT],[$with_default_win32_winnt])
 AC_SUBST([DEFAULT_WIN32_WINNT])
@@ -148,6 +148,21 @@ AC_ARG_WITH([default-msvcrt],
   [],
   [with_default_msvcrt=msvcrt])
 case $with_default_msvcrt in
+msvcrt10*)
+  default_msvcrt_version=0x100
+  ;;
+msvcrt20*)
+  default_msvcrt_version=0x200
+  ;;
+msvcrt40*)
+  default_msvcrt_version=0x400
+  ;;
+msvcr70*)
+  default_msvcrt_version=0x700
+  ;;
+msvcr71*)
+  default_msvcrt_version=0x701
+  ;;
 msvcr80*)
   default_msvcrt_version=0x800
   ;;

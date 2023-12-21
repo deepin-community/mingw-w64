@@ -6,4 +6,7 @@ mingw-w64-x86-64-dev: file-in-unusual-dir
 mingw-w64-x86-64-dev: non-standard-dir-in-usr
 
 # DLLs exported via Samba need to be executable (see #796224)
-mingw-w64-x86-64-dev: executable-not-elf-or-script usr/x86_64-w64-mingw32/lib/*.dll
+mingw-w64-x86-64-dev: executable-not-elf-or-script [usr/x86_64-w64-mingw32/lib/*.dll]
+
+# Lintian doesn't know about non-ELF
+mingw-w64-x86-64-dev: no-code-sections [usr/x86_64-w64-mingw32/lib/*.a]

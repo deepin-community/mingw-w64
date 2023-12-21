@@ -14,7 +14,7 @@ Based on http://wiki.debian.org/ArchitectureSpecificsMemo
  #define _WIN64
  #endif
  
-@@ -289,6 +289,10 @@
+@@ -325,6 +325,10 @@
  # define WORDS_BIGENDIAN
  #elif defined(__MIPSEL__)
  # undef  WORDS_BIGENDIAN

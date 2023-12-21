@@ -234,8 +234,9 @@ CreatePipe@16
 CreatePrivateNamespaceA@12
 CreatePrivateNamespaceW@12
 CreateProcessA@40
-CreateProcessAsUserA@44
-CreateProcessAsUserW@44
+; MSDN says these are exported from ADVAPI32.DLL.
+; CreateProcessAsUserA@44
+; CreateProcessAsUserW@44
 CreateProcessInternalA@48
 CreateProcessInternalW@48
 CreateProcessW@40
@@ -883,7 +884,6 @@ InitOnceInitialize@4
 InitializeConditionVariable@4
 InitializeContext2@24
 InitializeContext@16
-InitializeCriticalSection@4
 InitializeCriticalSectionAndSpinCount@8
 InitializeCriticalSectionEx@12
 InitializeEnclave@20
@@ -1069,7 +1069,8 @@ OpenSemaphoreW@12
 OpenState@0
 OpenStateExplicit@8
 OpenThread@12
-OpenThreadToken@16
+; MSDN says this is exported from ADVAPI32.DLL.
+; OpenThreadToken@16
 OpenWaitableTimerA@12
 OpenWaitableTimerW@12
 OutputDebugStringA@4
@@ -1171,7 +1172,6 @@ ReadFileScatter@20
 ReadFileVlm@20
 ReadProcessMemory@20
 ReadThreadProfilingData@12
-ReclaimVirtualMemory@8
 ;
 ; MSDN says these functions are exported
 ; from advapi32.dll. Commented out for
@@ -1264,7 +1264,6 @@ ResetWriteWatch@8
 ResizePseudoConsole@8
 ResolveDelayLoadedAPI@24
 ResolveDelayLoadsFromDll@12
-ResolveLocaleName@12
 RestoreLastError@4
 ResumeThread@4
 RtlCaptureContext@4
@@ -1418,7 +1417,8 @@ SetThreadPriority@8
 SetThreadPriorityBoost@8
 SetThreadSelectedCpuSets@12
 SetThreadStackGuarantee@4
-SetThreadToken@8
+; MSDN says this is exported from ADVAPI32.DLL.
+; SetThreadToken@8
 SetThreadUILanguage@4
 SetThreadpoolStackInformation@8
 SetThreadpoolThreadMaximum@8
@@ -1618,7 +1618,6 @@ WriteProfileSectionW@8
 WriteProfileStringA@12
 WriteProfileStringW@12
 WriteTapemark@16
-WTSGetActiveConsoleSessionId@0
 ZombifyActCtx@4
 ZombifyActCtxWorker@4
 _hread@12

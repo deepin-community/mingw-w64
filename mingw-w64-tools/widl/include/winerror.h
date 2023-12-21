@@ -19,6 +19,8 @@
 #ifndef __WINE_WINERROR_H
 #define __WINE_WINERROR_H
 
+#include <specstrings.h>
+
 #define FACILITY_NULL                         0
 #define FACILITY_RPC                          1
 #define FACILITY_DISPATCH                     2
@@ -87,11 +89,11 @@
 #define __HRESULT_FROM_WIN32(x)   ((HRESULT)(x) > 0 ? ((HRESULT) (((x) & 0x0000FFFF) | (FACILITY_WIN32 << 16) | 0x80000000)) : (HRESULT)(x) )
 #ifndef _HRESULT_DEFINED
 #define _HRESULT_DEFINED
-# ifdef _MSC_VER
-typedef long            HRESULT;
-# else
-typedef int             HRESULT;
-# endif
+#if !defined(__LP64__) && !defined(WINE_NO_LONG_TYPES)
+typedef long HRESULT;
+#else
+typedef int HRESULT;
+#endif
 #endif
 static inline HRESULT HRESULT_FROM_WIN32(unsigned int x)
 {
@@ -410,6 +412,7 @@ static inline HRESULT HRESULT_FROM_WIN32(unsigned int x)
 #define ERROR_THREAD_MODE_NOT_BACKGROUND                   401
 #define ERROR_PROCESS_MODE_ALREADY_BACKGROUND              402
 #define ERROR_PROCESS_MODE_NOT_BACKGROUND                  403
+#define ERROR_NO_SUCH_DEVICE                               433
 #define ERROR_PNP_QUERY_REMOVE_DEVICE_TIMEOUT              480
 #define ERROR_PNP_QUERY_REMOVE_RELATED_DEVICE_TIMEOUT      481
 #define ERROR_PNP_QUERY_REMOVE_UNRELATED_DEVICE_TIMEOUT    482
@@ -2575,6 +2578,25 @@ static inline HRESULT HRESULT_FROM_WIN32(unsigned int x)
 #define E_CHANGED_STATE                                    _HRESULT_TYPEDEF_(0x8000000C)
 #define E_ILLEGAL_STATE_CHANGE                             _HRESULT_TYPEDEF_(0x8000000D)
 #define E_ILLEGAL_METHOD_CALL                              _HRESULT_TYPEDEF_(0x8000000E)
+#define RO_E_METADATA_NAME_NOT_FOUND                       _HRESULT_TYPEDEF_(0x8000000F)
+#define RO_E_METADATA_NAME_IS_NAMESPACE                    _HRESULT_TYPEDEF_(0x80000010)
+#define RO_E_METADATA_INVALID_TYPE_FORMAT                  _HRESULT_TYPEDEF_(0x80000011)
+#define RO_E_INVALID_METADATA_FILE                         _HRESULT_TYPEDEF_(0x80000012)
+#define RO_E_CLOSED                                        _HRESULT_TYPEDEF_(0x80000013)
+#define RO_E_EXCLUSIVE_WRITE                               _HRESULT_TYPEDEF_(0x80000014)
+#define RO_E_CHANGE_NOTIFICATION_IN_PROGRESS               _HRESULT_TYPEDEF_(0x80000015)
+#define RO_E_ERROR_STRING_NOT_FOUND                        _HRESULT_TYPEDEF_(0x80000016)
+#define E_STRING_NOT_NULL_TERMINATED                       _HRESULT_TYPEDEF_(0x80000017)
+#define E_ILLEGAL_DELEGATE_ASSIGNMENT                      _HRESULT_TYPEDEF_(0x80000018)
+#define E_ASYNC_OPERATION_NOT_STARTED                      _HRESULT_TYPEDEF_(0x80000019)
+#define E_APPLICATION_EXITING                              _HRESULT_TYPEDEF_(0x8000001A)
+#define E_APPLICATION_VIEW_EXITING                         _HRESULT_TYPEDEF_(0x8000001B)
+#define RO_E_MUST_BE_AGILE                                 _HRESULT_TYPEDEF_(0x8000001C)
+#define RO_E_UNSUPPORTED_FROM_MTA                          _HRESULT_TYPEDEF_(0x8000001D)
+#define RO_E_COMMITTED                                     _HRESULT_TYPEDEF_(0x8000001E)
+#define RO_E_BLOCKED_CROSS_ASTA_CALL                       _HRESULT_TYPEDEF_(0x8000001F)
+#define RO_E_CANNOT_ACTIVATE_FULL_TRUST_SERVER             _HRESULT_TYPEDEF_(0x80000020)
+#define RO_E_CANNOT_ACTIVATE_UNIVERSAL_APPLICATION_SERVER  _HRESULT_TYPEDEF_(0x80000021)
 
 #define E_NOTIMPL                                          _HRESULT_TYPEDEF_(0x80004001)
 #define E_NOINTERFACE                                      _HRESULT_TYPEDEF_(0x80004002)
@@ -2679,6 +2701,7 @@ static inline HRESULT HRESULT_FROM_WIN32(unsigned int x)
 #define RPC_E_NO_CONTEXT                                   _HRESULT_TYPEDEF_(0x8001011E)
 #define RPC_E_TIMEOUT                                      _HRESULT_TYPEDEF_(0x8001011F)
 #define RPC_E_NO_SYNC                                      _HRESULT_TYPEDEF_(0x80010120)
+#define CO_E_CANCEL_DISABLED                               _HRESULT_TYPEDEF_(0x80010140)
 #define RPC_E_UNEXPECTED                                   _HRESULT_TYPEDEF_(0x8001FFFF)
 
 #define DISP_E_UNKNOWNINTERFACE                            _HRESULT_TYPEDEF_(0x80020001)
@@ -3035,6 +3058,21 @@ static inline HRESULT HRESULT_FROM_WIN32(unsigned int x)
 #define CO_E_FAILEDTOOPENPROCESSTOKEN                      _HRESULT_TYPEDEF_(0x80040219)
 #define CO_E_DECODEFAILED                                  _HRESULT_TYPEDEF_(0x8004021A)
 #define CO_E_ACNOTINITIALIZED                              _HRESULT_TYPEDEF_(0x8004021B)
+
+#define CONTEXT_S_FIRST                                    _HRESULT_TYPEDEF_(0x0004e000)
+#define CONTEXT_S_LAST                                     _HRESULT_TYPEDEF_(0x0004e02f)
+#define CONTEXT_E_FIRST                                    _HRESULT_TYPEDEF_(0x8004e000)
+#define CONTEXT_E_ABORTED                                  _HRESULT_TYPEDEF_(0x8004e002)
+#define CONTEXT_E_ABORTING                                 _HRESULT_TYPEDEF_(0x8004e003)
+#define CONTEXT_E_NOCONTEXT                                _HRESULT_TYPEDEF_(0x8004e004)
+#define CONTEXT_E_WOULD_DEADLOCK                           _HRESULT_TYPEDEF_(0x8004e005)
+#define CONTEXT_E_SYNCH_TIMEOUT                            _HRESULT_TYPEDEF_(0x8004e006)
+#define CONTEXT_E_OLDREF                                   _HRESULT_TYPEDEF_(0x8004e007)
+#define CONTEXT_E_ROLENOTFOUND                             _HRESULT_TYPEDEF_(0x8004e00c)
+#define CONTEXT_E_TMNOTAVAILABLE                           _HRESULT_TYPEDEF_(0x8004e00f)
+#define CONTEXT_E_NOJIT                                    _HRESULT_TYPEDEF_(0x8004e026)
+#define CONTEXT_E_NOTRANSACTION                            _HRESULT_TYPEDEF_(0x8004e027)
+#define CONTEXT_E_LAST                                     _HRESULT_TYPEDEF_(0x8004e02f)
 
 /* Task Scheduler Service Error Codes */
 #define SCHED_S_TASK_READY                                 _HRESULT_TYPEDEF_(0x00041300)
@@ -3637,6 +3675,29 @@ static inline HRESULT HRESULT_FROM_WIN32(unsigned int x)
 #define DWM_E_ADAPTER_NOT_FOUND                            _HRESULT_TYPEDEF_(0x80263005)
 #define DWM_S_GDI_REDIRECTION_SURFACE                      _HRESULT_TYPEDEF_(0x00263005)
 
+#define TBS_E_INTERNAL_ERROR                               _HRESULT_TYPEDEF_(0x80284001)
+#define TBS_E_BAD_PARAMETER                                _HRESULT_TYPEDEF_(0x80284002)
+#define TBS_E_INVALID_OUTPUT_POINTER                       _HRESULT_TYPEDEF_(0x80284003)
+#define TBS_E_INVALID_CONTEXT                              _HRESULT_TYPEDEF_(0x80284004)
+#define TBS_E_INSUFFICIENT_BUFFER                          _HRESULT_TYPEDEF_(0x80284005)
+#define TBS_E_IOERROR                                      _HRESULT_TYPEDEF_(0x80284006)
+#define TBS_E_INVALID_CONTEXT_PARAM                        _HRESULT_TYPEDEF_(0x80284007)
+#define TBS_E_SERVICE_NOT_RUNNING                          _HRESULT_TYPEDEF_(0x80284008)
+#define TBS_E_TOO_MANY_TBS_CONTEXTS                        _HRESULT_TYPEDEF_(0x80284009)
+#define TBS_E_TOO_MANY_RESOURCES                           _HRESULT_TYPEDEF_(0x8028400a)
+#define TBS_E_SERVICE_START_PENDING                        _HRESULT_TYPEDEF_(0x8028400b)
+#define TBS_E_PPI_NOT_SUPPORTED                            _HRESULT_TYPEDEF_(0x8028400c)
+#define TBS_E_COMMAND_CANCELED                             _HRESULT_TYPEDEF_(0x8028400d)
+#define TBS_E_BUFFER_TOO_LARGE                             _HRESULT_TYPEDEF_(0x8028400e)
+#define TBS_E_TPM_NOT_FOUND                                _HRESULT_TYPEDEF_(0x8028400f)
+#define TBS_E_SERVICE_DISABLED                             _HRESULT_TYPEDEF_(0x80284010)
+#define TBS_E_NO_EVENT_LOG                                 _HRESULT_TYPEDEF_(0x80284011)
+#define TBS_E_ACCESS_DENIED                                _HRESULT_TYPEDEF_(0x80284012)
+#define TBS_E_PROVISIONING_NOT_ALLOWED                     _HRESULT_TYPEDEF_(0x80284013)
+#define TBS_E_PPI_FUNCTION_UNSUPPORTED                     _HRESULT_TYPEDEF_(0x80284014)
+#define TBS_E_OWNERAUTH_NOT_FOUND                          _HRESULT_TYPEDEF_(0x80284015)
+#define TBS_E_PROVISIONING_INCOMPLETE                      _HRESULT_TYPEDEF_(0x80284016)
+
 #define UI_E_CREATE_FAILED                                 _HRESULT_TYPEDEF_(0x802a0001)
 #define UI_E_SHUTDOWN_CALLED                               _HRESULT_TYPEDEF_(0x802a0002)
 #define UI_E_ILLEGAL_REENTRANCY                            _HRESULT_TYPEDEF_(0x802a0003)
@@ -3823,6 +3884,47 @@ static inline HRESULT HRESULT_FROM_WIN32(unsigned int x)
 #define WINCODEC_ERR_WIN32ERROR                            _HRESULT_TYPEDEF_(0x88982f94)
 #define WINCODEC_ERR_INVALIDPROGRESSIVELEVEL               _HRESULT_TYPEDEF_(0x88982f95)
 
+#define MILERR_OBJECTBUSY                                  _HRESULT_TYPEDEF_(0x88980001)
+#define MILERR_INSUFFICIENTBUFFER                          _HRESULT_TYPEDEF_(0x88980002)
+#define MILERR_WIN32ERROR                                  _HRESULT_TYPEDEF_(0x88980003)
+#define MILERR_SCANNER_FAILED                              _HRESULT_TYPEDEF_(0x88980004)
+#define MILERR_SCREENACCESSDENIED                          _HRESULT_TYPEDEF_(0x88980005)
+#define MILERR_DISPLAYSTATEINVALID                         _HRESULT_TYPEDEF_(0x88980006)
+#define MILERR_NONINVERTIBLEMATRIX                         _HRESULT_TYPEDEF_(0x88980007)
+#define MILERR_ZEROVECTOR                                  _HRESULT_TYPEDEF_(0x88980008)
+#define MILERR_TERMINATED                                  _HRESULT_TYPEDEF_(0x88980009)
+#define MILERR_BADNUMBER                                   _HRESULT_TYPEDEF_(0x8898000a)
+#define MILERR_INTERNALERROR                               _HRESULT_TYPEDEF_(0x88980080)
+#define MILERR_DISPLAYFORMATNOTSUPPORTED                   _HRESULT_TYPEDEF_(0x88980084)
+#define MILERR_INVALIDCALL                                 _HRESULT_TYPEDEF_(0x88980085)
+#define MILERR_ALREADYLOCKED                               _HRESULT_TYPEDEF_(0x88980086)
+#define MILERR_NOTLOCKED                                   _HRESULT_TYPEDEF_(0x88980087)
+#define MILERR_DEVICECANNOTRENDERTEXT                      _HRESULT_TYPEDEF_(0x88980088)
+#define MILERR_GLYPHBITMAPMISSED                           _HRESULT_TYPEDEF_(0x88980089)
+#define MILERR_MALFORMEDGLYPHCACHE                         _HRESULT_TYPEDEF_(0x8898008a)
+#define MILERR_GENERIC_IGNORE                              _HRESULT_TYPEDEF_(0x8898008b)
+#define MILERR_MALFORMED_GUIDELINE_DATA                    _HRESULT_TYPEDEF_(0x8898008c)
+#define MILERR_NO_HARDWARE_DEVICE                          _HRESULT_TYPEDEF_(0x8898008d)
+#define MILERR_NEED_RECREATE_AND_PRESENT                   _HRESULT_TYPEDEF_(0x8898008e)
+#define MILERR_ALREADY_INITIALIZED                         _HRESULT_TYPEDEF_(0x8898008f)
+#define MILERR_MISMATCHED_SIZE                             _HRESULT_TYPEDEF_(0x88980090)
+#define MILERR_NO_REDIRECTION_SURFACE_AVAILABLE            _HRESULT_TYPEDEF_(0x88980091)
+#define MILERR_REMOTING_NOT_SUPPORTED                      _HRESULT_TYPEDEF_(0x88980092)
+#define MILERR_QUEUED_PRESENT_NOT_SUPPORTED                _HRESULT_TYPEDEF_(0x88980093)
+#define MILERR_NOT_QUEUING_PRESENTS                        _HRESULT_TYPEDEF_(0x88980094)
+#define MILERR_NO_REDIRECTION_SURFACE_RETRY_LATER          _HRESULT_TYPEDEF_(0x88980095)
+#define MILERR_TOOMANYSHADERELEMNTS                        _HRESULT_TYPEDEF_(0x88980096)
+#define MILERR_MROW_READLOCK_FAILED                        _HRESULT_TYPEDEF_(0x88980097)
+#define MILERR_MROW_UPDATE_FAILED                          _HRESULT_TYPEDEF_(0x88980098)
+#define MILERR_SHADER_COMPILE_FAILED                       _HRESULT_TYPEDEF_(0x88980099)
+#define MILERR_MAX_TEXTURE_SIZE_EXCEEDED                   _HRESULT_TYPEDEF_(0x8898009a)
+#define MILERR_QPC_TIME_WENT_BACKWARD                      _HRESULT_TYPEDEF_(0x8898009b)
+#define MILERR_DXGI_ENUMERATION_OUT_OF_SYNC                _HRESULT_TYPEDEF_(0x8898009d)
+#define MILERR_ADAPTER_NOT_FOUND                           _HRESULT_TYPEDEF_(0x8898009e)
+#define MILERR_COLORSPACE_NOT_SUPPORTED                    _HRESULT_TYPEDEF_(0x8898009f)
+#define MILERR_PREFILTER_NOT_SUPPORTED                     _HRESULT_TYPEDEF_(0x889800a0)
+#define MILERR_DISPLAYID_ACCESS_DENIED                     _HRESULT_TYPEDEF_(0x889800a1)
+
 #define DWRITE_E_FILEFORMAT                                _HRESULT_TYPEDEF_(0x88985000)
 #define DWRITE_E_UNEXPECTED                                _HRESULT_TYPEDEF_(0x88985001)
 #define DWRITE_E_NOFONT                                    _HRESULT_TYPEDEF_(0x88985002)
@@ -3920,6 +4022,10 @@ static inline HRESULT HRESULT_FROM_WIN32(unsigned int x)
 #define DXGI_ERROR_NOT_CURRENT                             _HRESULT_TYPEDEF_(0x887a002e)
 #define DXGI_ERROR_HW_PROTECTION_OUTOFMEMORY               _HRESULT_TYPEDEF_(0x887a0030)
 #define DXGI_ERROR_MODE_CHANGE_IN_PROGRESS                 _HRESULT_TYPEDEF_(0x887a0025)
+
+#define DCOMPOSITION_ERROR_WINDOW_ALREADY_COMPOSED         _HRESULT_TYPEDEF_(0x88980800)
+#define DCOMPOSITION_ERROR_SURFACE_BEING_RENDERED          _HRESULT_TYPEDEF_(0x88980801)
+#define DCOMPOSITION_ERROR_SURFACE_NOT_BEING_RENDERED      _HRESULT_TYPEDEF_(0x88980802)
 
 #define ERROR_AUDITING_DISABLED                            _HRESULT_TYPEDEF_(0xC0090001)
 #define ERROR_ALL_SIDS_FILTERED                            _HRESULT_TYPEDEF_(0xC0090002)

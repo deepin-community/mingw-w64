@@ -1,7 +1,7 @@
 # Watch control file for uscan
 # See uscan(1) for format
 
-version=3
+version=4
 
 opts=uversionmangle=s/\.([^.]*)$/+$1/;s/\+$//;s/.rc/~rc/,\
 pgpsigurlmangle=s/$/.sig/ \

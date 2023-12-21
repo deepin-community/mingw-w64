@@ -1,11 +1,13 @@
+buildflags.patch
 spelling-fixes.patch
 widl-no-context.patch
 disable-werror.patch
 missing-cpu-info.patch
 basetsd-hppa.patch
 dlltool-temp-prefix.patch
-reproducible-gendef.patch
+reproducible-build.patch
 widl-pathtools-bsd.patch
-widl-windef-aarch64.patch
-widl-cpu.patch
 genpeimg-file.patch
+widl-cpu.patch
+basetsd-debian.patch
+basetsd-loongarch.patch

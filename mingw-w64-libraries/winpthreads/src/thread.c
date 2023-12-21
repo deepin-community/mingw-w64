@@ -1038,7 +1038,7 @@ pthread_self (void)
 
 /* Internal helper for getting event handle of thread T.  */
 void *
-pthread_getevent ()
+pthread_getevent (void)
 {
   _pthread_v *t = __pthread_self_lite ();
   return (!t ? NULL : t->evStart);
@@ -1395,6 +1395,22 @@ pthread_attr_getscope (const pthread_attr_t *a, int *flag)
 }
 
 int
+pthread_attr_getstack (const pthread_attr_t *attr, void **stack, size_t *size)
+{
+  *stack = (char *) attr->stack - attr->s_size;
+  *size = attr->s_size;
+  return 0;
+}
+
+int
+pthread_attr_setstack (pthread_attr_t *attr, void *stack, size_t size)
+{
+  attr->s_size = size;
+  attr->stack = (char *) stack + size;
+  return 0;
+}
+
+int
 pthread_attr_getstackaddr (const pthread_attr_t *attr, void **stack)
 {
   *stack = attr->stack;
@@ -1504,19 +1520,23 @@ pthread_create_wrapper (void *args)
       intptr_t trslt = (intptr_t) 128;
       /* Provide to this thread a default exception handler.  */
       #ifdef __SEH__
-	asm ("\t.tl_start:\n"
-	  "\t.seh_handler __C_specific_handler, @except\n"
-	  "\t.seh_handlerdata\n"
-	  "\t.long 1\n"
-	  "\t.rva .tl_start, .tl_end, _gnu_exception_handler ,.tl_end\n"
-	  "\t.text"
-	  );
+	asm ("\t.tl_start:\n");
       #endif      /* Call function and save return value */
       pthread_mutex_unlock (&mtx_pthr_locked);
       if (tv->func)
         trslt = (intptr_t) tv->func(tv->ret_arg);
       #ifdef __SEH__
-	asm ("\tnop\n\t.tl_end: nop\n");
+	asm ("\tnop\n\t.tl_end: nop\n"
+#ifdef __arm__
+	  "\t.seh_handler __C_specific_handler, %except\n"
+#else
+	  "\t.seh_handler __C_specific_handler, @except\n"
+#endif
+	  "\t.seh_handlerdata\n"
+	  "\t.long 1\n"
+	  "\t.rva .tl_start, .tl_end, _gnu_exception_handler ,.tl_end\n"
+	  "\t.text"
+	  );
       #endif
       pthread_mutex_lock (&mtx_pthr_locked);
       tv->ret_arg = (void*) trslt;
