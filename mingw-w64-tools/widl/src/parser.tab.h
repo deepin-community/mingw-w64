@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.8.2.  */
+/* A Bison parser, made by GNU Bison 3.8.2.46-9785.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2022 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -134,152 +134,154 @@ extern int parser_debug;
     tDEFAULT = 319,                /* tDEFAULT  */
     tDEFAULTBIND = 320,            /* tDEFAULTBIND  */
     tDELEGATE = 321,               /* tDELEGATE  */
-    tDEFAULTCOLLELEM = 322,        /* tDEFAULTCOLLELEM  */
-    tDEFAULTVALUE = 323,           /* tDEFAULTVALUE  */
-    tDEFAULTVTABLE = 324,          /* tDEFAULTVTABLE  */
-    tDISABLECONSISTENCYCHECK = 325, /* tDISABLECONSISTENCYCHECK  */
-    tDISPLAYBIND = 326,            /* tDISPLAYBIND  */
-    tDISPINTERFACE = 327,          /* tDISPINTERFACE  */
-    tDLLNAME = 328,                /* tDLLNAME  */
-    tDONTFREE = 329,               /* tDONTFREE  */
-    tDOUBLE = 330,                 /* tDOUBLE  */
-    tDUAL = 331,                   /* tDUAL  */
-    tENABLEALLOCATE = 332,         /* tENABLEALLOCATE  */
-    tENCODE = 333,                 /* tENCODE  */
-    tENDPOINT = 334,               /* tENDPOINT  */
-    tENTRY = 335,                  /* tENTRY  */
-    tENUM = 336,                   /* tENUM  */
-    tERRORSTATUST = 337,           /* tERRORSTATUST  */
-    tEVENTADD = 338,               /* tEVENTADD  */
-    tEVENTREMOVE = 339,            /* tEVENTREMOVE  */
-    tEXCLUSIVETO = 340,            /* tEXCLUSIVETO  */
-    tEXPLICITHANDLE = 341,         /* tEXPLICITHANDLE  */
-    tEXTERN = 342,                 /* tEXTERN  */
-    tFALSE = 343,                  /* tFALSE  */
-    tFAULTSTATUS = 344,            /* tFAULTSTATUS  */
-    tFLAGS = 345,                  /* tFLAGS  */
-    tFLOAT = 346,                  /* tFLOAT  */
-    tFORCEALLOCATE = 347,          /* tFORCEALLOCATE  */
-    tHANDLE = 348,                 /* tHANDLE  */
-    tHANDLET = 349,                /* tHANDLET  */
-    tHELPCONTEXT = 350,            /* tHELPCONTEXT  */
-    tHELPFILE = 351,               /* tHELPFILE  */
-    tHELPSTRING = 352,             /* tHELPSTRING  */
-    tHELPSTRINGCONTEXT = 353,      /* tHELPSTRINGCONTEXT  */
-    tHELPSTRINGDLL = 354,          /* tHELPSTRINGDLL  */
-    tHIDDEN = 355,                 /* tHIDDEN  */
-    tHYPER = 356,                  /* tHYPER  */
-    tID = 357,                     /* tID  */
-    tIDEMPOTENT = 358,             /* tIDEMPOTENT  */
-    tIGNORE = 359,                 /* tIGNORE  */
-    tIIDIS = 360,                  /* tIIDIS  */
-    tIMMEDIATEBIND = 361,          /* tIMMEDIATEBIND  */
-    tIMPLICITHANDLE = 362,         /* tIMPLICITHANDLE  */
-    tIMPORT = 363,                 /* tIMPORT  */
-    tIMPORTLIB = 364,              /* tIMPORTLIB  */
-    tIN = 365,                     /* tIN  */
-    tIN_LINE = 366,                /* tIN_LINE  */
-    tINLINE = 367,                 /* tINLINE  */
-    tINPUTSYNC = 368,              /* tINPUTSYNC  */
-    tINT = 369,                    /* tINT  */
-    tINT32 = 370,                  /* tINT32  */
-    tINT3264 = 371,                /* tINT3264  */
-    tINT64 = 372,                  /* tINT64  */
-    tINTERFACE = 373,              /* tINTERFACE  */
-    tLCID = 374,                   /* tLCID  */
-    tLENGTHIS = 375,               /* tLENGTHIS  */
-    tLIBRARY = 376,                /* tLIBRARY  */
-    tLICENSED = 377,               /* tLICENSED  */
-    tLOCAL = 378,                  /* tLOCAL  */
-    tLONG = 379,                   /* tLONG  */
-    tMARSHALINGBEHAVIOR = 380,     /* tMARSHALINGBEHAVIOR  */
-    tMAYBE = 381,                  /* tMAYBE  */
-    tMESSAGE = 382,                /* tMESSAGE  */
-    tMETHODS = 383,                /* tMETHODS  */
-    tMODULE = 384,                 /* tMODULE  */
-    tMTA = 385,                    /* tMTA  */
-    tNAMESPACE = 386,              /* tNAMESPACE  */
-    tNOCODE = 387,                 /* tNOCODE  */
-    tNONBROWSABLE = 388,           /* tNONBROWSABLE  */
-    tNONCREATABLE = 389,           /* tNONCREATABLE  */
-    tNONE = 390,                   /* tNONE  */
-    tNONEXTENSIBLE = 391,          /* tNONEXTENSIBLE  */
-    tNOTIFY = 392,                 /* tNOTIFY  */
-    tNOTIFYFLAG = 393,             /* tNOTIFYFLAG  */
-    tNULL = 394,                   /* tNULL  */
-    tOBJECT = 395,                 /* tOBJECT  */
-    tODL = 396,                    /* tODL  */
-    tOLEAUTOMATION = 397,          /* tOLEAUTOMATION  */
-    tOPTIMIZE = 398,               /* tOPTIMIZE  */
-    tOPTIONAL = 399,               /* tOPTIONAL  */
-    tOUT = 400,                    /* tOUT  */
-    tOVERLOAD = 401,               /* tOVERLOAD  */
-    tPARTIALIGNORE = 402,          /* tPARTIALIGNORE  */
-    tPOINTERDEFAULT = 403,         /* tPOINTERDEFAULT  */
-    tPRAGMA_WARNING = 404,         /* tPRAGMA_WARNING  */
-    tPROGID = 405,                 /* tPROGID  */
-    tPROPERTIES = 406,             /* tPROPERTIES  */
-    tPROPGET = 407,                /* tPROPGET  */
-    tPROPPUT = 408,                /* tPROPPUT  */
-    tPROPPUTREF = 409,             /* tPROPPUTREF  */
-    tPROTECTED = 410,              /* tPROTECTED  */
-    tPROXY = 411,                  /* tPROXY  */
-    tPTR = 412,                    /* tPTR  */
-    tPUBLIC = 413,                 /* tPUBLIC  */
-    tRANGE = 414,                  /* tRANGE  */
-    tREADONLY = 415,               /* tREADONLY  */
-    tREF = 416,                    /* tREF  */
-    tREGISTER = 417,               /* tREGISTER  */
-    tREPRESENTAS = 418,            /* tREPRESENTAS  */
-    tREQUESTEDIT = 419,            /* tREQUESTEDIT  */
-    tREQUIRES = 420,               /* tREQUIRES  */
-    tRESTRICTED = 421,             /* tRESTRICTED  */
-    tRETVAL = 422,                 /* tRETVAL  */
-    tRUNTIMECLASS = 423,           /* tRUNTIMECLASS  */
-    tSAFEARRAY = 424,              /* tSAFEARRAY  */
-    tSHORT = 425,                  /* tSHORT  */
-    tSIGNED = 426,                 /* tSIGNED  */
-    tSINGLENODE = 427,             /* tSINGLENODE  */
-    tSIZEIS = 428,                 /* tSIZEIS  */
-    tSIZEOF = 429,                 /* tSIZEOF  */
-    tSMALL = 430,                  /* tSMALL  */
-    tSOURCE = 431,                 /* tSOURCE  */
-    tSTANDARD = 432,               /* tSTANDARD  */
-    tSTATIC = 433,                 /* tSTATIC  */
-    tSTRICTCONTEXTHANDLE = 434,    /* tSTRICTCONTEXTHANDLE  */
-    tSTRING = 435,                 /* tSTRING  */
-    tSTRUCT = 436,                 /* tSTRUCT  */
-    tSWITCH = 437,                 /* tSWITCH  */
-    tSWITCHIS = 438,               /* tSWITCHIS  */
-    tSWITCHTYPE = 439,             /* tSWITCHTYPE  */
-    tTHREADING = 440,              /* tTHREADING  */
-    tTRANSMITAS = 441,             /* tTRANSMITAS  */
-    tTRUE = 442,                   /* tTRUE  */
-    tTYPEDEF = 443,                /* tTYPEDEF  */
-    tUIDEFAULT = 444,              /* tUIDEFAULT  */
-    tUNION = 445,                  /* tUNION  */
-    tUNIQUE = 446,                 /* tUNIQUE  */
-    tUNSIGNED = 447,               /* tUNSIGNED  */
-    tUSESGETLASTERROR = 448,       /* tUSESGETLASTERROR  */
-    tUSERMARSHAL = 449,            /* tUSERMARSHAL  */
-    tUUID = 450,                   /* tUUID  */
-    tV1ENUM = 451,                 /* tV1ENUM  */
-    tVARARG = 452,                 /* tVARARG  */
-    tVERSION = 453,                /* tVERSION  */
-    tVIPROGID = 454,               /* tVIPROGID  */
-    tVOID = 455,                   /* tVOID  */
-    tWCHAR = 456,                  /* tWCHAR  */
-    tWIREMARSHAL = 457,            /* tWIREMARSHAL  */
-    tAPARTMENT = 458,              /* tAPARTMENT  */
-    tNEUTRAL = 459,                /* tNEUTRAL  */
-    tSINGLE = 460,                 /* tSINGLE  */
-    tFREE = 461,                   /* tFREE  */
-    tBOTH = 462,                   /* tBOTH  */
-    CAST = 463,                    /* CAST  */
-    PPTR = 464,                    /* PPTR  */
-    POS = 465,                     /* POS  */
-    NEG = 466,                     /* NEG  */
-    ADDRESSOF = 467                /* ADDRESSOF  */
+    tDEFAULT_OVERLOAD = 322,       /* tDEFAULT_OVERLOAD  */
+    tDEFAULTCOLLELEM = 323,        /* tDEFAULTCOLLELEM  */
+    tDEFAULTVALUE = 324,           /* tDEFAULTVALUE  */
+    tDEFAULTVTABLE = 325,          /* tDEFAULTVTABLE  */
+    tDEPRECATED = 326,             /* tDEPRECATED  */
+    tDISABLECONSISTENCYCHECK = 327, /* tDISABLECONSISTENCYCHECK  */
+    tDISPLAYBIND = 328,            /* tDISPLAYBIND  */
+    tDISPINTERFACE = 329,          /* tDISPINTERFACE  */
+    tDLLNAME = 330,                /* tDLLNAME  */
+    tDONTFREE = 331,               /* tDONTFREE  */
+    tDOUBLE = 332,                 /* tDOUBLE  */
+    tDUAL = 333,                   /* tDUAL  */
+    tENABLEALLOCATE = 334,         /* tENABLEALLOCATE  */
+    tENCODE = 335,                 /* tENCODE  */
+    tENDPOINT = 336,               /* tENDPOINT  */
+    tENTRY = 337,                  /* tENTRY  */
+    tENUM = 338,                   /* tENUM  */
+    tERRORSTATUST = 339,           /* tERRORSTATUST  */
+    tEVENTADD = 340,               /* tEVENTADD  */
+    tEVENTREMOVE = 341,            /* tEVENTREMOVE  */
+    tEXCLUSIVETO = 342,            /* tEXCLUSIVETO  */
+    tEXPLICITHANDLE = 343,         /* tEXPLICITHANDLE  */
+    tEXTERN = 344,                 /* tEXTERN  */
+    tFALSE = 345,                  /* tFALSE  */
+    tFAULTSTATUS = 346,            /* tFAULTSTATUS  */
+    tFLAGS = 347,                  /* tFLAGS  */
+    tFLOAT = 348,                  /* tFLOAT  */
+    tFORCEALLOCATE = 349,          /* tFORCEALLOCATE  */
+    tHANDLE = 350,                 /* tHANDLE  */
+    tHANDLET = 351,                /* tHANDLET  */
+    tHELPCONTEXT = 352,            /* tHELPCONTEXT  */
+    tHELPFILE = 353,               /* tHELPFILE  */
+    tHELPSTRING = 354,             /* tHELPSTRING  */
+    tHELPSTRINGCONTEXT = 355,      /* tHELPSTRINGCONTEXT  */
+    tHELPSTRINGDLL = 356,          /* tHELPSTRINGDLL  */
+    tHIDDEN = 357,                 /* tHIDDEN  */
+    tHYPER = 358,                  /* tHYPER  */
+    tID = 359,                     /* tID  */
+    tIDEMPOTENT = 360,             /* tIDEMPOTENT  */
+    tIGNORE = 361,                 /* tIGNORE  */
+    tIIDIS = 362,                  /* tIIDIS  */
+    tIMMEDIATEBIND = 363,          /* tIMMEDIATEBIND  */
+    tIMPLICITHANDLE = 364,         /* tIMPLICITHANDLE  */
+    tIMPORT = 365,                 /* tIMPORT  */
+    tIMPORTLIB = 366,              /* tIMPORTLIB  */
+    tIN = 367,                     /* tIN  */
+    tIN_LINE = 368,                /* tIN_LINE  */
+    tINLINE = 369,                 /* tINLINE  */
+    tINPUTSYNC = 370,              /* tINPUTSYNC  */
+    tINT = 371,                    /* tINT  */
+    tINT32 = 372,                  /* tINT32  */
+    tINT3264 = 373,                /* tINT3264  */
+    tINT64 = 374,                  /* tINT64  */
+    tINTERFACE = 375,              /* tINTERFACE  */
+    tLCID = 376,                   /* tLCID  */
+    tLENGTHIS = 377,               /* tLENGTHIS  */
+    tLIBRARY = 378,                /* tLIBRARY  */
+    tLICENSED = 379,               /* tLICENSED  */
+    tLOCAL = 380,                  /* tLOCAL  */
+    tLONG = 381,                   /* tLONG  */
+    tMARSHALINGBEHAVIOR = 382,     /* tMARSHALINGBEHAVIOR  */
+    tMAYBE = 383,                  /* tMAYBE  */
+    tMESSAGE = 384,                /* tMESSAGE  */
+    tMETHODS = 385,                /* tMETHODS  */
+    tMODULE = 386,                 /* tMODULE  */
+    tMTA = 387,                    /* tMTA  */
+    tNAMESPACE = 388,              /* tNAMESPACE  */
+    tNOCODE = 389,                 /* tNOCODE  */
+    tNONBROWSABLE = 390,           /* tNONBROWSABLE  */
+    tNONCREATABLE = 391,           /* tNONCREATABLE  */
+    tNONE = 392,                   /* tNONE  */
+    tNONEXTENSIBLE = 393,          /* tNONEXTENSIBLE  */
+    tNOTIFY = 394,                 /* tNOTIFY  */
+    tNOTIFYFLAG = 395,             /* tNOTIFYFLAG  */
+    tNULL = 396,                   /* tNULL  */
+    tOBJECT = 397,                 /* tOBJECT  */
+    tODL = 398,                    /* tODL  */
+    tOLEAUTOMATION = 399,          /* tOLEAUTOMATION  */
+    tOPTIMIZE = 400,               /* tOPTIMIZE  */
+    tOPTIONAL = 401,               /* tOPTIONAL  */
+    tOUT = 402,                    /* tOUT  */
+    tOVERLOAD = 403,               /* tOVERLOAD  */
+    tPARTIALIGNORE = 404,          /* tPARTIALIGNORE  */
+    tPOINTERDEFAULT = 405,         /* tPOINTERDEFAULT  */
+    tPRAGMA_WARNING = 406,         /* tPRAGMA_WARNING  */
+    tPROGID = 407,                 /* tPROGID  */
+    tPROPERTIES = 408,             /* tPROPERTIES  */
+    tPROPGET = 409,                /* tPROPGET  */
+    tPROPPUT = 410,                /* tPROPPUT  */
+    tPROPPUTREF = 411,             /* tPROPPUTREF  */
+    tPROTECTED = 412,              /* tPROTECTED  */
+    tPROXY = 413,                  /* tPROXY  */
+    tPTR = 414,                    /* tPTR  */
+    tPUBLIC = 415,                 /* tPUBLIC  */
+    tRANGE = 416,                  /* tRANGE  */
+    tREADONLY = 417,               /* tREADONLY  */
+    tREF = 418,                    /* tREF  */
+    tREGISTER = 419,               /* tREGISTER  */
+    tREPRESENTAS = 420,            /* tREPRESENTAS  */
+    tREQUESTEDIT = 421,            /* tREQUESTEDIT  */
+    tREQUIRES = 422,               /* tREQUIRES  */
+    tRESTRICTED = 423,             /* tRESTRICTED  */
+    tRETVAL = 424,                 /* tRETVAL  */
+    tRUNTIMECLASS = 425,           /* tRUNTIMECLASS  */
+    tSAFEARRAY = 426,              /* tSAFEARRAY  */
+    tSHORT = 427,                  /* tSHORT  */
+    tSIGNED = 428,                 /* tSIGNED  */
+    tSINGLENODE = 429,             /* tSINGLENODE  */
+    tSIZEIS = 430,                 /* tSIZEIS  */
+    tSIZEOF = 431,                 /* tSIZEOF  */
+    tSMALL = 432,                  /* tSMALL  */
+    tSOURCE = 433,                 /* tSOURCE  */
+    tSTANDARD = 434,               /* tSTANDARD  */
+    tSTATIC = 435,                 /* tSTATIC  */
+    tSTRICTCONTEXTHANDLE = 436,    /* tSTRICTCONTEXTHANDLE  */
+    tSTRING = 437,                 /* tSTRING  */
+    tSTRUCT = 438,                 /* tSTRUCT  */
+    tSWITCH = 439,                 /* tSWITCH  */
+    tSWITCHIS = 440,               /* tSWITCHIS  */
+    tSWITCHTYPE = 441,             /* tSWITCHTYPE  */
+    tTHREADING = 442,              /* tTHREADING  */
+    tTRANSMITAS = 443,             /* tTRANSMITAS  */
+    tTRUE = 444,                   /* tTRUE  */
+    tTYPEDEF = 445,                /* tTYPEDEF  */
+    tUIDEFAULT = 446,              /* tUIDEFAULT  */
+    tUNION = 447,                  /* tUNION  */
+    tUNIQUE = 448,                 /* tUNIQUE  */
+    tUNSIGNED = 449,               /* tUNSIGNED  */
+    tUSESGETLASTERROR = 450,       /* tUSESGETLASTERROR  */
+    tUSERMARSHAL = 451,            /* tUSERMARSHAL  */
+    tUUID = 452,                   /* tUUID  */
+    tV1ENUM = 453,                 /* tV1ENUM  */
+    tVARARG = 454,                 /* tVARARG  */
+    tVERSION = 455,                /* tVERSION  */
+    tVIPROGID = 456,               /* tVIPROGID  */
+    tVOID = 457,                   /* tVOID  */
+    tWCHAR = 458,                  /* tWCHAR  */
+    tWIREMARSHAL = 459,            /* tWIREMARSHAL  */
+    tAPARTMENT = 460,              /* tAPARTMENT  */
+    tNEUTRAL = 461,                /* tNEUTRAL  */
+    tSINGLE = 462,                 /* tSINGLE  */
+    tFREE = 463,                   /* tFREE  */
+    tBOTH = 464,                   /* tBOTH  */
+    CAST = 465,                    /* CAST  */
+    PPTR = 466,                    /* PPTR  */
+    POS = 467,                     /* POS  */
+    NEG = 468,                     /* NEG  */
+    ADDRESSOF = 469                /* ADDRESSOF  */
   };
   typedef enum parser_tokentype parser_token_kind_t;
 #endif
@@ -318,7 +320,7 @@ union PARSER_STYPE
 	enum function_specifier function_specifier;
 	struct namespace *namespace;
 
-#line 322 "tools/widl/parser.tab.h"
+#line 324 "tools/widl/parser.tab.h"
 
 };
 typedef union PARSER_STYPE PARSER_STYPE;
@@ -351,13 +353,13 @@ int parser_parse (void);
 
 int parser_lex( PARSER_STYPE *yylval, PARSER_LTYPE *yylloc );
 void push_import( const char *fname, PARSER_LTYPE *yylloc );
-void pop_import( PARSER_LTYPE *yylloc );
+PARSER_LTYPE pop_import(void);
 
 # define YYLLOC_DEFAULT( cur, rhs, n ) \
         do { if (n) init_location( &(cur), &YYRHSLOC( rhs, 1 ), &YYRHSLOC( rhs, n ) ); \
              else init_location( &(cur), &YYRHSLOC( rhs, 0 ), NULL ); } while(0)
 
 
-#line 362 "tools/widl/parser.tab.h"
+#line 364 "tools/widl/parser.tab.h"
 
 #endif /* !YY_PARSER_TOOLS_WIDL_PARSER_TAB_H_INCLUDED  */

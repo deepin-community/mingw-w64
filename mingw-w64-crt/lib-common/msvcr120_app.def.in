@@ -7,8 +7,6 @@ LIBRARY "msvcr120_app.dll"
 EXPORTS
 
 #include "func.def.in"
-#define NO_GETPID_ALIAS
-#include "msvcrt-common.def.in"
 
 #ifdef DEF_X64
 $I10_OUTPUT
@@ -1033,10 +1031,8 @@ F_ARM32(_cscanf_l)
 F_ARM32(_cscanf_s)
 F_ARM32(_cscanf_s_l)
 _ctime32
-F32(ctime == _ctime32)
 _ctime32_s
 _ctime64
-F64(ctime == _ctime64)
 _ctime64_s
 F_ARM32(_ctype)
 F_ARM32(_cwait)
@@ -1104,19 +1100,15 @@ _fileno
 _findclose
 F_ARM32(_findfirst)
 F_X86_ANY(_findfirst32)
-F_I386(_findfirst == _findfirst32)
 F_X86_ANY(_findfirst32i64)
 _findfirst64
 F_X86_ANY(_findfirst64i32)
-F_X64(_findfirst == _findfirst64)
 F_ARM32(_findfirsti64)
 F_ARM32(_findnext)
 F_X86_ANY(_findnext32)
-F_I386(_findnext == _findnext32)
 F_X86_ANY(_findnext32i64)
 _findnext64
 F_X86_ANY(_findnext64i32)
-F_X64(_findnext == _findnext64)
 F_ARM32(_findnexti64)
 _finite
 F_NON_I386(_finitef)
@@ -1153,10 +1145,6 @@ F_X86_ANY(_fstat32)
 F_X86_ANY(_fstat32i64)
 _fstat64
 F_X86_ANY(_fstat64i32)
-F_I386(_fstat == _fstat32)
-F_I386(_fstati64 == _fstat32i64)
-F_X64(_fstat == _fstat64i32)
-F_X64(_fstati64 == _fstat64)
 F_ARM32(_fstati64)
 F_X86_ANY(_ftell_nolock)
 F_X86_ANY(_ftelli64)
@@ -1166,8 +1154,6 @@ _ftime32
 _ftime32_s
 _ftime64
 _ftime64_s
-F_I386(_ftime == _ftime32)
-F_X64(_ftime == _ftime64)
 F_I386(_ftol)
 _fullpath
 F_ARM32(_fullpath_dbg)
@@ -1222,10 +1208,8 @@ F_ARM32(_getwch)
 F_ARM32(_getwche)
 _gmtime32
 _gmtime32_s
-F32(gmtime == _gmtime32)
 _gmtime64
 _gmtime64_s
-F_X64(gmtime == _gmtime64)
 F_ARM32(_heapchk)
 F_ARM32(_heapmin)
 F_ARM32(_heapwalk)
@@ -1369,11 +1353,9 @@ F_X64(_local_unwind)
 F_I386(_local_unwind2)
 F_I386(_local_unwind4)
 _localtime32
-F32(localtime == _localtime32)
 _localtime32_s
 _localtime64
 _localtime64_s
-F64(localtime == _localtime64)
 _lock
 F_X86_ANY(_lock_file)
 _locking
@@ -1664,10 +1646,6 @@ F_X86_ANY(_stat32)
 F_X86_ANY(_stat32i64)
 _stat64
 F_X86_ANY(_stat64i32)
-F_I386(_stat == _stat32)
-F_I386(_stati64 == _stat32i64)
-F_X64(_stat = _stat64i32)
-F_X64(_stati64 = _stat64)
 F_ARM32(_stati64)
 _statusfp
 F_I386(_statusfp2)
@@ -1685,7 +1663,6 @@ _stricmp_l
 _stricoll
 _stricoll_l
 _strlwr
-strlwr == _strlwr
 _strlwr_l
 _strlwr_s
 _strlwr_s_l
@@ -1721,7 +1698,6 @@ _strupr_s
 _strupr_s_l
 _strxfrm_l
 _swab
-F_I386(swab == _swab)
 _swprintf
 _swprintf_c
 _swprintf_c_l
@@ -1738,8 +1714,6 @@ _tempnam
 F_ARM32(_tempnam_dbg)
 _time32
 _time64
-F32(time == _time32)
-F64(time == _time64)
 _timezone DATA
 _tolower
 _tolower_l
@@ -1848,7 +1822,6 @@ _wcsicmp_l
 _wcsicoll
 _wcsicoll_l
 _wcslwr
-wcslwr == _wcslwr
 _wcslwr_l
 _wcslwr_s
 _wcslwr_s_l
@@ -1885,11 +1858,9 @@ _wcsupr_s_l
 _wcsxfrm_l
 F_ARM32(_wctime)
 _wctime32
-F_I386(_wctime == _wctime32)
 _wctime32_s
 _wctime64
 _wctime64_s
-F_X64(_wctime == _wctime64)
 _wctomb_l
 _wctomb_s_l
 F_X64(_wctype DATA)
@@ -1907,19 +1878,15 @@ F_ARM32(_wexecvpe)
 _wfdopen
 F_ARM32(_wfindfirst)
 F_X86_ANY(_wfindfirst32)
-F_I386(_wfindfirst == _wfindfirst32)
 F_X86_ANY(_wfindfirst32i64)
 _wfindfirst64
 F_X86_ANY(_wfindfirst64i32)
-F_X64(_wfindfirst == _wfindfirst64)
 F_ARM32(_wfindfirsti64)
 F_ARM32(_wfindnext)
 F_X86_ANY(_wfindnext32)
-F_I386(_wfindnext == _wfindnext32)
 F_X86_ANY(_wfindnext32i64)
 _wfindnext64
 F_X86_ANY(_wfindnext64i32)
-F_X64(_wfindnext == _wfindnext64)
 F_ARM32(_wfindnexti64)
 _wfopen
 _wfopen_s
@@ -1975,12 +1942,8 @@ _wsplitpath_s
 F_ARM32(_wstat)
 F_X86_ANY(_wstat32)
 F_X86_ANY(_wstat32i64)
-F_I386(_wstat == _wstat32)
-F_I386(_wstati64 == _wstat32i64)
 _wstat64
 F_X86_ANY(_wstat64i32)
-F_X64(_wstat == _wstat64i32)
-F_X64(_wstati64 == _wstat64)
 F_ARM32(_wstati64)
 _wstrdate
 _wstrdate_s
@@ -2199,7 +2162,6 @@ F_NON_I386(fmodf)
 fopen
 fopen_s
 fprintf
-__ms_fprintf == fprintf
 fprintf_s
 fputc
 fputs
@@ -2212,17 +2174,14 @@ freopen
 freopen_s
 frexp DATA
 fscanf
-__ms_fscanf == fscanf
 fscanf_s
 fseek
 fsetpos
 ftell
 fwprintf
-__ms_fwprintf == fwprintf
 fwprintf_s
 fwrite
 fwscanf
-__ms_fwscanf == fwscanf
 fwscanf_s
 getc
 getchar
@@ -2349,7 +2308,6 @@ perror
 pow
 F_NON_I386(powf)
 printf
-__ms_printf == printf
 printf_s
 putc
 putchar
@@ -2386,7 +2344,6 @@ scalbnf
 scalbnl
 #endif
 scanf
-__ms_scanf == scanf
 scanf_s
 setbuf
 F_NON_I386(setjmp)
@@ -2398,13 +2355,11 @@ F_NON_I386(sinf)
 sinh
 F_NON_I386(sinhf)
 sprintf
-__ms_sprintf == sprintf
 sprintf_s
 sqrt
 F_NON_I386(sqrtf)
 srand
 sscanf
-__ms_sscanf == sscanf
 sscanf_s
 strcat
 strcat_s
@@ -2443,7 +2398,6 @@ strxfrm
 F_ARM32(swprintf)
 swprintf_s
 swscanf
-__ms_swscanf == swscanf
 swscanf_s
 F_ARM32(system)
 tan
@@ -2470,22 +2424,18 @@ ungetc
 ungetwc
 F_ARM32(utime)
 vfprintf
-__ms_vfprintf == vfprintf
 vfprintf_s
 F_X86_ANY(vfscanf)
 F_X86_ANY(vfscanf_s)
 vfwprintf
-__ms_vfwprintf == vfwprintf
 vfwprintf_s
 F_X86_ANY(vfwscanf)
 F_X86_ANY(vfwscanf_s)
 vprintf
-__ms_vprintf == vprintf
 vprintf_s
 F_X86_ANY(vscanf)
 F_X86_ANY(vscanf_s)
 vsprintf
-__ms_vsprintf == vsprintf
 vsprintf_s
 F_X86_ANY(vsscanf)
 F_X86_ANY(vsscanf_s)
@@ -2494,7 +2444,6 @@ vswprintf_s
 F_X86_ANY(vswscanf)
 F_X86_ANY(vswscanf_s)
 vwprintf
-__ms_vwprintf == vwprintf
 vwprintf_s
 F_X86_ANY(vwscanf)
 F_X86_ANY(vwscanf_s)
@@ -2544,8 +2493,13 @@ F_X86_ANY(wctype)
 F_X86_ANY(wmemcpy_s)
 F_X86_ANY(wmemmove_s)
 wprintf
-__ms_wprintf == wprintf
 wprintf_s
 wscanf
-__ms_wscanf == wscanf
 wscanf_s
+
+#define NO_GETPID_ALIAS
+#ifdef DEF_ARM32
+#define NO_STRCMPI_ALIAS
+#define FIXED_SIZE_SYMBOLS
+#endif
+#include "crt-aliases.def.in"

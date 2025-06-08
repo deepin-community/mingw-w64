@@ -118,7 +118,7 @@ static typelib_t *current_typelib;
 
 int parser_lex( PARSER_STYPE *yylval, PARSER_LTYPE *yylloc );
 void push_import( const char *fname, PARSER_LTYPE *yylloc );
-void pop_import( PARSER_LTYPE *yylloc );
+PARSER_LTYPE pop_import(void);
 
 # define YYLLOC_DEFAULT( cur, rhs, n ) \
         do { if (n) init_location( &(cur), &YYRHSLOC( rhs, 1 ), &YYRHSLOC( rhs, n ) ); \
@@ -196,9 +196,11 @@ void pop_import( PARSER_LTYPE *yylloc );
 %token tDECLARE
 %token tDECODE tDEFAULT tDEFAULTBIND
 %token tDELEGATE
+%token tDEFAULT_OVERLOAD
 %token tDEFAULTCOLLELEM
 %token tDEFAULTVALUE
 %token tDEFAULTVTABLE
+%token tDEPRECATED
 %token tDISABLECONSISTENCYCHECK tDISPLAYBIND
 %token tDISPINTERFACE
 %token tDLLNAME tDONTFREE tDOUBLE tDUAL
@@ -298,6 +300,7 @@ void pop_import( PARSER_LTYPE *yylloc );
 %type <expr> static_attr
 %type <expr> activatable_attr
 %type <expr> composable_attr
+%type <expr> deprecated_attr
 %type <type> delegatedef
 %type <stgclass> storage_cls_spec
 %type <type_qualifier> type_qualifier m_type_qual_list
@@ -512,7 +515,7 @@ cppquote: tCPPQUOTE '(' aSTRING ')'		{ $$ = $3; }
 
 import_start: tIMPORT aSTRING ';'		{ $$ = $2; push_import( $2, &yylloc ); }
 	;
-import: import_start imp_statements aEOF	{ pop_import( &yylloc ); }
+import: import_start imp_statements aEOF	{ yyloc = pop_import(); }
 	;
 
 importlib: tIMPORTLIB '(' aSTRING ')'
@@ -628,6 +631,11 @@ composable_attr
                                                 }
         ;
 
+deprecated_attr
+        : aSTRING ',' aIDENTIFIER ',' contract_req
+                                                { $$ = make_expr3( EXPR_MEMBER, make_exprs( EXPR_STRLIT, $1 ), make_exprs( EXPR_IDENTIFIER, $3 ), $5 ); }
+        ;
+
 attribute
         : %empty                                { $$ = NULL; }
         | tACTIVATABLE '(' activatable_attr ')' { $$ = attr_ptr( @$, ATTR_ACTIVATABLE, $3 ); }
@@ -655,10 +663,12 @@ attribute
                                                 }
         | tDECODE                               { $$ = attr_int( @$, ATTR_DECODE, 0 ); }
         | tDEFAULT                              { $$ = attr_int( @$, ATTR_DEFAULT, 0 ); }
+        | tDEFAULT_OVERLOAD                     { $$ = attr_int( @$, ATTR_DEFAULT_OVERLOAD, 0 ); }
         | tDEFAULTBIND                          { $$ = attr_int( @$, ATTR_DEFAULTBIND, 0 ); }
         | tDEFAULTCOLLELEM                      { $$ = attr_int( @$, ATTR_DEFAULTCOLLELEM, 0 ); }
         | tDEFAULTVALUE '(' expr_const ')'      { $$ = attr_ptr( @$, ATTR_DEFAULTVALUE, $3 ); }
         | tDEFAULTVTABLE                        { $$ = attr_int( @$, ATTR_DEFAULTVTABLE, 0 ); }
+        | tDEPRECATED '(' deprecated_attr ')'   { $$ = attr_ptr( @$, ATTR_DEPRECATED, $3 ); }
         | tDISABLECONSISTENCYCHECK              { $$ = attr_int( @$, ATTR_DISABLECONSISTENCYCHECK, 0 ); }
         | tDISPLAYBIND                          { $$ = attr_int( @$, ATTR_DISPLAYBIND, 0 ); }
         | tDLLNAME '(' aSTRING ')'              { $$ = attr_ptr( @$, ATTR_DLLNAME, $3 ); }
@@ -2260,7 +2270,7 @@ char *gen_name(void)
 
   if (! file_id)
   {
-    char *dst = replace_extension( get_basename(input_idl_name), ".idl", "" );
+    char *dst = replace_extension( idl_name, ".idl", "" );
     file_id = dst;
 
     for (; *dst; ++dst)

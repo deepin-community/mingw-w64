@@ -95,7 +95,9 @@ IDL_SRCS = \
   include/ctxtcall.idl \
   include/d3d10.idl \
   include/d3d10_1.idl \
+  include/d3d10effect.idl \
   include/d3d10sdklayers.idl \
+  include/d3d10shader.idl \
   include/d3d11.idl \
   include/d3d11_1.idl \
   include/d3d11_2.idl \
@@ -106,6 +108,7 @@ IDL_SRCS = \
   include/d3d12.idl \
   include/d3d12sdklayers.idl \
   include/d3d12shader.idl \
+  include/d3d12video.idl \
   include/d3dcommon.idl \
   include/dbgprop.idl \
   include/dcommon.idl \
@@ -156,6 +159,7 @@ IDL_SRCS = \
   include/icftypes.idl \
   include/icodecapi.idl \
   include/iketypes.idl \
+  include/inputpaneinterop.idl \
   include/inputscope.idl \
   include/inspectable.idl \
   include/ivectorchangedeventargs.idl \
@@ -168,6 +172,7 @@ IDL_SRCS = \
   include/mfd3d12.idl \
   include/mfidl.idl \
   include/mfmediacapture.idl \
+  include/mfmediaengine.idl \
   include/mfobjects.idl \
   include/mfplay.idl \
   include/mfreadwrite.idl \
@@ -200,6 +205,7 @@ IDL_SRCS = \
   include/objidlbase.idl \
   include/oleidl.idl \
   include/optary.idl \
+  include/portabledeviceapi.idl \
   include/portabledevicetypes.idl \
   include/propidl.idl \
   include/propsys.idl \
@@ -275,9 +281,15 @@ IDL_SRCS = \
   include/wsdxml.idl \
   include/wsmandisp.idl \
   include/wtypesbase.idl \
+  include/windows.applicationmodel.core.idl \
+  include/windows.applicationmodel.idl \
+  include/windows.devices.bluetooth.idl \
   include/windows.devices.enumeration.idl \
+  include/windows.devices.geolocation.idl \
   include/windows.devices.haptics.idl \
   include/windows.devices.power.idl \
+  include/windows.devices.radios.idl \
+  include/windows.devices.usb.idl \
   include/windows.foundation.idl \
   include/windows.foundation.collections.idl \
   include/windows.foundation.metadata.idl \
@@ -288,23 +300,39 @@ IDL_SRCS = \
   include/windows.gaming.ui.idl \
   include/windows.globalization.idl \
   include/windows.graphics.capture.idl \
+  include/windows.graphics.capture.interop.idl \
   include/windows.graphics.directx.idl \
   include/windows.graphics.directx.direct3d11.idl \
   include/windows.graphics.effects.idl \
   include/windows.graphics.holographic.idl \
-  include/windows.media.idl \
+  include/windows.graphics.imaging.idl \
+  include/windows.management.deployment.idl \
+  include/windows.media.capture.idl \
   include/windows.media.closedcaptioning.idl \
   include/windows.media.devices.idl \
+  include/windows.media.effects.idl \
+  include/windows.media.faceanalysis.idl \
+  include/windows.media.idl \
+  include/windows.media.render.idl \
   include/windows.media.speechrecognition.idl \
   include/windows.media.speechsynthesis.idl \
+  include/windows.networking.connectivity.idl \
+  include/windows.networking.idl \
   include/windows.perception.spatial.idl \
   include/windows.perception.spatial.surfaces.idl \
+  include/windows.security.authentication.onlineid.idl \
   include/windows.security.credentials.idl \
+  include/windows.security.credentials.ui.idl \
   include/windows.security.cryptography.idl \
+  include/windows.security.exchangeactivesyncprovisioning.idl \
+  include/windows.security.isolation.idl \
   include/windows.storage.idl \
+  include/windows.storage.fileproperties.idl \
+  include/windows.storage.search.idl \
   include/windows.storage.streams.idl \
   include/windows.system.idl \
   include/windows.system.power.idl \
+  include/windows.system.profile.idl \
   include/windows.system.profile.systemmanufacturers.idl \
   include/windows.system.threading.idl \
   include/windows.system.userprofile.idl \
@@ -313,12 +341,14 @@ IDL_SRCS = \
   include/windows.ui.composition.interop.idl \
   include/windows.ui.core.idl \
   include/windows.ui.viewmanagement.idl \
+  include/windows.ui.xaml.hosting.desktopwindowxamlsource.idl \
   include/windowscontracts.idl \
   include/wmcodecdsp.idl \
   include/wmdrmsdk.idl \
   include/wpcapi.idl \
   include/wtypes.idl \
   include/wuapi.idl \
+  include/xamlom.idl \
   include/xapo.idl \
   include/xaudio2.idl \
   include/xaudio2fx.idl \

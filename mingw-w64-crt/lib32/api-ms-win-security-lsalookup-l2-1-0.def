@@ -7,3 +7,4 @@ LookupAccountSidW@28
 LookupPrivilegeDisplayNameW@20
 LookupPrivilegeNameW@16
 LookupPrivilegeValueW@12
+LsaEnumerateTrustedDomains@20

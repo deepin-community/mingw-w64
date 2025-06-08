@@ -49,8 +49,6 @@ libwinstorecompat_a_SOURCES = \
   $(NULL)
 
 libwindowsappcompat_a_SOURCES = \
-  src/beginthread.c \
-  src/GetModuleHandle.c \
   src/LoadLibraryW.c \
   src/CreateFileW.c \
   src/UnhandledExceptionFilter.c \
@@ -59,7 +57,6 @@ libwindowsappcompat_a_SOURCES = \
   src/GetFileSize.c \
   src/SHGetFolderPathW.c \
   src/QueueTimer.c \
-  src/Crypto.c \
   src/GetStartupInfo.c \
   src/EnumProcessModules.c \
   src/RtlAddFunctionTable.c \
@@ -68,7 +65,6 @@ libwindowsappcompat_a_SOURCES = \
   src/RtlRestoreContext.c \
   src/GetUserName.c \
   src/getpid.c \
-  src/GetFileInformationByHandle.c \
   src/SystemFunction036.c \
   $(NULL)
 libwindowsappcompat_a_CFLAGS = $(AM_CFLAGS) -D_WIN32_WINNT=_WIN32_WINNT_WIN10

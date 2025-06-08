@@ -7,4 +7,5 @@ CreateSemaphoreExA
 CreateWaitableTimerA
 CreateWaitableTimerExA
 OpenMutexA
+OpenSemaphoreA
 OpenWaitableTimerA

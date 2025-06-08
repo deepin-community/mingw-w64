@@ -20,9 +20,50 @@
    DEALINGS IN THE SOFTWARE.
 */
 
+#include <windows.h>
 #include "pthread.h"
-#include "windows.h"
 #include "misc.h"
+
+void (WINAPI *_pthread_get_system_time_best_as_file_time) (LPFILETIME) = NULL;
+static ULONGLONG (WINAPI *_pthread_get_tick_count_64) (VOID);
+
+#if defined(__GNUC__) || defined(__clang__)
+__attribute__((constructor))
+#endif
+static void winpthreads_init(void)
+{
+    HMODULE mod = GetModuleHandleA("kernel32.dll");
+    if (mod)
+    {
+        _pthread_get_tick_count_64 =
+            (ULONGLONG (WINAPI *)(VOID))(void*) GetProcAddress(mod, "GetTickCount64");
+
+        /* <1us precision on Windows 10 */
+        _pthread_get_system_time_best_as_file_time =
+            (void (WINAPI *)(LPFILETIME))(void*) GetProcAddress(mod, "GetSystemTimePreciseAsFileTime");
+    }
+
+    if (!_pthread_get_system_time_best_as_file_time)
+        /* >15ms precision on Windows 10 */
+        _pthread_get_system_time_best_as_file_time = GetSystemTimeAsFileTime;
+}
+
+#if defined(_MSC_VER) && !defined(__clang__)
+/* Force a reference to __xc_t to prevent whole program optimization
+ * from discarding the variable. */
+
+/* On x86, symbols are prefixed with an underscore. */
+# if defined(_M_IX86)
+#   pragma comment(linker, "/include:___xc_t")
+# else
+#   pragma comment(linker, "/include:__xc_t")
+# endif
+
+#pragma section(".CRT$XCT", long, read)
+__declspec(allocate(".CRT$XCT"))
+extern const _PVFV __xc_t;
+const _PVFV __xc_t = winpthreads_init;
+#endif
 
 unsigned long long _pthread_time_in_ms(void)
 {
@@ -55,10 +96,9 @@ unsigned long long _pthread_rel_time_in_ms(const struct timespec *ts)
 static unsigned long long
 _pthread_get_tick_count (long long *frequency)
 {
-#if defined (_WIN32_WINNT) && (_WIN32_WINNT >= _WIN32_WINNT_VISTA)
-  (void) frequency; /* unused */
-  return GetTickCount64 ();
-#else
+  if (_pthread_get_tick_count_64 != NULL)
+    return _pthread_get_tick_count_64 ();
+
   LARGE_INTEGER freq, timestamp;
 
   if (*frequency == 0)
@@ -74,7 +114,6 @@ _pthread_get_tick_count (long long *frequency)
 
   /* Fallback */
   return GetTickCount ();
-#endif
 }
 
 /* A wrapper around WaitForSingleObject() that ensures that

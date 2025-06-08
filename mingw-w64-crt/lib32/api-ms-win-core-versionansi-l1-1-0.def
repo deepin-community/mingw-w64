@@ -4,4 +4,5 @@ EXPORTS
 
 GetFileVersionInfoExA@20
 GetFileVersionInfoSizeExA@12
+VerFindFileA@32
 VerQueryValueA@16
