@@ -12,8 +12,9 @@ cpp_nowarn := $(foreach w,$(mute_warn),-Wno-$(w))
 export DEB_CPPFLAGS_MAINT_APPEND = $(cpp_nowarn)
 
 # Hardening is for host binaries only (no support in targets for now)
+# Don't force 64-bit time_t
 export DEB_BUILD_MAINT_OPTIONS := hardening=+all optimize=+lto
-TARGET_DEB_BUILD_OPTIONS := hardening=-all optimize=-lto
+TARGET_DEB_BUILD_OPTIONS := hardening=-all optimize=-lto abi=-time64
 
 ifeq (,$(filter terse,$(DEB_BUILD_OPTIONS)))
 export DH_VERBOSE := 1
@@ -28,13 +29,14 @@ tmpdst := $(build)/tmp
 # Target architectures
 target32 := i686-w64-mingw32
 target64 := x86_64-w64-mingw32
-targets := $(target32) $(target64)
+targetucrt := x86_64-w64-mingw32ucrt
+targets := $(target32) $(target64) $(targetucrt)
 
 # Host architecture
 host = $(DEB_HOST_GNU_TYPE)
 
 # Host-based tools
-tools_host := gendef genidl genlib genpeimg
+tools_host := gendef genidl genpeimg
 # Targetted tools
 tools_target := widl
 
@@ -85,7 +87,8 @@ $(stamp)/$(host)~$(host)~tools~gendef~configure: \
 	  --host=$(call rule_host,$(*)~tools~gendef) \
 	  --target=$(call rule_target,$(*)~tools~gendef) \
 	  --prefix=/usr \
-	  --with-mangle='$(tmpdst)/usr'
+	  --with-mangle='$(tmpdst)/usr' \
+	  --with-default-msvcrt=$(if $(filter $(call rule_target,$(*)~tools~gendef),$(targetucrt)),ucrt,msvcrt)
 	touch '$(stamp)/$(*)~tools~gendef~configure'
 
 # genlib requires libmangle and is installed as mingw-genlib
@@ -102,7 +105,8 @@ $(stamp)/$(host)~$(host)~tools~genlib~configure: \
 	  --target=$(call rule_target,$(*)~tools~genlib) \
 	  --program-prefix=mingw- \
 	  --prefix=/usr \
-	  --with-mangle'=$(tmpdst)/usr'
+	  --with-mangle'=$(tmpdst)/usr' \
+	  --with-default-msvcrt=$(if $(filter $(call rule_target,$(*)~tools~genlib),$(targetucrt)),ucrt,msvcrt)
 	touch '$(stamp)/$(*)~tools~genlib~configure'
 
 ######################################################################
@@ -117,7 +121,8 @@ $(stamp)/%~headers~configure: \
 	'$(call source_folder,$(*)~headers)/configure' \
 	  --host=$(call rule_host,$(*)~headers) \
 	  --target=$(call rule_target,$(*)~headers) \
-	  --prefix=/usr/$(call rule_target,$(*)~headers)
+	  --prefix=/usr/$(call rule_target,$(*)~headers) \
+	  --with-default-msvcrt=$(if $(filter $(call rule_target,$(*)~headers),$(targetucrt)),ucrt,msvcrt)
 	touch '$(stamp)/$(*)~headers~configure'
 
 # Override CRT configuration to avoid multilib builds
@@ -132,8 +137,9 @@ $(foreach t,$(targets),$(stamp)/$(t)~$(t)~crt~configure): \
 	  --host=$(call rule_host,$(*)~crt) \
 	  --target=$(call rule_target,$(*)~crt) \
 	  --prefix=/usr/$(call rule_target,$(*)~crt) \
-	  --$(if $(filter $(call rule_target,$(*)~crt),$(target64)),enable,disable)-lib64 \
-	  --$(if $(filter $(call rule_target,$(*)~crt),$(target32)),enable,disable)-lib32
+	  --$(if $(filter $(call rule_target,$(*)~crt),$(target32)),disable,enable)-lib64 \
+	  --$(if $(filter $(call rule_target,$(*)~crt),$(target32)),enable,disable)-lib32 \
+	  --with-default-msvcrt=$(if $(filter $(call rule_target,$(*)~crt),$(targetucrt)),ucrt,msvcrt)
 	touch '$(stamp)/$(*)~crt~configure'
 
 # Special target to call autoreconf only and only when required
@@ -207,6 +213,7 @@ $(stamp)/%~configure: $(stamp)/%~preconf
 		  --host=$(call rule_host,$(*)) \
 		  --target=$(call rule_target,$(*)) \
 		  --prefix=/usr \
+		  --with-default-msvcrt=$(if $(filter $(call rule_target,$(*)~crt),$(targetucrt)),ucrt,msvcrt) \
 		; \
 	else \
 		'$(call source_folder,$(*))/configure' \
@@ -214,6 +221,7 @@ $(stamp)/%~configure: $(stamp)/%~preconf
 		  --target=$(call rule_target,$(*)) \
 		  --prefix=/usr/$(call rule_target,$(*)) \
 		  --with-widl-includedir=/usr/$(call rule_target,$(*))/include \
+		  --with-default-msvcrt=$(if $(filter $(call rule_target,$(*)~crt),$(targetucrt)),ucrt,msvcrt) \
 		; \
 	fi
 	touch '$(stamp)/$(*)~configure'

@@ -5,9 +5,6 @@
 ;
 LIBRARY "MSVCR71.dll"
 EXPORTS
-
-#include "msvcrt-common.def.in"
-
 ; public: __thiscall __non_rtti_object::__non_rtti_object(class __non_rtti_object const &)
 ??0__non_rtti_object@@QAE@ABV0@@Z ; has WINAPI (@4)
 ; public: __thiscall __non_rtti_object::__non_rtti_object(char const *)
@@ -232,15 +229,15 @@ __winitenv DATA
 _abnormal_termination
 _access
 _acmdln DATA
-_adj_fdiv_m16i@4
-_adj_fdiv_m32@4
-_adj_fdiv_m32i@4
-_adj_fdiv_m64@8
+_adj_fdiv_m16i ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdiv_m32 ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdiv_m32i ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdiv_m64 ; msvc symbol is without decoration but callee pop stack (like stdcall @8)
 _adj_fdiv_r
-_adj_fdivr_m16i@4
-_adj_fdivr_m32@4
-_adj_fdivr_m32i@4
-_adj_fdivr_m64@8
+_adj_fdivr_m16i ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdivr_m32 ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdivr_m32i ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdivr_m64 ; msvc symbol is without decoration but callee pop stack (like stdcall @8)
 _adj_fpatan
 _adj_fprem
 _adj_fprem1
@@ -256,7 +253,6 @@ _amsg_exit
 _assert
 _atodbl
 _atoi64
-atoll == _atoi64
 _atoldbl
 _beep
 _beginthread
@@ -580,11 +576,7 @@ _strrev
 _strset
 _strtime
 _strtoi64
-strtoll == _strtoi64
-strtoimax == _strtoi64
 _strtoui64
-strtoull == _strtoui64
-strtoumax == _strtoui64
 _strupr
 _swab
 _sys_errlist DATA
@@ -900,3 +892,10 @@ wcsxfrm
 wctomb
 wprintf
 wscanf
+
+#define PRE_C95_SWPRINTF
+#define FIXED_SIZE_SYMBOLS
+#define NO_STRCMPI_ALIAS
+#define WITH_ATOLL_ALIAS
+#define WITH_STRTO64_ALIAS
+#include "crt-aliases.def.in"

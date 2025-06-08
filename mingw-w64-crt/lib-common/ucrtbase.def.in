@@ -2,8 +2,6 @@ LIBRARY "ucrtbase.dll"
 EXPORTS
 
 #include "func.def.in"
-#define UCRTBASE
-#include "msvcrt-common.def.in"
 
 #ifdef DEF_I386
 _CIacos
@@ -327,12 +325,10 @@ _filelength
 _filelengthi64
 _fileno
 _findclose
-_findfirst == _findfirst64
 _findfirst32
 _findfirst32i64
 _findfirst64
 _findfirst64i32
-_findnext == _findnext64
 _findnext32
 _findnext32i64
 _findnext64
@@ -364,14 +360,12 @@ _fstat64i32
 _ftell_nolock
 _ftelli64
 _ftelli64_nolock
-_ftime == _ftime64
 _ftime32
 _ftime32_s
 _ftime64
 _ftime64_s
 F_I386(_ftol)
 _fullpath
-_futime == _futime64
 _futime32
 _futime64
 _fwrite_nolock
@@ -1944,7 +1938,6 @@ _stat64
 _stat64i32
 _statusfp
 F_I386(_statusfp2)
-_strcmpi == _stricmp
 _strcoll_l
 _strdate
 _strdate_s
@@ -2027,7 +2020,6 @@ _unlink
 _unloaddll
 _unlock_file
 _unlock_locales
-_utime == _utime64
 _utime32
 _utime64
 _waccess
@@ -2171,7 +2163,6 @@ _wtol_l
 _wtoll
 _wtoll_l
 _wunlink
-_wutime == _wutime64
 _wutime32
 _wutime64
 _y0
@@ -2180,25 +2171,21 @@ _yn
 abort
 abs
 acos
-F_NON_I386(acosf F_X86_ANY(DATA))
-F_ARM_ANY(acosl == acos)
+F_NON_I386(acosf)
 acosh
 acoshf
 acoshl F_X86_ANY(DATA)
 asctime
 asctime_s
 asin
-F_NON_I386(asinf F_X86_ANY(DATA))
-F_ARM_ANY(asinl == asin)
+F_NON_I386(asinf)
 asinh
 asinhf
 asinhl F_X86_ANY(DATA)
 atan
-atan2 F_X86_ANY(DATA)
-F_NON_I386(atan2f F_X86_ANY(DATA))
-F_ARM_ANY(atan2l == atan2)
-F_NON_I386(atanf F_X86_ANY(DATA))
-F_ARM_ANY(atanl == atan)
+atan2
+F_NON_I386(atan2f)
+F_NON_I386(atanf)
 atanh
 atanhf
 atanhl F_X86_ANY(DATA)
@@ -2245,9 +2232,8 @@ ccosh
 ccoshf
 ccoshl
 ccosl
-ceil F_X86_ANY(DATA)
-F_NON_I386(ceilf F_X86_ANY(DATA))
-F_ARM_ANY(ceill == ceil)
+ceil
+F_NON_I386(ceilf)
 cexp
 cexpf
 cexpl
@@ -2269,11 +2255,10 @@ conjl
 copysign
 copysignf
 copysignl F_X86_ANY(DATA)
-cos F_X86_ANY(DATA)
-F_NON_I386(cosf F_X86_ANY(DATA))
-F_ARM_ANY(cosl == cos)
+cos
+F_NON_I386(cosf)
 cosh
-F_NON_I386(coshf DATA)
+F_NON_I386(coshf)
 cpow
 cpowf
 cpowl
@@ -2306,16 +2291,15 @@ erfcl F_X86_ANY(DATA)
 erff
 erfl F_X86_ANY(DATA)
 exit
-exp F_X86_ANY(DATA)
+exp
 exp2
 exp2f
 exp2l F_X86_ANY(DATA)
-F_NON_I386(expf F_X86_ANY(DATA))
-F_ARM_ANY(expl == exp)
+F_NON_I386(expf)
 expm1
 expm1f
 expm1l F_X86_ANY(DATA)
-fabs DATA
+fabs
 F_ARM_ANY(fabsf)
 fclose
 fdim
@@ -2341,9 +2325,8 @@ fgetpos
 fgets
 fgetwc
 fgetws
-floor F_X86_ANY(DATA)
-F_NON_I386(floorf F_X86_ANY(DATA))
-F_ARM_ANY(floorl == floor)
+floor
+F_NON_I386(floorf)
 fma
 fmaf
 fmal F_X86_ANY(DATA)
@@ -2353,9 +2336,8 @@ fmaxl F_X86_ANY(DATA)
 fmin
 fminf
 fminl F_X86_ANY(DATA)
-fmod F_X86_ANY(DATA)
-F_NON_I386(fmodf F_X86_ANY(DATA))
-F_ARM_ANY(fmodl == fmod)
+fmod
+F_NON_I386(fmodf)
 fopen
 fopen_s
 fputc
@@ -2415,7 +2397,7 @@ iswupper
 iswxdigit
 isxdigit
 labs
-ldexp F_X86_ANY(DATA)
+ldexp
 ldiv
 ; The UCRT lgamma functions don't set/provide the signgam variable like
 ; the mingw ones do. Therefore prefer the libmingwex version instead.
@@ -2431,10 +2413,9 @@ llround
 llroundf
 llroundl F_X86_ANY(DATA)
 localeconv
-log F_X86_ANY(DATA)
+log
 log10
-F_NON_I386(log10f F_X86_ANY(DATA))
-F_ARM_ANY(log10l == log10)
+F_NON_I386(log10f)
 log1p
 log1pf
 log1pl F_X86_ANY(DATA)
@@ -2444,8 +2425,7 @@ log2l F_X86_ANY(DATA)
 logb
 logbf
 logbl F_X86_ANY(DATA)
-F_NON_I386(logf F_X86_ANY(DATA))
-F_ARM_ANY(logl == log)
+F_NON_I386(logf)
 longjmp
 lrint
 lrintf
@@ -2471,8 +2451,8 @@ memcpy_s
 memmove
 memmove_s
 memset
-modf DATA
-F_NON_I386(modff DATA)
+modf
+F_NON_I386(modff)
 nan
 nanf
 nanl F_X86_ANY(DATA)
@@ -2491,9 +2471,8 @@ norm
 normf
 norml
 perror
-pow F_X86_ANY(DATA)
-F_NON_I386(powf F_X86_ANY(DATA))
-F_ARM_ANY(powl == pow)
+pow
+F_NON_I386(powf)
 putc
 putchar
 puts
@@ -2534,20 +2513,18 @@ F_X64(setjmp)
 setlocale
 setvbuf
 signal
-sin F_X86_ANY(DATA)
-F_NON_I386(sinf F_X86_ANY(DATA))
-F_ARM_ANY(sinl == sin)
+sin
+F_NON_I386(sinf)
 ; if we implement sinh, we can set it DATA only.
 sinh
-F_NON_I386(sinhf DATA)
-sqrt DATA
-F_NON_I386(sqrtf DATA)
+F_NON_I386(sinhf)
+sqrt
+F_NON_I386(sqrtf)
 srand
 strcat
 strcat_s
 strchr
 strcmp
-strcmpi == _stricmp
 strcoll
 strcpy
 strcpy_s
@@ -2581,8 +2558,7 @@ strtoumax
 strxfrm
 system
 tan
-F_NON_I386(tanf F_X86_ANY(DATA))
-F_ARM_ANY(tanl == tan)
+F_NON_I386(tanf)
 ; if we implement tanh, we can set it to DATA only.
 tanh
 F_NON_I386(tanhf)
@@ -2605,7 +2581,6 @@ truncl F_X86_ANY(DATA)
 unexpected
 ungetc
 ungetwc
-utime == _utime64
 wcrtomb
 wcrtomb_s
 wcscat
@@ -2653,10 +2628,6 @@ wctrans
 wctype
 wmemcpy_s
 wmemmove_s
-; These functions may satisfy configure scripts.
-ctime == _ctime64
-gmtime == _gmtime64
-localtime == _localtime64
-mktime == _mktime64
-time == _time64
-timespec_get == _timespec64_get
+
+#define UCRTBASE
+#include "crt-aliases.def.in"

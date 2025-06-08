@@ -4,7 +4,6 @@ EXPORTS
 
 GetComputerNameExA
 GetComputerNameExW
-GetDynamicTimeZoneInformation
 GetLocalTime
 GetLogicalProcessorInformation
 GetLogicalProcessorInformationEx
@@ -14,10 +13,10 @@ GetSystemInfo
 GetSystemTime
 GetSystemTimeAdjustment
 GetSystemTimeAsFileTime
+GetSystemWindowsDirectoryA
+GetSystemWindowsDirectoryW
 GetTickCount
 GetTickCount64
-GetTimeZoneInformation
-GetTimeZoneInformationForYear
 GetVersion
 GetVersionExA
 GetVersionExW
@@ -25,6 +24,3 @@ GetWindowsDirectoryA
 GetWindowsDirectoryW
 GlobalMemoryStatusEx
 SetLocalTime
-SystemTimeToFileTime
-SystemTimeToTzSpecificLocalTime
-TzSpecificLocalTimeToSystemTime

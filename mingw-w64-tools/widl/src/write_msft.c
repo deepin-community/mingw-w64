@@ -36,8 +36,6 @@
 #include <ctype.h>
 #include <time.h>
 
-#define NONAMELESSUNION
-
 #include "widl.h"
 #include "typelib.h"
 #include "typelib_struct.h"
@@ -1231,6 +1229,9 @@ static void write_default_value(msft_typelib_t *typelib, type_t *type, expr_t *e
         case VT_UINT:
         case VT_HRESULT:
             break;
+        case VT_USERDEFINED:
+            vt = VT_I4;
+            break;
         case VT_VARIANT: {
             switch (expr->type) {
             case EXPR_DOUBLE:
@@ -1418,6 +1419,7 @@ static int add_func_desc(msft_typeinfo_t* typeinfo, var_t *func, int index)
             break;
         case ATTR_OUT:
             break;
+        case ATTR_DEFAULT_OVERLOAD:
         case ATTR_OVERLOAD:
             break;
         case ATTR_PROPGET:
@@ -2225,6 +2227,9 @@ static void add_structure_typeinfo(msft_typelib_t *typelib, type_t *structure)
     if (-1 < structure->typelib_idx)
         return;
 
+    if (!structure->name)
+        structure->name = gen_name();
+
     structure->typelib_idx = typelib->typelib_header.nrtypeinfos;
     msft_typeinfo = create_msft_typeinfo(typelib, TKIND_RECORD, structure->name, structure->attrs);
     msft_typeinfo->typeinfo->size = 0;
@@ -2752,7 +2757,6 @@ int create_msft_typelib(typelib_t *typelib)
     const statement_t *stmt;
     const attr_t *attr;
     time_t cur_time;
-    char *time_override;
     unsigned int version = 7 << 24 | 555; /* 7.00.0555 */
     static const struct uuid midl_time_guid    = {0xde77ba63,0x517c,0x11d1,{0xa2,0xda,0x00,0x00,0xf8,0x77,0x3c,0xe9}};
     static const struct uuid midl_version_guid = {0xde77ba64,0x517c,0x11d1,{0xa2,0xda,0x00,0x00,0xf8,0x77,0x3c,0xe9}};
@@ -2808,11 +2812,13 @@ int create_msft_typelib(typelib_t *typelib)
         }
     }
 
-    /* midl adds two sets of custom data to the library: the current unix time
-       and midl's version number */
-    time_override = getenv( "WIDL_TIME_OVERRIDE");
-    cur_time = time_override ? atol( time_override) : time(NULL);
-    sprintf(info_string, "Created by WIDL version %s at %s", PACKAGE_VERSION, ctime(&cur_time));
+    /* midl adds three sets of custom data to the library:
+     * - 2147483647 (INT_MAX, previously the current Unix time)
+     * - midl's version number
+     * - a string representation of those
+     */
+    cur_time = 2147483647;
+    sprintf(info_string, "Created by WIDL version %s at %s", PACKAGE_VERSION, asctime(gmtime(&cur_time)));
     set_custdata(msft, &midl_info_guid, VT_BSTR, info_string, &msft->typelib_header.CustomDataOffset);
     set_custdata(msft, &midl_time_guid, VT_UI4, &cur_time, &msft->typelib_header.CustomDataOffset);
     set_custdata(msft, &midl_version_guid, VT_UI4, &version, &msft->typelib_header.CustomDataOffset);

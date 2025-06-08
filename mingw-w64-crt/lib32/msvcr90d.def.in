@@ -5,9 +5,7 @@
 ;
 LIBRARY "MSVCR90D.dll"
 EXPORTS
-
-#include "msvcrt-common.def.in"
-
+#include "func.def.in"
 ; public: __thiscall std::__non_rtti_object::__non_rtti_object(class std::__non_rtti_object const &)
 ??0__non_rtti_object@std@@QAE@ABV01@@Z ; has WINAPI (@4)
 ; public: __thiscall std::__non_rtti_object::__non_rtti_object(char const *)
@@ -270,8 +268,8 @@ __daylight
 __dllonexit
 __doserrno
 __dstbias
-___fls_getvalue@4@4
-___fls_setvalue@8@8
+DECORATED_EXPORT(__fls_getvalue@4)
+DECORATED_EXPORT(__fls_setvalue@8)
 __fpecode
 __free_locale
 __get_app_type
@@ -372,20 +370,18 @@ __wgetmainargs
 __winitenv DATA
 _abnormal_termination
 _abs64
-llabs == _abs64
-imaxabs == _abs64
 _access
 _access_s
 _acmdln DATA
-_adj_fdiv_m16i@4
-_adj_fdiv_m32@4
-_adj_fdiv_m32i@4
-_adj_fdiv_m64@8
+_adj_fdiv_m16i ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdiv_m32 ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdiv_m32i ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdiv_m64 ; msvc symbol is without decoration but callee pop stack (like stdcall @8)
 _adj_fdiv_r ; Check!!! Couldn't determine function argument count. Function doesn't return. 
-_adj_fdivr_m16i@4
-_adj_fdivr_m32@4
-_adj_fdivr_m32i@4
-_adj_fdivr_m64@8
+_adj_fdivr_m16i ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdivr_m32 ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdivr_m32i ; msvc symbol is without decoration but callee pop stack (like stdcall @4)
+_adj_fdivr_m64 ; msvc symbol is without decoration but callee pop stack (like stdcall @8)
 _adj_fpatan
 _adj_fprem
 _adj_fprem1
@@ -416,9 +412,7 @@ _atof_l
 _atoflt
 _atoflt_l
 _atoi64
-atoll == _atoi64
 _atoi64_l
-_atoll_l == _atoi64_l
 _atoi_l
 _atol_l
 _atoldbl
@@ -475,7 +469,6 @@ _cscanf_l
 _cscanf_s
 _cscanf_s_l
 _ctime32
-ctime == _ctime32
 _ctime32_s
 _ctime64
 _ctime64_s
@@ -531,7 +524,6 @@ _fdopen
 _fflush_nolock
 _fgetchar
 _fgetwc_nolock
-_getwc_nolock == _fgetwc_nolock
 _fgetwchar
 _filbuf
 _filelength
@@ -539,12 +531,10 @@ _filelengthi64
 _fileno
 _findclose
 _findfirst32
-_findfirst == _findfirst32
 _findfirst32i64
 _findfirst64
 _findfirst64i32
 _findnext32
-_findnext == _findnext32
 _findnext32i64
 _findnext64
 _findnext64i32
@@ -577,8 +567,6 @@ _fseeki64
 _fseeki64_nolock
 _fsopen
 _fstat32
-_fstat == _fstat32
-_fstati64 == _fstat32i64
 _fstat32i64
 _fstat64
 _fstat64i32
@@ -589,7 +577,6 @@ _ftime32
 _ftime32_s
 _ftime64
 _ftime64_s
-_ftime == _ftime32
 _ftol
 _fullpath
 _fullpath_dbg
@@ -625,7 +612,6 @@ _get_tzname
 _get_unexpected
 _get_wpgmptr
 _getc_nolock
-_fgetc_nolock == _getc_nolock
 _getch
 _getch_nolock
 _getche
@@ -653,7 +639,6 @@ _getws
 _getws_s
 _global_unwind2
 _gmtime32
-gmtime == _gmtime32
 _gmtime32_s
 _gmtime64
 _gmtime64_s
@@ -780,7 +765,6 @@ _loaddll
 _local_unwind2
 _local_unwind4
 _localtime32
-localtime == _localtime32
 _localtime32_s
 _localtime64
 _localtime64_s
@@ -944,12 +928,10 @@ _memicmp
 _memicmp_l
 _mkdir
 _mkgmtime32
-_mkgmtime == _mkgmtime32
 _mkgmtime64
 _mktemp
 _mktemp_s
 _mktime32
-mktime == _mktime32
 _mktime64
 _msize
 _msize_dbg
@@ -1068,8 +1050,6 @@ _sprintf_s_l
 _sscanf_l
 _sscanf_s_l
 _stat32
-_stat == _stat32
-_stati64 == _stat32i64
 _stat32i64
 _stat64
 _stat64i32
@@ -1084,12 +1064,10 @@ _strerror
 _strerror_s
 _strftime_l
 _stricmp
-_strcmpi == _stricmp
 _stricmp_l
 _stricoll
 _stricoll_l
 _strlwr
-strlwr == _strlwr
 _strlwr_l
 _strlwr_s
 _strlwr_s_l
@@ -1108,18 +1086,10 @@ _strtime
 _strtime_s
 _strtod_l
 _strtoi64
-strtoll == _strtoi64
-strtoimax == _strtoi64
 _strtoi64_l
-_strtoll_l == _strtoi64_l
-_strtoimax_l == _strtoi64_l
 _strtol_l
 _strtoui64
-strtoull == _strtoui64
-strtoumax == _strtoui64
 _strtoui64_l
-_strtoull_l == _strtoui64_l
-_strtoumax_l == _strtoui64_l
 _strtoul_l
 _strupr
 _strupr_l
@@ -1142,7 +1112,6 @@ _telli64
 _tempnam
 _tempnam_dbg
 _time32
-time == _time32
 _time64
 _timezone DATA
 _tolower
@@ -1252,7 +1221,6 @@ _wcsicmp_l
 _wcsicoll
 _wcsicoll_l
 _wcslwr
-wcslwr == _wcslwr
 _wcslwr_l
 _wcslwr_s
 _wcslwr_s_l
@@ -1282,7 +1250,6 @@ _wcsupr_s
 _wcsupr_s_l
 _wcsxfrm_l
 _wctime32
-_wctime == _wctime32
 _wctime32_s
 _wctime64
 _wctime64_s
@@ -1302,12 +1269,10 @@ _wexecvp
 _wexecvpe
 _wfdopen
 _wfindfirst32
-_wfindfirst == _wfindfirst32
 _wfindfirst32i64
 _wfindfirst64
 _wfindfirst64i32
 _wfindnext32
-_wfindnext = _wfindnext32
 _wfindnext32i64
 _wfindnext64
 _wfindnext64i32
@@ -1362,8 +1327,6 @@ _wspawnvpe
 _wsplitpath
 _wsplitpath_s
 _wstat32
-_wstat == _wstat32
-_wstati64 == _wstat32i64
 _wstat32i64
 _wstat64
 _wstat64i32
@@ -1431,7 +1394,6 @@ fmod DATA
 fopen
 fopen_s
 fprintf
-__ms_fprintf == fprintf
 fprintf_s
 fputc
 fputs
@@ -1444,17 +1406,14 @@ freopen
 freopen_s
 frexp DATA
 fscanf
-__ms_fscanf == fscanf
 fscanf_s
 fseek
 fsetpos
 ftell
 fwprintf
-__ms_fwprintf == fwprintf
 fwprintf_s
 fwrite
 fwscanf
-__ms_fwscanf == fwscanf
 fwscanf_s
 getc
 getchar
@@ -1518,7 +1477,6 @@ modf DATA
 perror
 pow DATA
 printf
-__ms_printf == printf
 printf_s
 putc
 putchar
@@ -1535,7 +1493,6 @@ remove
 rename
 rewind
 scanf
-__ms_scanf == scanf
 scanf_s
 setbuf
 setlocale
@@ -1545,12 +1502,10 @@ sin DATA
 ; If we implement sinh too, we can set it to DATA only.
 sinh
 sprintf
-__ms_sprintf == sprintf
 sprintf_s
 sqrt DATA
 srand
 sscanf
-__ms_sscanf == sscanf
 sscanf_s
 strcat
 strcat_s
@@ -1582,7 +1537,6 @@ strtoul
 strxfrm
 swprintf_s
 swscanf
-__ms_swscanf == swscanf
 swscanf_s
 system
 tan
@@ -1599,20 +1553,15 @@ towupper
 ungetc
 ungetwc
 vfprintf
-__ms_vfprintf == vfprintf
 vfprintf_s
 vfwprintf
-__ms_vfwprintf == vfwprintf
 vfwprintf_s
 vprintf
-__ms_vprintf == vprintf
 vprintf_s
 vsprintf
-__ms_vsprintf == vsprintf
 vsprintf_s
 vswprintf_s
 vwprintf
-__ms_vwprintf == vwprintf
 vwprintf_s
 wcrtomb
 wcrtomb_s
@@ -1650,8 +1599,13 @@ wctob
 wctomb
 wctomb_s
 wprintf
-__ms_wprintf == wprintf
 wprintf_s
 wscanf
-__ms_wscanf == wscanf
 wscanf_s
+
+#define WITH_ATOLL_ALIAS
+#define WITH_ATOLL_L_ALIAS
+#define WITH_LLABS_ALIAS
+#define WITH_STRTO64_ALIAS
+#define WITH_STRTO64_L_ALIAS
+#include "crt-aliases.def.in"

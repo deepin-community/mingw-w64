@@ -2,11 +2,19 @@ LIBRARY api-ms-win-core-libraryloader-l1-2-0
 
 EXPORTS
 
+AddDllDirectory
 DisableThreadLibraryCalls
+EnumResourceLanguagesExA
+EnumResourceLanguagesExW
+EnumResourceNamesExA
+EnumResourceNamesExW
+EnumResourceTypesExA
+EnumResourceTypesExW
 FindResourceExW
 FindStringOrdinal
 FreeLibrary
 FreeLibraryAndExitThread
+FreeResource
 GetModuleFileNameA
 GetModuleFileNameW
 GetModuleHandleA
@@ -17,6 +25,9 @@ GetProcAddress
 LoadLibraryExA
 LoadLibraryExW
 LoadResource
+LoadStringA
 LoadStringW
 LockResource
+RemoveDllDirectory
+SetDefaultDllDirectories
 SizeofResource

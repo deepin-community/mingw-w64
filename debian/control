@@ -3,9 +3,11 @@ Maintainer: Stephen Kitt <skitt@debian.org>
 Section: devel
 Priority: optional
 Build-Depends: debhelper-compat (= 13),
-Build-Depends-Indep: gcc-mingw-w64-i686 | gcc-mingw-w64-bootstrap (>= 4.6.0),
-                     gcc-mingw-w64-x86-64 | gcc-mingw-w64-bootstrap (>= 4.6.0)
-Standards-Version: 4.6.2
+Build-Depends-Indep: gcc-mingw-w64-bootstrap <stage1>,
+                     gcc-mingw-w64-i686 <!stage1>,
+                     gcc-mingw-w64-ucrt64 <!stage1>,
+                     gcc-mingw-w64-x86-64 <!stage1>,
+Standards-Version: 4.7.0
 Vcs-Browser: https://salsa.debian.org/mingw-w64-team/mingw-w64
 Vcs-Git: https://salsa.debian.org/mingw-w64-team/mingw-w64.git
 Homepage: http://mingw-w64.sf.net
@@ -20,7 +22,7 @@ Description: Common files for Mingw-w64
  64-bit (x86 and x64) Windows applications using the Windows API and
  the GNU Compiler Collection (gcc).
  .
- This package contains files common to both 32- and 64-bit targets.
+ This package contains files common to all targets.
 
 Package: mingw-w64-i686-dev
 Architecture: all
@@ -51,7 +53,26 @@ Description: Development files for MinGW-w64 targeting Win64
  the GNU Compiler Collection (gcc).
  .
  This package contains the headers and libraries required to build
- 64-bit software using MinGW-w64.
+ 64-bit software using MinGW-w64, targeting the Visual C Runtime
+ (MSVCRT).
+ .
+ The wine64 package can be used to test software built using MinGW-w64
+ without using Windows.
+
+Package: mingw-w64-ucrt64-dev
+Architecture: all
+Multi-Arch: foreign
+Depends: ${misc:Depends},
+         mingw-w64-common
+Suggests: wine64
+Description: Development files for MinGW-w64 targeting Win64/UCRT
+ MinGW-w64 provides a development and runtime environment for 32- and
+ 64-bit (x86 and x64) Windows applications using the Windows API and
+ the GNU Compiler Collection (gcc).
+ .
+ This package contains the headers and libraries required to build
+ 64-bit software using MinGW-w64, targeting the Universal C Runtime
+ (UCRT).
  .
  The wine64 package can be used to test software built using MinGW-w64
  without using Windows.
@@ -77,9 +98,10 @@ Architecture: any
 Multi-Arch: foreign
 Depends: ${shlibs:Depends},
          ${misc:Depends},
-         pkg-config
+         pkgconf
 Provides: pkg-config-mingw-w64-i686,
-          pkg-config-mingw-w64-x86-64
+          pkg-config-mingw-w64-ucrt64,
+          pkg-config-mingw-w64-x86-64,
 Description: Development tools for 32- and 64-bit Windows
  MinGW-w64 provides a development and runtime environment for 32- and
  64-bit (x86 and x64) Windows applications using the Windows API and

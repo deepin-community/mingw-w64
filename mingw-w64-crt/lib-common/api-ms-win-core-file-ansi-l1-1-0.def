@@ -2,5 +2,12 @@ LIBRARY api-ms-win-core-file-ansi-l1-1-0
 
 EXPORTS
 
+DefineDosDeviceA
 DeleteVolumeMountPointA
+FindFirstVolumeA
+FindNextVolumeA
 GetLogicalDriveStringsA
+GetVolumeNameForVolumeMountPointA
+GetVolumePathNameA
+GetVolumePathNamesForVolumeNameA
+QueryDosDeviceA

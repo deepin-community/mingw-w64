@@ -20,32 +20,20 @@ else
 endif
 
 AM_CPPFLAGS=$(sysincludes)
-AM_CFLAGS=-pipe -std=gnu99 -D_CRTBLD -D_WIN32_WINNT=0x0f00 -D__MSVCRT_VERSION__=0x700 -D__USE_MINGW_ANSI_STDIO=0 @CFGUARD_CFLAGS@ @ADD_C_CXX_WARNING_FLAGS@ @ADD_C_ONLY_WARNING_FLAGS@
+AM_CFLAGS=-pipe -std=gnu99 -D_CRTBLD -D_WIN32_WINNT=0x0f00 -D__MSVCRT_VERSION__=0x700 -D__USE_MINGW_ANSI_STDIO=0 @IMAGEBASE_CFLAGS@ @CFGUARD_CFLAGS@ @ADD_C_CXX_WARNING_FLAGS@ @ADD_C_ONLY_WARNING_FLAGS@
 AM_CXXFLAGS=@ADD_C_CXX_WARNING_FLAGS@ @ADD_CXX_ONLY_WARNING_FLAGS@
 CPPFLAGSARM32=-mfpu=vfpv3
 CPPFLAGS32=-m32 -masm=att
 CPPFLAGS64=-m64 -masm=att
-if WITH_GENLIB
-  AM_DLLTOOLFLAGS=-o $@
-  DLLTOOLFLAGSARM32=-a arm
-  DLLTOOLFLAGSARM64=
-  DLLTOOLFLAGS32=-a x86
-  DLLTOOLFLAGS64=-a x86_64
-  DTDEFARM32=$(GENLIB) $(DLLTOOLFLAGSARM32) $(AM_DLLTOOLFLAGS)
-  DTDEFARM64=$(GENLIB) $(DLLTOOLFLAGSARM64) $(AM_DLLTOOLFLAGS)
-  DTDEF32=$(GENLIB) $(DLLTOOLFLAGS32) $(AM_DLLTOOLFLAGS)
-  DTDEF64=$(GENLIB) $(DLLTOOLFLAGS64) $(AM_DLLTOOLFLAGS)
-else
-  AM_DLLTOOLFLAGS=-k --as=$(AS) --output-lib $@
-  DLLTOOLFLAGSARM32=-m arm
-  DLLTOOLFLAGSARM64=-m arm64
-  DLLTOOLFLAGS32=--as-flags=--32 -m i386
-  DLLTOOLFLAGS64=--as-flags=--64 -m i386:x86-64
-  DTDEFARM32=$(DLLTOOL) $(DLLTOOLFLAGSARM32) $(AM_DLLTOOLFLAGS) --input-def
-  DTDEFARM64=$(DLLTOOL) $(DLLTOOLFLAGSARM64) $(AM_DLLTOOLFLAGS) --input-def
-  DTDEF32=$(DLLTOOL) $(DLLTOOLFLAGS32) $(AM_DLLTOOLFLAGS) --input-def
-  DTDEF64=$(DLLTOOL) $(DLLTOOLFLAGS64) $(AM_DLLTOOLFLAGS) --input-def
-endif
+AM_DLLTOOLFLAGS=-k --as=$(AS) --output-lib $@
+DLLTOOLFLAGSARM32=-m arm
+DLLTOOLFLAGSARM64=-m arm64
+DLLTOOLFLAGS32=--as-flags=--32 -m i386
+DLLTOOLFLAGS64=--as-flags=--64 -m i386:x86-64
+DTDEFARM32=$(DLLTOOL) $(DLLTOOLFLAGSARM32) $(AM_DLLTOOLFLAGS) --input-def
+DTDEFARM64=$(DLLTOOL) $(DLLTOOLFLAGSARM64) $(AM_DLLTOOLFLAGS) --input-def
+DTDEF32=$(DLLTOOL) $(DLLTOOLFLAGS32) $(AM_DLLTOOLFLAGS) --input-def
+DTDEF64=$(DLLTOOL) $(DLLTOOLFLAGS64) $(AM_DLLTOOLFLAGS) --input-def
 if DLLTOOL_HAS_TEMP_PREFIX
   AM_DLLTOOLFLAGS += --temp-prefix $(basename $@)
 endif
@@ -169,6 +157,7 @@ src_libws2_32=libsrc/ws2_32.c \
   libsrc/wspiapi/WspiapiLoad.c               libsrc/wspiapi/WspiapiGetAddrInfo.c       libsrc/wspiapi/WspiapiGetNameInfo.c        \
   libsrc/wspiapi/WspiapiFreeAddrInfo.c
 
+# Files included in all libmsvcr*.a
 src_msvcrt_common=\
   misc/mbrtowc.c \
   misc/mbsinit.c \
@@ -185,8 +174,125 @@ src_msvcrt_common=\
   stdio/strtof.c \
   stdio/snprintf_alias.c \
   stdio/vsnprintf_alias.c \
-  math/frexp.c
+  math/cbrt.c math/cbrtf.c \
+  math/copysign.c math/copysignf.c \
+  math/coshf.c \
+  math/expf.c \
+  math/fabs.c math/fabsf.c \
+  math/fdim.c math/fdimf.c \
+  math/fma.c math/fmaf.c \
+  math/fmax.c math/fmaxf.c \
+  math/fmin.c math/fminf.c \
+  math/frexp.c \
+  math/hypot.c \
+  math/llrint.c math/llrintf.c \
+  math/llround.c math/llroundf.c \
+  math/log10f.c \
+  math/logf.c \
+  math/lrint.c math/lrintf.c \
+  math/lround.c math/lroundf.c \
+  math/modf.c math/modff.c \
+  math/nextafterf.c \
+  math/nexttowardf.c \
+  math/powf.c \
+  math/round.c math/roundf.c \
+  math/s_erf.c math/sf_erf.c \
+  math/sinhf.c \
+  math/sqrt.c math/sqrtf.c \
+  math/tanhf.c \
+  math/tgamma.c math/tgammaf.c
 
+# Arch specific files included in all libmsvcr*.a on x86
+src_msvcrt_common_add_x86=\
+  math/x86/acosh.c math/x86/acoshf.c \
+  math/x86/asinh.c math/x86/asinhf.c \
+  math/x86/atan2.c \
+  math/x86/atanh.c math/x86/atanhf.c \
+  math/x86/ceil.S \
+  math/x86/cos.c \
+  math/x86/exp.c \
+  math/x86/exp2.S math/x86/exp2f.S \
+  math/x86/expm1.c math/x86/expm1f.c \
+  math/x86/floor.S \
+  math/x86/fmod.c \
+  math/x86/ilogb.S math/x86/ilogbf.S \
+  math/x86/log.c \
+  math/x86/log1p.S math/x86/log1pf.S \
+  math/x86/log2.S math/x86/log2f.S \
+  math/x86/logb.c math/x86/logbf.c \
+  math/x86/nearbyint.S math/x86/nearbyintf.S \
+  math/x86/pow.c \
+  math/x86/remainder.S math/x86/remainderf.S \
+  math/x86/remquo.S math/x86/remquof.S \
+  math/x86/rint.c math/x86/rintf.c \
+  math/x86/sin.c \
+  math/x86/trunc.S math/x86/truncf.S \
+  \
+  math/x86/acosf.c \
+  math/x86/asinf.c \
+  math/x86/atan2f.c \
+  math/x86/atanf.c \
+  math/x86/ceilf.S \
+  math/x86/cosf.c \
+  math/x86/floorf.S \
+  math/x86/fmodf.c \
+  math/x86/sinf.c \
+  math/x86/tanf.c
+
+# Arch specific files included in all libmsvcr*.a on x86_32
+src_msvcrt_common_add_x86_32=\
+  $(src_msvcrt_common_add_x86)
+
+# Arch specific files included in all libmsvcr*.a on x86_64
+src_msvcrt_common_add_x86_64=\
+  $(src_msvcrt_common_add_x86)
+
+# Arch specific files included in all libmsvcr*.a on arm
+src_msvcrt_common_add_arm=\
+  math/cbrtl.c \
+  math/erfl.c \
+  math/fdiml.c \
+  math/fmal.c \
+  math/fmaxl.c \
+  math/fminl.c \
+  math/llrintl.c \
+  math/llroundl.c \
+  math/lrintl.c \
+  math/lroundl.c \
+  math/rintl.c \
+  math/roundl.c \
+  math/tgammal.c \
+  math/truncl.c
+
+# Arch specific files included in all libmsvcr*.a on arm32
+src_msvcrt_common_add_arm32=\
+  $(src_msvcrt_common_add_arm)
+
+# Arch specific files included in all libmsvcr*.a on arm64
+src_msvcrt_common_add_arm64=\
+  $(src_msvcrt_common_add_arm)
+
+# Files included in all libmsvcr*.a on x86_32
+src_msvcrt_common32=\
+  $(src_msvcrt_common) \
+  $(src_msvcrt_common_add_x86_32)
+
+# Files included in all libmsvcr*.a on x86_64
+src_msvcrt_common64=\
+  $(src_msvcrt_common) \
+  $(src_msvcrt_common_add_x86_64)
+
+# Files included in all libmsvcr*.a on arm32
+src_msvcrt_commonarm32=\
+  $(src_msvcrt_common) \
+  $(src_msvcrt_common_add_arm32)
+
+# Files included in all libmsvcr*.a on arm64
+src_msvcrt_commonarm64=\
+  $(src_msvcrt_common) \
+  $(src_msvcrt_common_add_arm64)
+
+# Files included in libmsvcrt-os.a (for msvcrt.dll) on all archs
 src_msvcrt=\
   misc/_configthreadlocale.c \
   misc/imaxdiv.c \
@@ -239,6 +345,7 @@ src_msvcrt=\
   stdio/fseeki64.c \
   stdio/mingw_lock.c
 
+# Files included in libucrt*.a
 src_ucrtbase=\
   crt/ucrtbase_compat.c \
   math/_huge.c \
@@ -249,6 +356,9 @@ src_ucrtbase=\
   stdio/ucrt_fwprintf.c \
   stdio/ucrt_printf.c \
   stdio/ucrt_scanf.c \
+  stdio/ucrt__scprintf.c \
+  stdio/ucrt__snprintf.c \
+  stdio/ucrt__snscanf.c \
   stdio/ucrt__snwprintf.c \
   stdio/ucrt_snprintf.c \
   stdio/ucrt_sprintf.c \
@@ -264,6 +374,7 @@ src_ucrtbase=\
   stdio/ucrt_vsprintf.c \
   stdio/ucrt_vsscanf.c
 
+# Files included in libucrtapp.a
 src_ucrtapp=\
   crt/__C_specific_handler.c \
   misc/longjmp.S \
@@ -281,6 +392,46 @@ src_ucrtapp=\
   string/wcsrchr.c \
   string/wcsstr.c
 
+# Files included in libucrt*.a on x86_32
+src_ucrtbase32=\
+  $(src_ucrtbase) \
+  math/fabsf.c \
+  math/nexttowardf.c \
+  math/coshf.c \
+  math/expf.c \
+  math/log10f.c \
+  math/logf.c \
+  math/modff.c \
+  math/powf.c \
+  math/sinhf.c \
+  math/sqrtf.c \
+  math/tanhf.c \
+  math/x86/acosf.c \
+  math/x86/asinf.c \
+  math/x86/atan2f.c \
+  math/x86/atanf.c \
+  math/x86/ceilf.S \
+  math/x86/cosf.c \
+  math/x86/floorf.S \
+  math/x86/fmodf.c \
+  math/x86/sinf.c \
+  math/x86/tanf.c
+
+# Files included in libucrt*.a on x86_64
+src_ucrtbase64=\
+  $(src_ucrtbase) \
+  math/fabsf.c \
+  math/nexttowardf.c
+
+# Files included in libucrt*.a on arm32
+src_ucrtbasearm32=\
+  $(src_ucrtbase)
+
+# Files included in libucrt*.a on arm64
+src_ucrtbasearm64=\
+  $(src_ucrtbase)
+
+# Files included in libmsvcrt-os.a (for msvcrt.dll) on x86_32
 src_msvcrt32=\
   $(src_msvcrt) \
   math/x86/_copysignf.c \
@@ -291,10 +442,14 @@ src_msvcrt32=\
   misc/imaxabs.c \
   misc/lc_locale_func.c \
   misc/seterrno.c \
+  misc/strtoimax.c \
+  misc/strtoumax.c \
   misc/wassert.c \
+  stdio/_fstat64i32.c \
   stdio/_scprintf.c \
   stdio/_vscprintf.c
 
+# Files included in libmsvcrt-os.a (for msvcrt.dll) on x86_64
 src_msvcrt64=\
   $(src_msvcrt) \
   misc/__p___argv.c \
@@ -307,6 +462,7 @@ src_msvcrt64=\
   misc/_get_current_locale.c \
   misc/seterrno.c
 
+# Files included in libmsvcrt-os.a (for msvcrt.dll) on arm32
 src_msvcrtarm32=\
   $(src_msvcrt) \
   misc/__p___argv.c \
@@ -316,6 +472,7 @@ src_msvcrtarm32=\
   misc/__p__wcmdln.c \
   misc/_getpid.c \
   misc/initenv.c \
+  stdio/_fstat64i32.c \
   stdio/_setmaxstdio.c \
   stdio/gets.c
 
@@ -363,6 +520,7 @@ src_msvcrtarm32+=\
   math/arm-common/scalbn.c
 endif
 
+# Files included in libmsvcrt-os.a (for msvcrt.dll) on arm64
 src_msvcrtarm64=\
   $(src_msvcrt) \
   math/arm-common/acosh.c \
@@ -415,18 +573,9 @@ src_msvcrtarm64=\
   stdio/_setmaxstdio.c \
   stdio/gets.c
 
-src_msvcr80_32=\
-  misc/imaxabs.c
-
-src_msvcr80_64=\
-  misc/__p___argv.c \
-  misc/__p__acmdln.c \
-  misc/__p__commode.c \
-  misc/__p__fmode.c \
-  misc/__p__wcmdln.c
-
 src_crtdll=\
   crt/crtdll_compat.c \
+  math/x86/_copysignf.c \
   misc/___mb_cur_max_func.c \
   misc/__initenv.c \
   misc/__p___argv.c \
@@ -506,12 +655,14 @@ src_msvcr70=\
   misc/imaxabs.c \
   misc/imaxdiv.c \
   misc/invalid_parameter_handler.c \
+  stdio/_fstat64i32.c \
   stdio/mingw_lock.c
 
 src_msvcr71=\
   misc/imaxabs.c \
   misc/imaxdiv.c \
   misc/invalid_parameter_handler.c \
+  stdio/_fstat64i32.c \
   stdio/mingw_lock.c
 
 src_msvcr80=\
@@ -551,36 +702,24 @@ src_libmingwex=\
   gdtoa/misc.c      gdtoa/qnan.c     gdtoa/smisc.c  gdtoa/strtodg.c  gdtoa/strtodnrp.c  gdtoa/strtof.c     \
   gdtoa/strtopx.c   gdtoa/sum.c      gdtoa/ulp.c    \
   \
-  math/cbrt.c           \
-  math/cbrtf.c          math/cbrtl.c       math/copysign.c      math/copysignf.c     \
-  math/coshf.c          math/coshl.c       math/erfl.c           \
-  math/expf.c           \
-  math/fabs.c           math/fabsf.c       math/fabsl.c          math/fdim.c          math/fdimf.c         math/fdiml.c         \
-  math/fma.c            math/fmaf.c        math/fmal.c           \
-  math/fmax.c           math/fmaxf.c       math/fmaxl.c          math/fmin.c          math/fminf.c         \
-  math/fminl.c          math/fp_consts.c   math/fp_constsf.c     \
+  math/coshl.c       \
+  math/fabsl.c          math/fp_consts.c   math/fp_constsf.c     \
   math/fp_constsl.c     math/fpclassify.c  math/fpclassifyf.c    math/fpclassifyl.c   math/frexpf.c        math/frexpl.c \
-  math/hypotf.c         math/hypot.c  math/hypotl.c      math/isnan.c          math/isnanf.c        math/isnanl.c        \
-  math/ldexpf.c         math/lgamma.c      math/lgammaf.c        math/lgammal.c       math/llrint.c        \
-  math/signgam.c \
-  math/llrintf.c        math/llrintl.c     math/llround.c        math/llroundf.c      math/llroundl.c      \
-  math/log10f.c         math/logf.c        \
-  math/lrint.c          math/lrintf.c      math/lrintl.c         math/lround.c        math/lroundf.c       math/lroundl.c       \
-  math/modf.c           math/modff.c       math/modfl.c          math/nextafterf.c    math/nextafterl.c    math/nexttoward.c    \
-  math/nexttowardf.c    math/powf.c        math/powi.c           math/powif.c         math/powil.c         \
-  math/rintl.c          math/round.c       math/roundf.c         \
-  math/roundl.c         math/s_erf.c       math/sf_erf.c         math/signbit.c       math/signbitf.c      math/signbitl.c      \
-  math/sinhf.c          math/sinhl.c       math/sqrt.c           \
-  math/sqrtf.c          math/sqrtl.c       math/tanhf.c          math/tanhl.c         math/tgamma.c        \
-  math/tgammaf.c        math/tgammal.c     math/truncl.c         \
-  math/powi.def.h       math/sqrt.def.h       \
+  math/hypotf.c         math/hypotl.c      math/isnan.c          math/isnanf.c        math/isnanl.c        \
+  math/ldexpf.c         math/lgamma.c      math/lgammaf.c        math/lgammal.c       \
+  math/modfl.c          math/nextafterl.c  math/nexttoward.c     \
+  math/powi.c           math/powif.c       math/powil.c          \
+  math/signbit.c        math/signbitf.c    math/signbitl.c       \
+  math/signgam.c        \
+  math/sinhl.c          math/sqrtl.c       math/tanhl.c          \
+  math/powi.def.h       math/sqrt.def.h    \
   math/cephes_mconf.h   math/fp_consts.h   \
   \
   misc/mb_wc_common.h \
   misc/mingw_longjmp.S \
   misc/mingw_getsp.S \
   misc/alarm.c \
-  misc/basename.c        misc/btowc.c               misc/delay-f.c          misc/delay-n.c         \
+  misc/btowc.c               misc/delay-f.c          misc/delay-n.c         \
   misc/delayimp.c        misc/dirent.c          \
   misc/dirname.c \
   misc/feclearexcept.c   misc/fegetenv.c            misc/fegetexceptflag.c  misc/fegetround.c            misc/feholdexcept.c    \
@@ -610,7 +749,7 @@ src_libmingwex=\
   stdio/vfscanf2.S         stdio/vfwscanf2.S         stdio/vscanf2.S          stdio/vsscanf2.S          stdio/vswscanf2.S \
   stdio/vwscanf2.S         stdio/strtok_r.c          stdio/scanf.S \
   stdio/_Exit.c            stdio/_findfirst64i32.c   stdio/_findnext64i32.c   stdio/_fstat.c \
-  stdio/_fstat64i32.c      stdio/_ftime.c       \
+  stdio/_ftime.c       \
   stdio/_stat.c            stdio/_stat64i32.c        stdio/_wfindfirst64i32.c stdio/_wfindnext64i32.c \
   stdio/_wstat.c           stdio/_wstat64i32.c       stdio/asprintf.c         stdio/fgetpos64.c       \
   stdio/fopen64.c          stdio/fseeko32.c          stdio/fseeko64.c         stdio/fsetpos64.c         stdio/ftello.c          \
@@ -633,26 +772,25 @@ endif
 
 # these go into both 32 and 64 bit x86 versions:
 src_libmingwex_x86=\
-  math/x86/_chgsignl.S      math/x86/acosf.c          math/x86/acosh.c          math/x86/acosl.c          math/x86/acosh.def.h      \
-  math/x86/acoshf.c         math/x86/acoshl.c         math/x86/asinf.c          math/x86/asinh.c          math/x86/asinl.c          \
-  math/x86/asinhf.c         math/x86/asinhl.c         math/x86/atan2f.c         math/x86/atan2.c          math/x86/atan2l.c         \
-  math/x86/atanf.c          math/x86/atanh.c          math/x86/atanl.c          math/x86/atanhf.c         math/x86/atanhl.c         \
-  math/x86/ceil.S           math/x86/ceilf.S          math/x86/ceill.S          math/x86/copysignl.S      math/x86/cos.c            \
-  math/x86/cos.def.h        math/x86/cosf.c           math/x86/cosl.c           math/x86/cosl_internal.S  math/x86/cossin.c         \
-  math/x86/exp.c            math/x86/exp.def.h        math/x86/expl.c           math/x86/exp2.S           math/x86/exp2f.S          \
-  math/x86/exp2l.S          math/x86/expm1.c          math/x86/expm1.def.h      math/x86/expm1f.c         math/x86/expm1l.c         \
-  math/x86/fastmath.h       math/x86/floor.S          math/x86/floorf.S         math/x86/floorl.S         math/x86/fmod.c           \
-  math/x86/fmodf.c          math/x86/fmodl.c          math/x86/fucom.c          math/x86/ilogb.S          \
-  math/x86/ilogbf.S         math/x86/ilogbl.S         math/x86/internal_logl.S  math/x86/ldexp.c          math/x86/ldexpl.c         \
-  math/x86/log.c            math/x86/log.def.h        math/x86/log10l.S         math/x86/log1p.S          math/x86/log1pf.S         \
-  math/x86/log1pl.S         math/x86/log2.S           math/x86/log2f.S          math/x86/log2l.S          math/x86/logb.c           \
-  math/x86/logbf.c          math/x86/logbl.c          math/x86/logl.c           math/x86/nearbyint.S      math/x86/nearbyintf.S     \
-  math/x86/nearbyintl.S     math/x86/pow.c            math/x86/pow.def.h        math/x86/powl.c           math/x86/remainder.S      \
-  math/x86/remainderf.S     math/x86/remainderl.S     math/x86/remquo.S         math/x86/remquof.S        math/x86/remquol.S        \
-  math/x86/rint.c           math/x86/rintf.c          \
-  math/x86/scalbn.S         math/x86/scalbnf.S        math/x86/scalbnl.S        math/x86/sin.c            math/x86/sin.def.h        \
-  math/x86/sinf.c           math/x86/sinl.c           math/x86/sinl_internal.S  math/x86/tanf.c           math/x86/tanl.S           \
-  math/x86/trunc.S          math/x86/truncf.S
+  math/cbrtl.c              math/erfl.c               math/fdiml.c              math/fmal.c               math/fmaxl.c              \
+  math/fminl.c              math/llrintl.c            math/llroundl.c           math/lrintl.c             math/lroundl.c            \
+  math/rintl.c              math/roundl.c             math/tgammal.c            math/truncl.c             \
+  math/x86/_chgsignl.S      math/x86/acosh.def.h      math/x86/acoshl.c         math/x86/acosl.c          \
+  math/x86/asinhl.c         math/x86/asinl.c          math/x86/atan2l.c         \
+  math/x86/atanhl.c         math/x86/atanl.c          \
+  math/x86/ceill.S          math/x86/copysignl.S      \
+  math/x86/cos.def.h        math/x86/cosl.c           math/x86/cosl_internal.S  math/x86/cossin.c         \
+  math/x86/exp2l.S          math/x86/exp.def.h        math/x86/expl.c           math/x86/expm1.def.h      math/x86/expm1l.c         \
+  math/x86/fastmath.h       math/x86/floorl.S         \
+  math/x86/fmodl.c          math/x86/fucom.c          \
+  math/x86/ilogbl.S         math/x86/internal_logl.S  \
+  math/x86/ldexp.c          math/x86/ldexpl.c         \
+  math/x86/log.def.h        math/x86/log10l.S         math/x86/log1pl.S         math/x86/log2l.S          \
+  math/x86/logbl.c          math/x86/logl.c           math/x86/nearbyintl.S     math/x86/pow.def.h        math/x86/powl.c           \
+  math/x86/remainderl.S     math/x86/remquol.S        \
+  math/x86/scalbn.S         math/x86/scalbnf.S        math/x86/scalbnl.S        \
+  math/x86/sin.def.h        \
+  math/x86/sinl.c           math/x86/sinl_internal.S  math/x86/tanl.S
 
 
 src_libmingwex32=$(src_libmingwex_x86)
@@ -973,6 +1111,7 @@ processed_defs += lib32/crtdll.def lib32/msvcrt10.def lib32/msvcrt20.def lib32/m
 				  lib32/msvcr80.def lib32/msvcr90.def lib32/msvcr90d.def lib32/msvcr100.def lib32/msvcr110.def lib32/msvcr120.def lib32/msvcr120d.def \
 				  lib32/msvcr120_app.def lib32/msvcp120_app.def lib32/ucrtbase.def \
 				  lib32/api-ms-win-crt-math-l1-1-0.def lib32/api-ms-win-crt-private-l1-1-0.def lib32/api-ms-win-crt-runtime-l1-1-0.def \
+				  lib32/api-ms-win-crt-filesystem-l1-1-0.def lib32/api-ms-win-crt-time-l1-1-0.def \
 				  lib32/vcruntime140_app.def
 
 endif
@@ -1052,7 +1191,7 @@ lib32_libmsvcrt20_extra_a_SOURCES = $(src_msvcrt20)
 lib32_libmsvcrt20_extra_a_CPPFLAGS = $(CPPFLAGS32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 lib32_libmsvcrt40_extra_a_SOURCES = $(src_msvcrt40)
 lib32_libmsvcrt40_extra_a_CPPFLAGS = $(CPPFLAGS32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
-lib32_libmsvcrt_common_a_SOURCES = $(src_msvcrt_common)
+lib32_libmsvcrt_common_a_SOURCES = $(src_msvcrt_common32)
 lib32_libmsvcrt_common_a_CPPFLAGS=$(CPPFLAGS32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 lib32_libmsvcrt_extra_a_SOURCES = $(src_msvcrt32)
 lib32_libmsvcrt_extra_a_CPPFLAGS=$(CPPFLAGS32) -D__LIBMSVCRT__ -D__LIBMSVCRT_OS__ $(extra_include) $(sysincludes)
@@ -1060,13 +1199,13 @@ lib32_libmsvcr70_extra_a_SOURCES = $(src_msvcr70)
 lib32_libmsvcr70_extra_a_CPPFLAGS = $(CPPFLAGS32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 lib32_libmsvcr71_extra_a_SOURCES = $(src_msvcr71)
 lib32_libmsvcr71_extra_a_CPPFLAGS = $(CPPFLAGS32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
-lib32_libmsvcr80_extra_a_SOURCES = $(src_msvcr80) $(src_msvcr80_32)
+lib32_libmsvcr80_extra_a_SOURCES = $(src_msvcr80)
 lib32_libmsvcr80_extra_a_CPPFLAGS = $(CPPFLAGS32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 lib32_libmsvcr90_extra_a_SOURCES = $(src_msvcr90)
 lib32_libmsvcr90_extra_a_CPPFLAGS = $(CPPFLAGS32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 lib32_libmsvcr120_app_extra_a_SOURCES = $(src_msvcr120_app)
 lib32_libmsvcr120_app_extra_a_CPPFLAGS=$(CPPFLAGS32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
-lib32_libucrt_extra_a_SOURCES = $(src_ucrtbase)
+lib32_libucrt_extra_a_SOURCES = $(src_ucrtbase32)
 lib32_libucrt_extra_a_CPPFLAGS=$(CPPFLAGS32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 lib32_libucrtapp_extra_a_SOURCES = $(src_ucrtapp)
 lib32_libucrtapp_extra_a_CPPFLAGS=$(CPPFLAGS32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
@@ -1349,6 +1488,7 @@ processed_defs += lib64/msvcrt.def lib64/msvcr80.def lib64/msvcr90.def lib64/msv
 				  lib64/advapi32.def lib64/clbcatq.def lib64/kernel32.def lib64/ole32.def \
 				  lib64/oleaut32.def lib64/user32.def lib64/ws2_32.def \
 				  lib64/api-ms-win-crt-math-l1-1-0.def lib64/api-ms-win-crt-private-l1-1-0.def lib64/api-ms-win-crt-runtime-l1-1-0.def \
+				  lib64/api-ms-win-crt-filesystem-l1-1-0.def lib64/api-ms-win-crt-time-l1-1-0.def \
 				  lib64/vcruntime140_app.def
 
 endif
@@ -1396,17 +1536,17 @@ lib64/libucrtbase.a: lib-common/ucrtbase.mri lib64/libucrtbase_def.a lib64/libuc
 
 lib64_DATA += lib64/libucrt.a lib64/libucrtapp.a
 noinst_LIBRARIES += lib64/libmsvcrt_common.a lib64/libmsvcrt_extra.a lib64/libmsvcr80_extra.a lib64/libmsvcr90_extra.a lib64/libmsvcr120_app_extra.a lib64/libucrt_extra.a lib64/libucrtapp_extra.a
-lib64_libmsvcrt_common_a_SOURCES = $(src_msvcrt_common)
+lib64_libmsvcrt_common_a_SOURCES = $(src_msvcrt_common64)
 lib64_libmsvcrt_common_a_CPPFLAGS=$(CPPFLAGS64) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 lib64_libmsvcrt_extra_a_SOURCES = $(src_msvcrt64)
 lib64_libmsvcrt_extra_a_CPPFLAGS=$(CPPFLAGS64) -D__LIBMSVCRT__ -D__LIBMSVCRT_OS__ $(extra_include) $(sysincludes)
-lib64_libmsvcr80_extra_a_SOURCES = $(src_msvcr80) $(src_msvcr80_64)
+lib64_libmsvcr80_extra_a_SOURCES = $(src_msvcr80)
 lib64_libmsvcr80_extra_a_CPPFLAGS=$(CPPFLAGS64) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 lib64_libmsvcr90_extra_a_SOURCES = $(src_msvcr90)
 lib64_libmsvcr90_extra_a_CPPFLAGS=$(CPPFLAGS64) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 lib64_libmsvcr120_app_extra_a_SOURCES = $(src_msvcr120_app)
 lib64_libmsvcr120_app_extra_a_CPPFLAGS=$(CPPFLAGS64) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
-lib64_libucrt_extra_a_SOURCES = $(src_ucrtbase)
+lib64_libucrt_extra_a_SOURCES = $(src_ucrtbase64)
 lib64_libucrt_extra_a_CPPFLAGS=$(CPPFLAGS64) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 lib64_libucrtapp_extra_a_SOURCES = $(src_ucrtapp)
 lib64_libucrtapp_extra_a_CPPFLAGS=$(CPPFLAGS64) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
@@ -1691,6 +1831,7 @@ processed_defs += libarm32/msvcrt.def libarm32/msvcr80.def libarm32/msvcr90.def 
 				  libarm32/advapi32.def libarm32/clbcatq.def libarm32/kernel32.def libarm32/ole32.def libarm32/oleaut32.def \
 				  libarm32/user32.def libarm32/ws2_32.def \
 				  libarm32/api-ms-win-crt-math-l1-1-0.def libarm32/api-ms-win-crt-private-l1-1-0.def libarm32/api-ms-win-crt-runtime-l1-1-0.def \
+				  libarm32/api-ms-win-crt-filesystem-l1-1-0.def libarm32/api-ms-win-crt-time-l1-1-0.def \
 				  libarm32/vcruntime140_app.def
 
 endif
@@ -1714,13 +1855,13 @@ libarm32/libucrtbase.a: lib-common/ucrtbase.mri libarm32/libucrtbase_def.a libar
 
 libarm32_DATA += libarm32/libucrt.a libarm32/libucrtapp.a
 noinst_LIBRARIES += libarm32/libmsvcrt_common.a libarm32/libmsvcrt_extra.a libarm32/libmsvcr120_app_extra.a libarm32/libucrt_extra.a libarm32/libucrtapp_extra.a
-libarm32_libmsvcrt_common_a_SOURCES = $(src_msvcrt_common)
+libarm32_libmsvcrt_common_a_SOURCES = $(src_msvcrt_commonarm32)
 libarm32_libmsvcrt_common_a_CPPFLAGS=$(CPPFLAGSARM32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 libarm32_libmsvcrt_extra_a_SOURCES = $(src_msvcrtarm32)
 libarm32_libmsvcrt_extra_a_CPPFLAGS=$(CPPFLAGSARM32) -D__LIBMSVCRT__ -D__LIBMSVCRT_OS__ $(extra_include) $(sysincludes)
 libarm32_libmsvcr120_app_extra_a_SOURCES = $(src_msvcr120_app)
 libarm32_libmsvcr120_app_extra_a_CPPFLAGS=$(CPPFLAGSARM32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
-libarm32_libucrt_extra_a_SOURCES = $(src_ucrtbase)
+libarm32_libucrt_extra_a_SOURCES = $(src_ucrtbasearm32)
 libarm32_libucrt_extra_a_CPPFLAGS=$(CPPFLAGSARM32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 libarm32_libucrtapp_extra_a_SOURCES = $(src_ucrtapp)
 libarm32_libucrtapp_extra_a_CPPFLAGS=$(CPPFLAGSARM32) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
@@ -1985,6 +2126,7 @@ processed_defs += libarm64/msvcrt.def libarm64/ucrtbase.def \
 				  libarm64/advapi32.def libarm64/clbcatq.def libarm64/kernel32.def libarm64/ole32.def libarm64/oleaut32.def \
 				  libarm64/user32.def libarm64/ws2_32.def \
 				  libarm64/api-ms-win-crt-math-l1-1-0.def libarm64/api-ms-win-crt-private-l1-1-0.def libarm64/api-ms-win-crt-runtime-l1-1-0.def \
+				  libarm64/api-ms-win-crt-filesystem-l1-1-0.def libarm64/api-ms-win-crt-time-l1-1-0.def \
 				  libarm64/vcruntime140_app.def
 
 endif
@@ -1998,11 +2140,11 @@ libarm64/libucrtbase.a: lib-common/ucrtbase.mri libarm64/libucrtbase_def.a libar
 
 libarm64_DATA += libarm64/libucrt.a libarm64/libucrtapp.a
 noinst_LIBRARIES += libarm64/libmsvcrt_common.a libarm64/libmsvcrt_extra.a libarm64/libucrt_extra.a libarm64/libucrtapp_extra.a
-libarm64_libmsvcrt_common_a_SOURCES = $(src_msvcrt_common)
+libarm64_libmsvcrt_common_a_SOURCES = $(src_msvcrt_commonarm64)
 libarm64_libmsvcrt_common_a_CPPFLAGS=$(CPPFLAGSARM64) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 libarm64_libmsvcrt_extra_a_SOURCES = $(src_msvcrtarm64)
 libarm64_libmsvcrt_extra_a_CPPFLAGS=$(CPPFLAGSARM64) -D__LIBMSVCRT__ -D__LIBMSVCRT_OS__ $(extra_include) $(sysincludes)
-libarm64_libucrt_extra_a_SOURCES = $(src_ucrtbase)
+libarm64_libucrt_extra_a_SOURCES = $(src_ucrtbasearm64)
 libarm64_libucrt_extra_a_CPPFLAGS=$(CPPFLAGSARM64) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
 libarm64_libucrtapp_extra_a_SOURCES = $(src_ucrtapp)
 libarm64_libucrtapp_extra_a_CPPFLAGS=$(CPPFLAGSARM64) -D__LIBMSVCRT__ $(extra_include) $(sysincludes)
@@ -2036,14 +2178,17 @@ endif
 # ##########
 
 %/libmincore.a: lib-common/mincore.mri \
-		%/libapi-ms-win-core-com-l1-1-1.a \
-		%/libapi-ms-win-core-com-midlproxystub-l1-1-0.a \
 		%/libapi-ms-win-core-com-l1-1-0.a \
+		%/libapi-ms-win-core-com-l1-1-1.a \
+		%/libapi-ms-win-core-com-l1-1-2.a \
+		%/libapi-ms-win-core-com-l1-1-3.a \
+		%/libapi-ms-win-core-com-midlproxystub-l1-1-0.a \
 		%/libapi-ms-win-core-comm-l1-1-0.a \
 		%/libapi-ms-win-core-comm-l1-1-1.a \
 		%/libapi-ms-win-core-comm-l1-1-2.a \
 		%/libapi-ms-win-core-console-l1-1-0.a \
 		%/libapi-ms-win-core-console-l1-2-0.a \
+		%/libapi-ms-win-core-console-l1-2-1.a \
 		%/libapi-ms-win-core-console-l2-1-0.a \
 		%/libapi-ms-win-core-console-l2-2-0.a \
 		%/libapi-ms-win-core-console-l3-2-0.a \
@@ -2052,36 +2197,435 @@ endif
 		%/libapi-ms-win-core-datetime-l1-1-2.a \
 		%/libapi-ms-win-core-debug-l1-1-0.a \
 		%/libapi-ms-win-core-debug-l1-1-1.a \
+		%/libapi-ms-win-core-debug-l1-1-2.a \
+		%/libapi-ms-win-core-delayload-l1-1-0.a \
 		%/libapi-ms-win-core-delayload-l1-1-1.a \
 		%/libapi-ms-win-core-errorhandling-l1-1-0.a \
 		%/libapi-ms-win-core-errorhandling-l1-1-1.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-2.a \
 		%/libapi-ms-win-core-errorhandling-l1-1-3.a \
+		%/libapi-ms-win-core-fibers-l1-1-0.a \
 		%/libapi-ms-win-core-fibers-l1-1-1.a \
-		%/libapi-ms-win-core-file-ansi-l2-1-0.a \
 		%/libapi-ms-win-core-file-l1-1-0.a \
+		%/libapi-ms-win-core-file-l1-2-0.a \
 		%/libapi-ms-win-core-file-l1-2-1.a \
 		%/libapi-ms-win-core-file-l1-2-2.a \
+		%/libapi-ms-win-core-file-l1-2-3.a \
 		%/libapi-ms-win-core-file-l2-1-0.a \
 		%/libapi-ms-win-core-file-l2-1-1.a \
 		%/libapi-ms-win-core-file-l2-1-2.a \
+		%/libapi-ms-win-core-file-l2-1-3.a \
 		%/libapi-ms-win-core-firmware-l1-1-0.a \
 		%/libapi-ms-win-core-handle-l1-1-0.a \
-		%/libapi-ms-win-core-heap-l1-2-0.a \
+		%/libapi-ms-win-core-heap-l1-1-0.a \
+		%/libapi-ms-win-core-heap-l2-1-0.a \
 		%/libapi-ms-win-core-interlocked-l1-1-0.a \
 		%/libapi-ms-win-core-interlocked-l1-2-0.a \
 		%/libapi-ms-win-core-io-l1-1-0.a \
 		%/libapi-ms-win-core-io-l1-1-1.a \
+		%/libapi-ms-win-core-job-l1-1-0.a \
 		%/libapi-ms-win-core-libraryloader-l1-2-0.a \
 		%/libapi-ms-win-core-libraryloader-l1-2-1.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-2.a \
 		%/libapi-ms-win-core-libraryloader-l2-1-0.a \
 		%/libapi-ms-win-core-localization-l1-2-1.a \
 		%/libapi-ms-win-core-localization-l1-2-0.a \
 		%/libapi-ms-win-core-localization-l1-2-2.a \
+		%/libapi-ms-win-core-localization-l1-2-3.a \
+		%/libapi-ms-win-core-localization-l1-2-4.a \
 		%/libapi-ms-win-core-localization-l2-1-0.a \
 		%/libapi-ms-win-core-memory-l1-1-0.a \
 		%/libapi-ms-win-core-memory-l1-1-1.a \
 		%/libapi-ms-win-core-memory-l1-1-2.a \
 		%/libapi-ms-win-core-memory-l1-1-3.a \
+		%/libapi-ms-win-core-memory-l1-1-4.a \
+		%/libapi-ms-win-core-memory-l1-1-5.a \
+		%/libapi-ms-win-core-memory-l1-1-6.a \
+		%/libapi-ms-win-core-memory-l1-1-7.a \
+		%/libapi-ms-win-core-namedpipe-l1-1-0.a \
+		%/libapi-ms-win-core-namedpipe-l1-2-1.a \
+		%/libapi-ms-win-core-namedpipe-l1-2-2.a \
+		%/libapi-ms-win-core-namespace-l1-1-0.a \
+		%/libapi-ms-win-core-path-l1-1-0.a \
+		%/libapi-ms-win-core-processenvironment-l1-1-0.a \
+		%/libapi-ms-win-core-processenvironment-l1-2-0.a \
+		%/libapi-ms-win-core-processsnapshot-l1-1-0.a \
+		%/libapi-ms-win-core-processthreads-l1-1-0.a \
+		%/libapi-ms-win-core-processthreads-l1-1-1.a \
+		%/libapi-ms-win-core-processthreads-l1-1-2.a \
+		%/libapi-ms-win-core-processthreads-l1-1-3.a \
+		%/libapi-ms-win-core-processthreads-l1-1-4.a \
+		%/libapi-ms-win-core-processtopology-l1-1-0.a \
+		%/libapi-ms-win-core-profile-l1-1-0.a \
+		%/libapi-ms-win-core-psapi-l1-1-0.a \
+		%/libapi-ms-win-core-quirks-l1-1-0.a \
+		%/libapi-ms-win-core-quirks-l1-1-1.a \
+		%/libapi-ms-win-core-realtime-l1-1-0.a \
+		%/libapi-ms-win-core-realtime-l1-1-1.a \
+		%/libapi-ms-win-core-realtime-l1-1-2.a \
+		%/libapi-ms-win-core-registry-l1-1-0.a \
+		%/libapi-ms-win-core-registry-l1-1-1.a \
+		%/libapi-ms-win-core-registry-l1-1-2.a \
+		%/libapi-ms-win-core-rtlsupport-l1-1-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-2-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-2-1.a \
+		%/libapi-ms-win-core-shutdown-l1-1-0.a \
+		%/libapi-ms-win-core-shutdown-l1-1-1.a \
+		%/libapi-ms-win-core-sidebyside-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-sidebyside-l1-1-0.a \
+		%/libapi-ms-win-core-state-helpers-l1-1-0.a \
+		%/libapi-ms-win-core-string-l1-1-0.a \
+		%/libapi-ms-win-core-string-l2-1-0.a \
+		%/libapi-ms-win-core-string-l2-1-1.a \
+		%/libapi-ms-win-core-synch-l1-1-0.a \
+		%/libapi-ms-win-core-synch-l1-2-0.a \
+		%/libapi-ms-win-core-synch-l1-2-1.a \
+		%/libapi-ms-win-core-sysinfo-l1-1-0.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-0.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-1.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-2.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-3.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-4.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-5.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-6.a \
+		%/libapi-ms-win-core-systemtopology-l1-1-0.a \
+		%/libapi-ms-win-core-systemtopology-l1-1-1.a \
+		%/libapi-ms-win-core-threadpool-l1-2-0.a \
+		%/libapi-ms-win-core-timezone-l1-1-0.a \
+		%/libapi-ms-win-core-timezone-l1-1-1.a \
+		%/libapi-ms-win-core-util-l1-1-0.a \
+		%/libapi-ms-win-core-util-l1-1-1.a \
+		%/libapi-ms-win-core-version-l1-1-0.a \
+		%/libapi-ms-win-core-version-l1-1-1.a \
+		%/libapi-ms-win-core-winrt-error-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-error-l1-1-1.a \
+		%/libapi-ms-win-core-winrt-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-string-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-string-l1-1-1.a \
+		%/libapi-ms-win-core-wow64-l1-1-0.a \
+		%/libapi-ms-win-core-wow64-l1-1-1.a \
+		%/libapi-ms-win-core-wow64-l1-1-2.a \
+		%/libapi-ms-win-core-wow64-l1-1-3.a \
+		%/libapi-ms-win-core-xstate-l1-1-0.a \
+		%/libapi-ms-win-core-xstate-l1-1-1.a \
+		%/libapi-ms-win-core-xstate-l1-1-2.a \
+		%/libapi-ms-win-core-xstate-l1-1-3.a \
+		%/libapi-ms-win-core-xstate-l2-1-0.a \
+		%/libapi-ms-win-core-xstate-l2-1-1.a \
+		%/libapi-ms-win-devices-config-l1-1-1.a \
+		%/libapi-ms-win-devices-config-l1-1-2.a \
+		%/libapi-ms-win-devices-swdevice-l1-1-0.a \
+		%/libapi-ms-win-devices-swdevice-l1-1-1.a \
+		%/libapi-ms-win-eventing-classicprovider-l1-1-0.a \
+		%/libapi-ms-win-eventing-consumer-l1-1-0.a \
+		%/libapi-ms-win-eventing-consumer-l1-1-1.a \
+		%/libapi-ms-win-eventing-controller-l1-1-0.a \
+		%/libapi-ms-win-eventing-provider-l1-1-0.a \
+		%/libapi-ms-win-power-base-l1-1-0.a \
+		%/libapi-ms-win-power-setting-l1-1-0.a \
+		%/libapi-ms-win-power-setting-l1-1-1.a \
+		%/libapi-ms-win-security-appcontainer-l1-1-0.a \
+		%/libapi-ms-win-security-base-l1-1-0.a \
+		%/libapi-ms-win-security-base-l1-2-0.a \
+		%/libapi-ms-win-security-base-l1-2-1.a \
+		%/libapi-ms-win-security-base-l1-2-2.a \
+		%/libapi-ms-win-security-credentials-l1-1-0.a \
+		%/libapi-ms-win-security-lsalookup-l2-1-0.a \
+		%/libapi-ms-win-security-lsalookup-l2-1-1.a \
+		%/libapi-ms-win-security-sddl-l1-1-0.a \
+		%/libapi-ms-win-service-core-l1-1-0.a \
+		%/libapi-ms-win-service-core-l1-1-1.a \
+		%/libapi-ms-win-service-core-l1-1-2.a \
+		%/libapi-ms-win-service-core-l1-1-3.a \
+		%/libapi-ms-win-service-core-l1-1-4.a \
+		%/libapi-ms-win-service-management-l1-1-0.a \
+		%/libapi-ms-win-service-management-l2-1-0.a \
+		%/libapi-ms-win-service-winsvc-l1-1-0.a \
+		%/libauthz.a \
+		%/libbcrypt.a \
+		%/libcabinet.a \
+		%/libcrypt32.a \
+		%/libcryptbase.a \
+		%/libcryptnet.a \
+		%/libdnsapi.a \
+		%/libdfscli.a \
+		%/libdsparse.a \
+		%/libdsrole.a \
+		%/libiphlpapi.a \
+		%/liblogoncli.a \
+		%/libmpr.a \
+		%/libmswsock.a \
+		%/libncrypt.a \
+		%/libnetutils.a \
+		%/liboleaut32.a \
+		%/librpcrt4.a \
+		%/libsamcli.a \
+		%/libschedcli.a \
+		%/libsrvcli.a \
+		%/libsspicli.a \
+		%/libuserenv.a \
+		%/libwinhttp.a \
+		%/libwkscli.a \
+		%/libwldap32.a \
+		%/libwebsocket.a \
+		%/libws2_32.a
+	rm -f $@
+	cd $(dir $@) && $(AR) -M < $(abspath $<)
+	$(RANLIB) $@
+
+%/libmincore_downlevel.a: lib-common/mincore_downlevel.mri \
+		%/libapi-ms-win-downlevel-advapi32-l1-1-0.a \
+		%/libapi-ms-win-downlevel-advapi32-l2-1-0.a \
+		%/libapi-ms-win-downlevel-normaliz-l1-1-0.a \
+		%/libapi-ms-win-downlevel-ole32-l1-1-0.a \
+		%/libapi-ms-win-downlevel-shell32-l1-1-0.a \
+		%/libapi-ms-win-downlevel-shlwapi-l1-1-0.a \
+		%/libapi-ms-win-downlevel-shlwapi-l2-1-0.a \
+		%/libapi-ms-win-downlevel-user32-l1-1-0.a \
+		%/libapi-ms-win-downlevel-version-l1-1-0.a
+	rm -f $@
+	cd $(dir $@) && $(AR) -M < $(abspath $<)
+	$(RANLIB) $@
+
+%/libnanosrv.a: lib-common/nanosrv.mri \
+		%/libapi-ms-win-net-isolation-l1-1-0.a \
+		%/libapi-ms-win-net-isolation-l1-1-1.a \
+		%/libclfsw32.a \
+		%/libclusapi.a \
+		%/libcryptxml.a \
+		%/libdbgeng.a \
+		%/libdbghelp.a \
+		%/libdnsperf.a \
+		%/libesent.a \
+		%/libfaultrep.a \
+		%/libfwpuclnt.a \
+		%/libhbaapi.a \
+		%/libhttpapi.a \
+		%/libiscsidsc.a \
+		%/libktmw32.a \
+		%/libmprapi.a \
+		%/libntdsapi.a \
+		%/libpdh.a \
+		%/libsnmpapi.a \
+		%/libtbs.a \
+		%/libvirtdisk.a \
+		%/libvssapi.a \
+		%/libwebservices.a \
+		%/libwer.a \
+		%/libwevtapi.a \
+		%/libwintrust.a \
+		%/libwsmsvc.a
+	rm -f $@
+	cd $(dir $@) && $(AR) -M < $(abspath $<)
+	$(RANLIB) $@
+
+%/libonecore.a: lib-common/onecore.mri \
+		%/libadvapi32_onecore.a \
+		%/libapi-ms-win-core-backgroundtask-l1-1-0.a \
+		%/libapi-ms-win-core-calendar-l1-1-0.a \
+		%/libapi-ms-win-core-comm-l1-1-1.a \
+		%/libapi-ms-win-core-comm-l1-1-2.a \
+		%/libapi-ms-win-core-debug-minidump-l1-1-0.a \
+		%/libapi-ms-win-core-enclave-l1-1-1.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-3.a \
+		%/libapi-ms-win-core-featurestaging-l1-1-0.a \
+		%/libapi-ms-win-core-featurestaging-l1-1-1.a \
+		%/libapi-ms-win-core-handle-l1-1-0.a \
+		%/libapi-ms-win-core-libraryloader-l2-1-0.a \
+		%/libapi-ms-win-core-memory-l1-1-3.a \
+		%/libapi-ms-win-core-memory-l1-1-4.a \
+		%/libapi-ms-win-core-memory-l1-1-5.a \
+		%/libapi-ms-win-core-memory-l1-1-6.a \
+		%/libapi-ms-win-core-memory-l1-1-7.a \
+		%/libapi-ms-win-core-path-l1-1-0.a \
+		%/libapi-ms-win-core-quirks-l1-1-0.a \
+		%/libapi-ms-win-core-quirks-l1-1-1.a \
+		%/libapi-ms-win-core-realtime-l1-1-1.a \
+		%/libapi-ms-win-core-realtime-l1-1-2.a \
+		%/libapi-ms-win-core-rtlsupport-l1-1-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-2-0.a \
+		%/libapi-ms-win-core-state-helpers-l1-1-0.a \
+		%/libapi-ms-win-core-synch-l1-2-0.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-0.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-3.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-4.a \
+		%/libapi-ms-win-core-util-l1-1-1.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-error-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-error-l1-1-1.a \
+		%/libapi-ms-win-core-winrt-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-registration-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-robuffer-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-roparameterizediid-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-string-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-string-l1-1-1.a \
+		%/libapi-ms-win-core-wow64-l1-1-1.a \
+		%/libapi-ms-win-devices-config-l1-1-1.a \
+		%/libapi-ms-win-devices-query-l1-1-0.a \
+		%/libapi-ms-win-devices-query-l1-1-1.a \
+		%/libapi-ms-win-devices-swdevice-l1-1-0.a \
+		%/libapi-ms-win-devices-swdevice-l1-1-1.a \
+		%/libapi-ms-win-gaming-deviceinformation-l1-1-0.a \
+		%/libapi-ms-win-power-base-l1-1-0.a \
+		%/libapi-ms-win-power-limitsmanagement-l1-1-0.a \
+		%/libapi-ms-win-power-setting-l1-1-0.a \
+		%/libapi-ms-win-power-setting-l1-1-1.a \
+		%/libapi-ms-win-ro-typeresolution-l1-1-0.a \
+		%/libapi-ms-win-ro-typeresolution-l1-1-1.a \
+		%/libapi-ms-win-security-base-l1-2-2.a \
+		%/libapi-ms-win-security-isolatedcontainer-l1-1-0.a \
+		%/libapi-ms-win-security-isolatedcontainer-l1-1-1.a \
+		%/libapi-ms-win-service-core-l1-1-3.a \
+		%/libapi-ms-win-service-core-l1-1-4.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-0.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-1.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-2.a \
+		%/libapi-ms-win-shcore-stream-winrt-l1-1-0.a \
+		%/libauthz.a \
+		%/libbcrypt.a \
+		%/libcabinet.a \
+		%/libcomctl32_onecore.a \
+		%/libcomdlg32.a \
+		%/libcrypt32.a \
+		%/libcryptnet.a \
+		%/libdfscli.a \
+		%/libdhcpcsvc.a \
+		%/libdhcpcsvc6.a \
+		%/libdiagnosticdataquery.a \
+		%/libdnsapi.a \
+		%/libdsrole.a \
+		%/libfltlib.a \
+		%/libfontsub.a \
+		%/libgdi32_onecore.a \
+		%/libiphlpapi.a \
+		%/libkernel32_onecore.a \
+		%/liblogoncli.a \
+		%/libmpr.a \
+		%/libmswsock.a \
+		%/libncrypt_onecore.a \
+		%/libnetutils.a \
+		%/libnormaliz_onecore.a \
+		%/libntdll_onecore.a \
+		%/libole32_onecore.a \
+		%/liboleaut32.a \
+		%/libpowrprof_onecore.a \
+		%/libprofapi.a \
+		%/libpsapi.a \
+		%/librpcrt4.a \
+		%/libsamcli.a \
+		%/libschedcli.a \
+		%/libsecur32_onecore.a \
+		%/libsetupapi_onecore.a \
+		%/libshell32_onecore.a \
+		%/libshlwapi.a \
+		%/libsrvcli.a \
+		%/libsspicli.a \
+		%/libtdh_onecore.a \
+		%/libuser32_onecore.a \
+		%/libuserenv.a \
+		%/libversion.a \
+		%/libwebsocket.a \
+		%/libwinhttp_onecore.a \
+		%/libwinmm_onecore.a \
+		%/libwkscli.a \
+		%/libwldap32.a \
+		%/libwpprecorderum.a \
+		%/libws2_32.a \
+		%/libwtsapi32_onecore.a \
+		%/libxmllite.a
+	rm -f $@
+	cd $(dir $@) && $(AR) -M < $(abspath $<)
+	$(RANLIB) $@
+
+%/libonecore_apiset.a: lib-common/onecore_apiset.mri \
+		%/libapi-ms-win-core-apiquery-l2-1-0.a \
+		%/libapi-ms-win-core-atoms-l1-1-0.a \
+		%/libapi-ms-win-core-backgroundtask-l1-1-0.a \
+		%/libapi-ms-win-core-calendar-l1-1-0.a \
+		%/libapi-ms-win-core-com-l1-1-0.a \
+		%/libapi-ms-win-core-com-l1-1-1.a \
+		%/libapi-ms-win-core-com-l1-1-2.a \
+		%/libapi-ms-win-core-com-l1-1-3.a \
+		%/libapi-ms-win-core-com-midlproxystub-l1-1-0.a \
+		%/libapi-ms-win-core-comm-l1-1-0.a \
+		%/libapi-ms-win-core-comm-l1-1-1.a \
+		%/libapi-ms-win-core-comm-l1-1-2.a \
+		%/libapi-ms-win-core-console-l1-1-0.a \
+		%/libapi-ms-win-core-console-l1-2-0.a \
+		%/libapi-ms-win-core-console-l1-2-1.a \
+		%/libapi-ms-win-core-console-l2-1-0.a \
+		%/libapi-ms-win-core-console-l2-2-0.a \
+		%/libapi-ms-win-core-console-l3-2-0.a \
+		%/libapi-ms-win-core-datetime-l1-1-0.a \
+		%/libapi-ms-win-core-datetime-l1-1-1.a \
+		%/libapi-ms-win-core-datetime-l1-1-2.a \
+		%/libapi-ms-win-core-debug-l1-1-0.a \
+		%/libapi-ms-win-core-debug-l1-1-1.a \
+		%/libapi-ms-win-core-debug-l1-1-2.a \
+		%/libapi-ms-win-core-debug-minidump-l1-1-0.a \
+		%/libapi-ms-win-core-delayload-l1-1-0.a \
+		%/libapi-ms-win-core-delayload-l1-1-1.a \
+		%/libapi-ms-win-core-enclave-l1-1-0.a \
+		%/libapi-ms-win-core-enclave-l1-1-1.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-0.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-1.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-2.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-3.a \
+		%/libapi-ms-win-core-featurestaging-l1-1-0.a \
+		%/libapi-ms-win-core-featurestaging-l1-1-1.a \
+		%/libapi-ms-win-core-fibers-l1-1-0.a \
+		%/libapi-ms-win-core-fibers-l1-1-1.a \
+		%/libapi-ms-win-core-fibers-l2-1-0.a \
+		%/libapi-ms-win-core-fibers-l2-1-1.a \
+		%/libapi-ms-win-core-file-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-file-ansi-l2-1-0.a \
+		%/libapi-ms-win-core-file-l1-1-0.a \
+		%/libapi-ms-win-core-file-l1-2-0.a \
+		%/libapi-ms-win-core-file-l1-2-1.a \
+		%/libapi-ms-win-core-file-l1-2-2.a \
+		%/libapi-ms-win-core-file-l1-2-3.a \
+		%/libapi-ms-win-core-file-l2-1-0.a \
+		%/libapi-ms-win-core-file-l2-1-1.a \
+		%/libapi-ms-win-core-file-l2-1-2.a \
+		%/libapi-ms-win-core-file-l2-1-3.a \
+		%/libapi-ms-win-core-firmware-l1-1-0.a \
+		%/libapi-ms-win-core-handle-l1-1-0.a \
+		%/libapi-ms-win-core-heap-l1-1-0.a \
+		%/libapi-ms-win-core-heap-l2-1-0.a \
+		%/libapi-ms-win-core-heap-obsolete-l1-1-0.a \
+		%/libapi-ms-win-core-interlocked-l1-1-0.a \
+		%/libapi-ms-win-core-interlocked-l1-2-0.a \
+		%/libapi-ms-win-core-io-l1-1-0.a \
+		%/libapi-ms-win-core-io-l1-1-1.a \
+		%/libapi-ms-win-core-job-l1-1-0.a \
+		%/libapi-ms-win-core-job-l2-1-0.a \
+		%/libapi-ms-win-core-job-l2-1-1.a \
+		%/libapi-ms-win-core-kernel32-legacy-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-0.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-1.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-2.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-3.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-4.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-5.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-6.a \
+		%/libapi-ms-win-core-largeinteger-l1-1-0.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-0.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-1.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-2.a \
+		%/libapi-ms-win-core-libraryloader-l2-1-0.a \
+		%/libapi-ms-win-core-localization-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-localization-l1-2-0.a \
+		%/libapi-ms-win-core-localization-l1-2-1.a \
+		%/libapi-ms-win-core-localization-l1-2-2.a \
+		%/libapi-ms-win-core-localization-l1-2-3.a \
+		%/libapi-ms-win-core-localization-l1-2-4.a \
+		%/libapi-ms-win-core-localization-l2-1-0.a \
+		%/libapi-ms-win-core-localization-obsolete-l1-2-0.a \
+		%/libapi-ms-win-core-memory-l1-1-0.a \
+		%/libapi-ms-win-core-memory-l1-1-1.a \
+		%/libapi-ms-win-core-memory-l1-1-2.a \
+		%/libapi-ms-win-core-memory-l1-1-3.a \
+		%/libapi-ms-win-core-memory-l1-1-4.a \
 		%/libapi-ms-win-core-memory-l1-1-5.a \
 		%/libapi-ms-win-core-memory-l1-1-6.a \
 		%/libapi-ms-win-core-memory-l1-1-7.a \
@@ -2090,71 +2634,533 @@ endif
 		%/libapi-ms-win-core-namedpipe-l1-1-0.a \
 		%/libapi-ms-win-core-namedpipe-l1-2-1.a \
 		%/libapi-ms-win-core-namedpipe-l1-2-2.a \
+		%/libapi-ms-win-core-namespace-ansi-l1-1-0.a \
 		%/libapi-ms-win-core-namespace-l1-1-0.a \
+		%/libapi-ms-win-core-normalization-l1-1-0.a \
 		%/libapi-ms-win-core-path-l1-1-0.a \
+		%/libapi-ms-win-core-perfcounters-l1-1-0.a \
+		%/libapi-ms-win-core-privateprofile-l1-1-0.a \
+		%/libapi-ms-win-core-privateprofile-l1-1-1.a \
+		%/libapi-ms-win-core-processenvironment-ansi-l1-1-0.a \
 		%/libapi-ms-win-core-processenvironment-l1-1-0.a \
 		%/libapi-ms-win-core-processenvironment-l1-2-0.a \
+		%/libapi-ms-win-core-processsnapshot-l1-1-0.a \
 		%/libapi-ms-win-core-processthreads-l1-1-0.a \
 		%/libapi-ms-win-core-processthreads-l1-1-1.a \
 		%/libapi-ms-win-core-processthreads-l1-1-2.a \
 		%/libapi-ms-win-core-processthreads-l1-1-3.a \
-		%/libapi-ms-win-core-psapi-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-processthreads-l1-1-4.a \
+		%/libapi-ms-win-core-processtopology-l1-1-0.a \
+		%/libapi-ms-win-core-processtopology-obsolete-l1-1-0.a \
+		%/libapi-ms-win-core-processtopology-obsolete-l1-1-1.a \
 		%/libapi-ms-win-core-profile-l1-1-0.a \
+		%/libapi-ms-win-core-psapi-ansi-l1-1-0.a \
 		%/libapi-ms-win-core-psapi-l1-1-0.a \
+		%/libapi-ms-win-core-quirks-l1-1-0.a \
+		%/libapi-ms-win-core-quirks-l1-1-1.a \
 		%/libapi-ms-win-core-realtime-l1-1-0.a \
 		%/libapi-ms-win-core-realtime-l1-1-1.a \
 		%/libapi-ms-win-core-realtime-l1-1-2.a \
+		%/libapi-ms-win-core-registry-l1-1-0.a \
+		%/libapi-ms-win-core-registry-l1-1-1.a \
+		%/libapi-ms-win-core-registry-l1-1-2.a \
+		%/libapi-ms-win-core-registry-l2-1-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-1-0.a \
 		%/libapi-ms-win-core-rtlsupport-l1-2-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-2-1.a \
+		%/libapi-ms-win-core-shutdown-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-shutdown-l1-1-0.a \
+		%/libapi-ms-win-core-shutdown-l1-1-1.a \
 		%/libapi-ms-win-core-string-l1-1-0.a \
+		%/libapi-ms-win-core-string-l2-1-0.a \
+		%/libapi-ms-win-core-string-l2-1-1.a \
+		%/libapi-ms-win-core-string-obsolete-l1-1-0.a \
+		%/libapi-ms-win-core-string-obsolete-l1-1-1.a \
+		%/libapi-ms-win-core-stringansi-l1-1-0.a \
+		%/libapi-ms-win-core-synch-ansi-l1-1-0.a \
 		%/libapi-ms-win-core-synch-l1-1-0.a \
 		%/libapi-ms-win-core-synch-l1-2-0.a \
 		%/libapi-ms-win-core-synch-l1-2-1.a \
 		%/libapi-ms-win-core-sysinfo-l1-1-0.a \
 		%/libapi-ms-win-core-sysinfo-l1-2-0.a \
 		%/libapi-ms-win-core-sysinfo-l1-2-1.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-2.a \
 		%/libapi-ms-win-core-sysinfo-l1-2-3.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-4.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-5.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-6.a \
+		%/libapi-ms-win-core-systemtopology-l1-1-0.a \
+		%/libapi-ms-win-core-systemtopology-l1-1-1.a \
 		%/libapi-ms-win-core-threadpool-l1-2-0.a \
+		%/libapi-ms-win-core-threadpool-legacy-l1-1-0.a \
 		%/libapi-ms-win-core-timezone-l1-1-0.a \
 		%/libapi-ms-win-core-timezone-l1-1-1.a \
+		%/libapi-ms-win-core-toolhelp-l1-1-0.a \
+		%/libapi-ms-win-core-toolhelp-l1-1-1.a \
+		%/libapi-ms-win-core-url-l1-1-0.a \
 		%/libapi-ms-win-core-util-l1-1-0.a \
+		%/libapi-ms-win-core-util-l1-1-1.a \
 		%/libapi-ms-win-core-version-l1-1-0.a \
 		%/libapi-ms-win-core-version-l1-1-1.a \
+		%/libapi-ms-win-core-versionansi-l1-1-0.a \
+		%/libapi-ms-win-core-versionansi-l1-1-1.a \
+		%/libapi-ms-win-core-windowsceip-l1-1-0.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-0.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-1.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-2.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-3.a \
+		%/libapi-ms-win-core-winrt-error-l1-1-0.a \
 		%/libapi-ms-win-core-winrt-error-l1-1-1.a \
 		%/libapi-ms-win-core-winrt-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-registration-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-robuffer-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-roparameterizediid-l1-1-0.a \
 		%/libapi-ms-win-core-winrt-string-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-string-l1-1-1.a \
 		%/libapi-ms-win-core-wow64-l1-1-0.a \
 		%/libapi-ms-win-core-wow64-l1-1-1.a \
+		%/libapi-ms-win-core-wow64-l1-1-2.a \
+		%/libapi-ms-win-core-wow64-l1-1-3.a \
 		%/libapi-ms-win-core-xstate-l2-1-0.a \
+		%/libapi-ms-win-core-xstate-l2-1-1.a \
 		%/libapi-ms-win-devices-config-l1-1-1.a \
 		%/libapi-ms-win-devices-config-l1-1-2.a \
+		%/libapi-ms-win-devices-query-l1-1-0.a \
+		%/libapi-ms-win-devices-query-l1-1-1.a \
+		%/libapi-ms-win-devices-swdevice-l1-1-0.a \
+		%/libapi-ms-win-devices-swdevice-l1-1-1.a \
 		%/libapi-ms-win-eventing-classicprovider-l1-1-0.a \
 		%/libapi-ms-win-eventing-consumer-l1-1-0.a \
+		%/libapi-ms-win-eventing-consumer-l1-1-1.a \
 		%/libapi-ms-win-eventing-controller-l1-1-0.a \
+		%/libapi-ms-win-eventing-legacy-l1-1-0.a \
+		%/libapi-ms-win-eventing-obsolete-l1-1-0.a \
 		%/libapi-ms-win-eventing-provider-l1-1-0.a \
+		%/libapi-ms-win-eventing-tdh-l1-1-0.a \
+		%/libapi-ms-win-eventing-tdh-l1-1-1.a \
+		%/libapi-ms-win-gaming-deviceinformation-l1-1-0.a \
+		%/libapi-ms-win-mm-time-l1-1-0.a \
+		%/libapi-ms-win-oobe-notification-l1-1-0.a \
+		%/libapi-ms-win-perf-legacy-l1-1-0.a \
+		%/libapi-ms-win-power-base-l1-1-0.a \
+		%/libapi-ms-win-power-limitsmanagement-l1-1-0.a \
+		%/libapi-ms-win-power-setting-l1-1-0.a \
+		%/libapi-ms-win-power-setting-l1-1-1.a \
+		%/libapi-ms-win-ro-typeresolution-l1-1-0.a \
+		%/libapi-ms-win-ro-typeresolution-l1-1-1.a \
+		%/libapi-ms-win-security-appcontainer-l1-1-0.a \
+		%/libapi-ms-win-security-base-ansi-l1-1-0.a \
 		%/libapi-ms-win-security-base-l1-1-0.a \
 		%/libapi-ms-win-security-base-l1-2-0.a \
 		%/libapi-ms-win-security-base-l1-2-1.a \
+		%/libapi-ms-win-security-base-l1-2-2.a \
+		%/libapi-ms-win-security-cpwl-l1-1-0.a \
+		%/libapi-ms-win-security-credentials-l1-1-0.a \
+		%/libapi-ms-win-security-cryptoapi-l1-1-0.a \
+		%/libapi-ms-win-security-isolatedcontainer-l1-1-0.a \
+		%/libapi-ms-win-security-isolatedcontainer-l1-1-1.a \
+		%/libapi-ms-win-security-lsalookup-ansi-l2-1-0.a \
 		%/libapi-ms-win-security-lsalookup-l2-1-0.a \
+		%/libapi-ms-win-security-lsalookup-l2-1-1.a \
+		%/libapi-ms-win-security-lsapolicy-l1-1-0.a \
+		%/libapi-ms-win-security-provider-ansi-l1-1-0.a \
+		%/libapi-ms-win-security-provider-l1-1-0.a \
+		%/libapi-ms-win-security-sddl-ansi-l1-1-0.a \
 		%/libapi-ms-win-security-sddl-l1-1-0.a \
+		%/libapi-ms-win-security-systemfunctions-l1-1-0.a \
+		%/libapi-ms-win-service-core-ansi-l1-1-0.a \
+		%/libapi-ms-win-service-core-ansi-l1-1-1.a \
+		%/libapi-ms-win-service-core-l1-1-0.a \
+		%/libapi-ms-win-service-core-l1-1-1.a \
+		%/libapi-ms-win-service-core-l1-1-2.a \
+		%/libapi-ms-win-service-core-l1-1-3.a \
+		%/libapi-ms-win-service-core-l1-1-4.a \
+		%/libapi-ms-win-service-management-l1-1-0.a \
+		%/libapi-ms-win-service-management-l2-1-0.a \
+		%/libapi-ms-win-service-winsvc-l1-1-0.a \
+		%/libapi-ms-win-shcore-obsolete-l1-1-0.a \
+		%/libapi-ms-win-shcore-path-l1-1-0.a \
+		%/libapi-ms-win-shcore-registry-l1-1-0.a \
+		%/libapi-ms-win-shcore-registry-l1-1-1.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-0.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-1.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-2.a \
+		%/libapi-ms-win-shcore-stream-l1-1-0.a \
+		%/libapi-ms-win-shcore-stream-winrt-l1-1-0.a \
+		%/libapi-ms-win-shcore-sysinfo-l1-1-0.a \
+		%/libapi-ms-win-shcore-unicodeansi-l1-1-0.a \
+		%/libapi-ms-win-shell-shdirectory-l1-1-0.a \
 		%/libauthz.a \
 		%/libbcrypt.a \
 		%/libcabinet.a \
 		%/libcrypt32.a \
 		%/libcryptbase.a \
 		%/libcryptnet.a \
+		%/libdfscli.a \
+		%/libdhcpcsvc.a \
 		%/libdnsapi.a \
+		%/libdsrole.a \
+		%/libfltlib.a \
 		%/libiphlpapi.a \
+		%/liblogoncli.a \
 		%/libmpr.a \
 		%/libmswsock.a \
 		%/libncrypt.a \
+		%/libnetutils.a \
 		%/liboleaut32.a \
+		%/libpowrprof.a \
+		%/libprofapi.a \
 		%/librpcrt4.a \
+		%/libsamcli.a \
+		%/libschedcli.a \
+		%/libsrvcli.a \
 		%/libsspicli.a \
 		%/libuserenv.a \
-		%/libwinhttp.a \
-		%/libwldap32.a \
 		%/libwebsocket.a \
-		%/libws2_32.a
+		%/libwinhttp.a \
+		%/libwkscli.a \
+		%/libwldap32.a \
+		%/libwpprecorderum.a \
+		%/libws2_32.a \
+		%/libxmllite.a
+	rm -f $@
+	cd $(dir $@) && $(AR) -M < $(abspath $<)
+	$(RANLIB) $@
+
+%/libonecoreuap_apiset.a: lib-common/onecoreuap_apiset.mri \
+		%/libapi-ms-win-appmodel-runtime-l1-1-0.a \
+		%/libapi-ms-win-appmodel-runtime-l1-1-1.a \
+		%/libapi-ms-win-appmodel-runtime-l1-1-2.a \
+		%/libapi-ms-win-appmodel-runtime-l1-1-3.a \
+		%/libapi-ms-win-core-apiquery-l2-1-0.a \
+		%/libapi-ms-win-core-atoms-l1-1-0.a \
+		%/libapi-ms-win-core-backgroundtask-l1-1-0.a \
+		%/libapi-ms-win-core-calendar-l1-1-0.a \
+		%/libapi-ms-win-core-com-l1-1-0.a \
+		%/libapi-ms-win-core-com-l1-1-1.a \
+		%/libapi-ms-win-core-com-l1-1-2.a \
+		%/libapi-ms-win-core-com-l1-1-3.a \
+		%/libapi-ms-win-core-com-l2-1-1.a \
+		%/libapi-ms-win-core-com-midlproxystub-l1-1-0.a \
+		%/libapi-ms-win-core-comm-l1-1-0.a \
+		%/libapi-ms-win-core-comm-l1-1-1.a \
+		%/libapi-ms-win-core-comm-l1-1-2.a \
+		%/libapi-ms-win-core-console-l1-1-0.a \
+		%/libapi-ms-win-core-console-l1-2-0.a \
+		%/libapi-ms-win-core-console-l1-2-1.a \
+		%/libapi-ms-win-core-console-l2-1-0.a \
+		%/libapi-ms-win-core-console-l2-2-0.a \
+		%/libapi-ms-win-core-console-l3-2-0.a \
+		%/libapi-ms-win-core-datetime-l1-1-0.a \
+		%/libapi-ms-win-core-datetime-l1-1-1.a \
+		%/libapi-ms-win-core-datetime-l1-1-2.a \
+		%/libapi-ms-win-core-debug-l1-1-0.a \
+		%/libapi-ms-win-core-debug-l1-1-1.a \
+		%/libapi-ms-win-core-debug-l1-1-2.a \
+		%/libapi-ms-win-core-debug-minidump-l1-1-0.a \
+		%/libapi-ms-win-core-delayload-l1-1-0.a \
+		%/libapi-ms-win-core-delayload-l1-1-1.a \
+		%/libapi-ms-win-core-enclave-l1-1-0.a \
+		%/libapi-ms-win-core-enclave-l1-1-1.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-0.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-1.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-2.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-3.a \
+		%/libapi-ms-win-core-featurestaging-l1-1-0.a \
+		%/libapi-ms-win-core-featurestaging-l1-1-1.a \
+		%/libapi-ms-win-core-fibers-l1-1-0.a \
+		%/libapi-ms-win-core-fibers-l1-1-1.a \
+		%/libapi-ms-win-core-fibers-l2-1-0.a \
+		%/libapi-ms-win-core-fibers-l2-1-1.a \
+		%/libapi-ms-win-core-file-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-file-ansi-l2-1-0.a \
+		%/libapi-ms-win-core-file-fromapp-l1-1-0.a \
+		%/libapi-ms-win-core-file-l1-1-0.a \
+		%/libapi-ms-win-core-file-l1-2-0.a \
+		%/libapi-ms-win-core-file-l1-2-1.a \
+		%/libapi-ms-win-core-file-l1-2-2.a \
+		%/libapi-ms-win-core-file-l1-2-3.a \
+		%/libapi-ms-win-core-file-l2-1-0.a \
+		%/libapi-ms-win-core-file-l2-1-1.a \
+		%/libapi-ms-win-core-file-l2-1-2.a \
+		%/libapi-ms-win-core-file-l2-1-3.a \
+		%/libapi-ms-win-core-firmware-l1-1-0.a \
+		%/libapi-ms-win-core-handle-l1-1-0.a \
+		%/libapi-ms-win-core-heap-l1-1-0.a \
+		%/libapi-ms-win-core-heap-l2-1-0.a \
+		%/libapi-ms-win-core-heap-obsolete-l1-1-0.a \
+		%/libapi-ms-win-core-interlocked-l1-1-0.a \
+		%/libapi-ms-win-core-interlocked-l1-2-0.a \
+		%/libapi-ms-win-core-io-l1-1-0.a \
+		%/libapi-ms-win-core-io-l1-1-1.a \
+		%/libapi-ms-win-core-job-l1-1-0.a \
+		%/libapi-ms-win-core-job-l2-1-0.a \
+		%/libapi-ms-win-core-job-l2-1-1.a \
+		%/libapi-ms-win-core-kernel32-legacy-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-0.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-1.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-2.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-3.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-4.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-5.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-6.a \
+		%/libapi-ms-win-core-largeinteger-l1-1-0.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-0.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-1.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-2.a \
+		%/libapi-ms-win-core-libraryloader-l2-1-0.a \
+		%/libapi-ms-win-core-localization-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-localization-l1-2-0.a \
+		%/libapi-ms-win-core-localization-l1-2-1.a \
+		%/libapi-ms-win-core-localization-l1-2-2.a \
+		%/libapi-ms-win-core-localization-l1-2-3.a \
+		%/libapi-ms-win-core-localization-l1-2-4.a \
+		%/libapi-ms-win-core-localization-l2-1-0.a \
+		%/libapi-ms-win-core-localization-obsolete-l1-2-0.a \
+		%/libapi-ms-win-core-memory-l1-1-0.a \
+		%/libapi-ms-win-core-memory-l1-1-1.a \
+		%/libapi-ms-win-core-memory-l1-1-2.a \
+		%/libapi-ms-win-core-memory-l1-1-3.a \
+		%/libapi-ms-win-core-memory-l1-1-4.a \
+		%/libapi-ms-win-core-memory-l1-1-5.a \
+		%/libapi-ms-win-core-memory-l1-1-6.a \
+		%/libapi-ms-win-core-memory-l1-1-7.a \
+		%/libapi-ms-win-core-namedpipe-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-namedpipe-ansi-l1-1-1.a \
+		%/libapi-ms-win-core-namedpipe-l1-1-0.a \
+		%/libapi-ms-win-core-namedpipe-l1-2-1.a \
+		%/libapi-ms-win-core-namedpipe-l1-2-2.a \
+		%/libapi-ms-win-core-namespace-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-namespace-l1-1-0.a \
+		%/libapi-ms-win-core-normalization-l1-1-0.a \
+		%/libapi-ms-win-core-path-l1-1-0.a \
+		%/libapi-ms-win-core-perfcounters-l1-1-0.a \
+		%/libapi-ms-win-core-privateprofile-l1-1-0.a \
+		%/libapi-ms-win-core-privateprofile-l1-1-1.a \
+		%/libapi-ms-win-core-processenvironment-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-processenvironment-l1-1-0.a \
+		%/libapi-ms-win-core-processenvironment-l1-2-0.a \
+		%/libapi-ms-win-core-processsnapshot-l1-1-0.a \
+		%/libapi-ms-win-core-processthreads-l1-1-0.a \
+		%/libapi-ms-win-core-processthreads-l1-1-1.a \
+		%/libapi-ms-win-core-processthreads-l1-1-2.a \
+		%/libapi-ms-win-core-processthreads-l1-1-3.a \
+		%/libapi-ms-win-core-processthreads-l1-1-4.a \
+		%/libapi-ms-win-core-processtopology-l1-1-0.a \
+		%/libapi-ms-win-core-processtopology-obsolete-l1-1-0.a \
+		%/libapi-ms-win-core-processtopology-obsolete-l1-1-1.a \
+		%/libapi-ms-win-core-profile-l1-1-0.a \
+		%/libapi-ms-win-core-psapi-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-psapi-l1-1-0.a \
+		%/libapi-ms-win-core-psm-appnotify-l1-1-0.a \
+		%/libapi-ms-win-core-quirks-l1-1-0.a \
+		%/libapi-ms-win-core-quirks-l1-1-1.a \
+		%/libapi-ms-win-core-realtime-l1-1-0.a \
+		%/libapi-ms-win-core-realtime-l1-1-1.a \
+		%/libapi-ms-win-core-realtime-l1-1-2.a \
+		%/libapi-ms-win-core-registry-l1-1-0.a \
+		%/libapi-ms-win-core-registry-l1-1-1.a \
+		%/libapi-ms-win-core-registry-l1-1-2.a \
+		%/libapi-ms-win-core-registry-l2-1-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-1-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-2-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-2-1.a \
+		%/libapi-ms-win-core-shutdown-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-shutdown-l1-1-0.a \
+		%/libapi-ms-win-core-shutdown-l1-1-1.a \
+		%/libapi-ms-win-core-slapi-l1-1-0.a \
+		%/libapi-ms-win-core-string-l1-1-0.a \
+		%/libapi-ms-win-core-string-l2-1-0.a \
+		%/libapi-ms-win-core-string-l2-1-1.a \
+		%/libapi-ms-win-core-string-obsolete-l1-1-0.a \
+		%/libapi-ms-win-core-string-obsolete-l1-1-1.a \
+		%/libapi-ms-win-core-stringansi-l1-1-0.a \
+		%/libapi-ms-win-core-synch-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-synch-l1-1-0.a \
+		%/libapi-ms-win-core-synch-l1-2-0.a \
+		%/libapi-ms-win-core-synch-l1-2-1.a \
+		%/libapi-ms-win-core-sysinfo-l1-1-0.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-0.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-1.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-2.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-3.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-4.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-5.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-6.a \
+		%/libapi-ms-win-core-systemtopology-l1-1-0.a \
+		%/libapi-ms-win-core-systemtopology-l1-1-1.a \
+		%/libapi-ms-win-core-threadpool-l1-2-0.a \
+		%/libapi-ms-win-core-threadpool-legacy-l1-1-0.a \
+		%/libapi-ms-win-core-timezone-l1-1-0.a \
+		%/libapi-ms-win-core-timezone-l1-1-1.a \
+		%/libapi-ms-win-core-toolhelp-l1-1-0.a \
+		%/libapi-ms-win-core-toolhelp-l1-1-1.a \
+		%/libapi-ms-win-core-url-l1-1-0.a \
+		%/libapi-ms-win-core-util-l1-1-0.a \
+		%/libapi-ms-win-core-util-l1-1-1.a \
+		%/libapi-ms-win-core-version-l1-1-0.a \
+		%/libapi-ms-win-core-version-l1-1-1.a \
+		%/libapi-ms-win-core-versionansi-l1-1-0.a \
+		%/libapi-ms-win-core-versionansi-l1-1-1.a \
+		%/libapi-ms-win-core-windowsceip-l1-1-0.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-0.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-1.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-2.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-3.a \
+		%/libapi-ms-win-core-winrt-error-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-error-l1-1-1.a \
+		%/libapi-ms-win-core-winrt-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-registration-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-robuffer-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-roparameterizediid-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-string-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-string-l1-1-1.a \
+		%/libapi-ms-win-core-wow64-l1-1-0.a \
+		%/libapi-ms-win-core-wow64-l1-1-1.a \
+		%/libapi-ms-win-core-wow64-l1-1-2.a \
+		%/libapi-ms-win-core-wow64-l1-1-3.a \
+		%/libapi-ms-win-core-xstate-l2-1-0.a \
+		%/libapi-ms-win-core-xstate-l2-1-1.a \
+		%/libapi-ms-win-devices-config-l1-1-1.a \
+		%/libapi-ms-win-devices-config-l1-1-2.a \
+		%/libapi-ms-win-devices-query-l1-1-0.a \
+		%/libapi-ms-win-devices-query-l1-1-1.a \
+		%/libapi-ms-win-devices-swdevice-l1-1-0.a \
+		%/libapi-ms-win-devices-swdevice-l1-1-1.a \
+		%/libapi-ms-win-eventing-classicprovider-l1-1-0.a \
+		%/libapi-ms-win-eventing-consumer-l1-1-0.a \
+		%/libapi-ms-win-eventing-consumer-l1-1-1.a \
+		%/libapi-ms-win-eventing-controller-l1-1-0.a \
+		%/libapi-ms-win-eventing-legacy-l1-1-0.a \
+		%/libapi-ms-win-eventing-obsolete-l1-1-0.a \
+		%/libapi-ms-win-eventing-provider-l1-1-0.a \
+		%/libapi-ms-win-eventing-tdh-l1-1-0.a \
+		%/libapi-ms-win-eventing-tdh-l1-1-1.a \
+		%/libapi-ms-win-gaming-deviceinformation-l1-1-0.a \
+		%/libapi-ms-win-gaming-expandedresources-l1-1-0.a \
+		%/libapi-ms-win-gaming-tcui-l1-1-0.a \
+		%/libapi-ms-win-gaming-tcui-l1-1-1.a \
+		%/libapi-ms-win-gaming-tcui-l1-1-2.a \
+		%/libapi-ms-win-gaming-tcui-l1-1-3.a \
+		%/libapi-ms-win-gaming-tcui-l1-1-4.a \
+		%/libapi-ms-win-mm-time-l1-1-0.a \
+		%/libapi-ms-win-net-isolation-l1-1-0.a \
+		%/libapi-ms-win-net-isolation-l1-1-1.a \
+		%/libapi-ms-win-ntuser-sysparams-l1-1-0.a \
+		%/libapi-ms-win-oobe-notification-l1-1-0.a \
+		%/libapi-ms-win-perf-legacy-l1-1-0.a \
+		%/libapi-ms-win-power-base-l1-1-0.a \
+		%/libapi-ms-win-power-limitsmanagement-l1-1-0.a \
+		%/libapi-ms-win-power-setting-l1-1-0.a \
+		%/libapi-ms-win-power-setting-l1-1-1.a \
+		%/libapi-ms-win-ro-typeresolution-l1-1-0.a \
+		%/libapi-ms-win-ro-typeresolution-l1-1-1.a \
+		%/libapi-ms-win-security-appcontainer-l1-1-0.a \
+		%/libapi-ms-win-security-base-ansi-l1-1-0.a \
+		%/libapi-ms-win-security-base-l1-1-0.a \
+		%/libapi-ms-win-security-base-l1-2-0.a \
+		%/libapi-ms-win-security-base-l1-2-1.a \
+		%/libapi-ms-win-security-base-l1-2-2.a \
+		%/libapi-ms-win-security-cpwl-l1-1-0.a \
+		%/libapi-ms-win-security-credentials-l1-1-0.a \
+		%/libapi-ms-win-security-cryptoapi-l1-1-0.a \
+		%/libapi-ms-win-security-isolatedcontainer-l1-1-0.a \
+		%/libapi-ms-win-security-isolatedcontainer-l1-1-1.a \
+		%/libapi-ms-win-security-lsalookup-ansi-l2-1-0.a \
+		%/libapi-ms-win-security-lsalookup-l2-1-0.a \
+		%/libapi-ms-win-security-lsalookup-l2-1-1.a \
+		%/libapi-ms-win-security-lsapolicy-l1-1-0.a \
+		%/libapi-ms-win-security-provider-ansi-l1-1-0.a \
+		%/libapi-ms-win-security-provider-l1-1-0.a \
+		%/libapi-ms-win-security-sddl-ansi-l1-1-0.a \
+		%/libapi-ms-win-security-sddl-l1-1-0.a \
+		%/libapi-ms-win-security-systemfunctions-l1-1-0.a \
+		%/libapi-ms-win-service-core-ansi-l1-1-0.a \
+		%/libapi-ms-win-service-core-ansi-l1-1-1.a \
+		%/libapi-ms-win-service-core-l1-1-0.a \
+		%/libapi-ms-win-service-core-l1-1-1.a \
+		%/libapi-ms-win-service-core-l1-1-2.a \
+		%/libapi-ms-win-service-core-l1-1-3.a \
+		%/libapi-ms-win-service-core-l1-1-4.a \
+		%/libapi-ms-win-service-management-l1-1-0.a \
+		%/libapi-ms-win-service-management-l2-1-0.a \
+		%/libapi-ms-win-service-winsvc-l1-1-0.a \
+		%/libapi-ms-win-shcore-obsolete-l1-1-0.a \
+		%/libapi-ms-win-shcore-path-l1-1-0.a \
+		%/libapi-ms-win-shcore-registry-l1-1-0.a \
+		%/libapi-ms-win-shcore-registry-l1-1-1.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-0.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-1.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-2.a \
+		%/libapi-ms-win-shcore-stream-l1-1-0.a \
+		%/libapi-ms-win-shcore-stream-winrt-l1-1-0.a \
+		%/libapi-ms-win-shcore-sysinfo-l1-1-0.a \
+		%/libapi-ms-win-shcore-unicodeansi-l1-1-0.a \
+		%/libapi-ms-win-shell-shdirectory-l1-1-0.a \
+		%/libauthz.a \
+		%/libbcrypt.a \
+		%/libcabinet.a \
+		%/libchakrart.a \
+		%/libcrypt32.a \
+		%/libcryptbase.a \
+		%/libcryptnet.a \
+		%/libd2d1.a \
+		%/libd3d11.a \
+		%/libd3d12.a \
+		%/libd3dcompiler_47.a \
+		%/libdfscli.a \
+		%/libdhcpcsvc.a \
+		%/libdhcpcsvc6.a \
+		%/libdirectml.a \
+		%/libdnsapi.a \
+		%/libdsrole.a \
+		%/libdwrite.a \
+		%/libdxgi.a \
+		%/libesent.a \
+		%/libfltlib.a \
+		%/libhid.a \
+		%/libhrtfapo.a \
+		%/libicu.a \
+		%/libinkobjcore.a \
+		%/libiphlpapi.a \
+		%/liblogoncli.a \
+		%/libmf.a \
+		%/libmfplat.a \
+		%/libmfreadwrite.a \
+		%/libmfsensorgroup.a \
+		%/libmmdevapi.a \
+		%/libmpr.a \
+		%/libmsajapi.a \
+		%/libmscms.a \
+		%/libmswsock.a \
+		%/libncrypt.a \
+		%/libnetutils.a \
+		%/liboleaut32.a \
+		%/libpowrprof.a \
+		%/libprofapi.a \
+		%/libpropsys.a \
+		%/librometadata.a \
+		%/librpcrt4.a \
+		%/libsamcli.a \
+		%/libschedcli.a \
+		%/libsrvcli.a \
+		%/libsspicli.a \
+		%/libuiautomationcore.a \
+		%/libuserenv.a \
+		%/libwebauthn.a \
+		%/libwebservices.a \
+		%/libwebsocket.a \
+		%/libwindows.ai.machinelearning.a \
+		%/libwindows.data.pdf.a \
+		%/libwindows.networking.a \
+		%/libwindowscodecs.a \
+		%/libwinhttp.a \
+		%/libwkscli.a \
+		%/libwldap32.a \
+		%/libwpprecorderum.a \
+		%/libws2_32.a \
+		%/libxaudio2_9.a \
+		%/libxmllite.a
 	rm -f $@
 	cd $(dir $@) && $(AR) -M < $(abspath $<)
 	$(RANLIB) $@
@@ -2185,156 +3191,573 @@ endif
 	$(RANLIB) $@
 
 %/libwindowsapp.a: lib-common/windowsapp.mri \
-		%/libgamemode.a \
-		%/libapi-ms-win-core-com-l1-1-1.a \
+		%/libapi-ms-win-appmodel-runtime-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-appmodel-runtime-l1-1-1_windowsapp.a \
+		%/libapi-ms-win-appmodel-runtime-l1-1-2.a \
+		%/libapi-ms-win-appmodel-runtime-l1-1-3.a \
+		%/libapi-ms-win-core-atoms-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-com-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-com-l1-1-1_windowsapp.a \
 		%/libapi-ms-win-core-com-l2-1-1.a \
 		%/libapi-ms-win-core-com-midlproxystub-l1-1-0.a \
 		%/libapi-ms-win-core-comm-l1-1-0.a \
+		%/libapi-ms-win-core-comm-l1-1-1.a \
+		%/libapi-ms-win-core-comm-l1-1-2.a \
 		%/libapi-ms-win-core-console-l1-1-0.a \
+		%/libapi-ms-win-core-console-l1-2-0.a \
+		%/libapi-ms-win-core-console-l2-1-0.a \
+		%/libapi-ms-win-core-console-l2-2-0.a \
+		%/libapi-ms-win-core-console-l3-2-0.a \
 		%/libapi-ms-win-core-datetime-l1-1-0.a \
 		%/libapi-ms-win-core-datetime-l1-1-1.a \
 		%/libapi-ms-win-core-datetime-l1-1-2.a \
+		%/libapi-ms-win-core-debug-l1-1-0.a \
 		%/libapi-ms-win-core-debug-l1-1-1.a \
+		%/libapi-ms-win-core-delayload-l1-1-0.a \
 		%/libapi-ms-win-core-delayload-l1-1-1.a \
-		%/libapi-ms-win-core-errorhandling-l1-1-1.a \
-		%/libapi-ms-win-core-errorhandling-l1-1-3.a \
+		%/libapi-ms-win-core-enclave-l1-1-0.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-0.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-1_windowsapp.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-2.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-3_windowsapp.a \
+		%/libapi-ms-win-core-featurestaging-l1-1-0.a \
+		%/libapi-ms-win-core-featurestaging-l1-1-1.a \
+		%/libapi-ms-win-core-fibers-l1-1-0.a \
 		%/libapi-ms-win-core-fibers-l1-1-1.a \
+		%/libapi-ms-win-core-fibers-l2-1-0_windowsapp.a \
 		%/libapi-ms-win-core-fibers-l2-1-1.a \
-		%/libapi-ms-win-core-file-ansi-l2-1-0.a \
-		%/libapi-ms-win-core-file-l1-2-1.a \
-		%/libapi-ms-win-core-file-l1-2-2.a \
+		%/libapi-ms-win-core-file-ansi-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-file-ansi-l2-1-0_windowsapp.a \
+		%/libapi-ms-win-core-file-fromapp-l1-1-0.a \
+		%/libapi-ms-win-core-file-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-file-l1-2-0.a \
+		%/libapi-ms-win-core-file-l1-2-2_windowsapp.a \
 		%/libapi-ms-win-core-file-l2-1-0.a \
-		%/libapi-ms-win-core-file-l2-1-1.a \
+		%/libapi-ms-win-core-file-l2-1-2_windowsapp.a \
+		%/libapi-ms-win-core-firmware-l1-1-0.a \
 		%/libapi-ms-win-core-handle-l1-1-0.a \
-		%/libapi-ms-win-core-heap-l1-2-0.a \
+		%/libapi-ms-win-core-heap-l1-1-0.a \
+		%/libapi-ms-win-core-heap-l2-1-0_windowsapp.a \
+		%/libapi-ms-win-core-heap-obsolete-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-interlocked-l1-1-0.a \
 		%/libapi-ms-win-core-interlocked-l1-2-0.a \
 		%/libapi-ms-win-core-io-l1-1-0.a \
-		%/libapi-ms-win-core-io-l1-1-1.a \
-		%/libapi-ms-win-core-kernel32-legacy-l1-1-0.a \
-		%/libapi-ms-win-core-kernel32-legacy-l1-1-1.a \
+		%/libapi-ms-win-core-io-l1-1-1_windowsapp.a \
+		%/libapi-ms-win-core-job-l2-1-0_windowsapp.a \
+		%/libapi-ms-win-core-kernel32-legacy-ansi-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-1_windowsapp.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-2_windowsapp.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-5_windowsapp.a \
 		%/libapi-ms-win-core-largeinteger-l1-1-0.a \
-		%/libapi-ms-win-core-libraryloader-l1-2-0.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-0_windowsapp.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-1.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-2.a \
 		%/libapi-ms-win-core-libraryloader-l2-1-0.a \
-		%/libapi-ms-win-core-localization-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-localization-ansi-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-localization-l1-2-0_windowsapp.a \
 		%/libapi-ms-win-core-localization-l1-2-1.a \
 		%/libapi-ms-win-core-localization-l1-2-2.a \
-		%/libapi-ms-win-core-localization-l2-1-0.a \
-		%/libapi-ms-win-core-memory-l1-1-2.a \
+		%/libapi-ms-win-core-localization-l2-1-0_windowsapp.a \
+		%/libapi-ms-win-core-localization-obsolete-l1-2-0_windowsapp.a \
+		%/libapi-ms-win-core-memory-l1-1-0.a \
+		%/libapi-ms-win-core-memory-l1-1-1_windowsapp.a \
+		%/libapi-ms-win-core-memory-l1-1-2_windowsapp.a \
 		%/libapi-ms-win-core-memory-l1-1-3.a \
+		%/libapi-ms-win-core-memory-l1-1-5_windowsapp.a \
+		%/libapi-ms-win-core-memory-l1-1-6_windowsapp.a \
+		%/libapi-ms-win-core-memory-l1-1-7_windowsapp.a \
 		%/libapi-ms-win-core-namedpipe-ansi-l1-1-0.a \
 		%/libapi-ms-win-core-namedpipe-ansi-l1-1-1.a \
 		%/libapi-ms-win-core-namedpipe-l1-1-0.a \
 		%/libapi-ms-win-core-namedpipe-l1-2-1.a \
 		%/libapi-ms-win-core-namedpipe-l1-2-2.a \
+		%/libapi-ms-win-core-namespace-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-namespace-l1-1-0.a \
 		%/libapi-ms-win-core-normalization-l1-1-0.a \
+		%/libapi-ms-win-core-path-l1-1-0.a \
+		%/libapi-ms-win-core-privateprofile-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-privateprofile-l1-1-1_windowsapp.a \
+		%/libapi-ms-win-core-processenvironment-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-processenvironment-l1-1-0.a \
+		%/libapi-ms-win-core-processenvironment-l1-2-0_windowsapp.a \
+		%/libapi-ms-win-core-processsnapshot-l1-1-0.a \
+		%/libapi-ms-win-core-processthreads-l1-1-0.a \
+		%/libapi-ms-win-core-processthreads-l1-1-1.a \
+		%/libapi-ms-win-core-processthreads-l1-1-2_windowsapp.a \
+		%/libapi-ms-win-core-processthreads-l1-1-3_windowsapp.a \
+		%/libapi-ms-win-core-processtopology-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-processtopology-obsolete-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-profile-l1-1-0.a \
+		%/libapi-ms-win-core-psapi-ansi-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-psapi-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-psm-appnotify-l1-1-0.a \
+		%/libapi-ms-win-core-realtime-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-realtime-l1-1-1.a \
+		%/libapi-ms-win-core-realtime-l1-1-2.a \
+		%/libapi-ms-win-core-registry-l1-1-0.a \
+		%/libapi-ms-win-core-registry-l1-1-1.a \
+		%/libapi-ms-win-core-registry-l1-1-2.a \
+		%/libapi-ms-win-core-registry-l2-1-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-1-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-2-0_windowsapp.a \
+		%/libapi-ms-win-core-shutdown-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-slapi-l1-1-0.a \
+		%/libapi-ms-win-core-string-l1-1-0.a \
+		%/libapi-ms-win-core-string-l2-1-0_windowsapp.a \
+		%/libapi-ms-win-core-string-obsolete-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-string-obsolete-l1-1-1.a \
+		%/libapi-ms-win-core-stringansi-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-synch-ansi-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-synch-l1-1-0.a \
+		%/libapi-ms-win-core-synch-l1-2-0.a \
+		%/libapi-ms-win-core-synch-l1-2-1.a \
+		%/libapi-ms-win-core-sysinfo-l1-1-0.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-0_windowsapp.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-1_windowsapp.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-3_windowsapp.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-5.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-6.a \
+		%/libapi-ms-win-core-systemtopology-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-threadpool-l1-2-0.a \
+		%/libapi-ms-win-core-threadpool-legacy-l1-1-0.a \
+		%/libapi-ms-win-core-timezone-l1-1-0.a \
+		%/libapi-ms-win-core-timezone-l1-1-1.a \
+		%/libapi-ms-win-core-toolhelp-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-url-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-util-l1-1-0.a \
+		%/libapi-ms-win-core-versionansi-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-versionansi-l1-1-1_windowsapp.a \
+		%/libapi-ms-win-core-version-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-version-l1-1-1_windowsapp.a \
+		%/libapi-ms-win-core-windowsceip-l1-1-0.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-1.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-2.a \
+		%/libapi-ms-win-core-winrt-error-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-winrt-error-l1-1-1_windowsapp.a \
+		%/libapi-ms-win-core-winrt-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-registration-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-robuffer-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-roparameterizediid-l1-1-0.a \
+		%/libapi-ms-win-core-winrt-string-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-wow64-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-core-wow64-l1-1-1_windowsapp.a \
+		%/libapi-ms-win-core-xstate-l2-1-0_windowsapp.a \
+		%/libapi-ms-win-devices-config-l1-1-1_windowsapp.a \
+		%/libapi-ms-win-devices-config-l1-1-2_windowsapp.a \
+		%/libapi-ms-win-devices-query-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-eventing-classicprovider-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-eventing-consumer-l1-1-0.a \
+		%/libapi-ms-win-eventing-controller-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-eventing-legacy-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-eventing-obsolete-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-eventing-provider-l1-1-0.a \
+		%/libapi-ms-win-eventlog-legacy-l1-1-0.a \
+		%/libapi-ms-win-gaming-deviceinformation-l1-1-0.a \
+		%/libapi-ms-win-gaming-expandedresources-l1-1-0.a \
+		%/libapi-ms-win-gaming-tcui-l1-1-0.a \
+		%/libapi-ms-win-gaming-tcui-l1-1-1.a \
+		%/libapi-ms-win-gaming-tcui-l1-1-2.a \
+		%/libapi-ms-win-gaming-tcui-l1-1-3.a \
+		%/libapi-ms-win-gaming-tcui-l1-1-4.a \
+		%/libapi-ms-win-mm-time-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-ntuser-sysparams-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-power-base-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-power-setting-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-ro-typeresolution-l1-1-0.a \
+		%/libapi-ms-win-ro-typeresolution-l1-1-1.a \
+		%/libapi-ms-win-security-appcontainer-l1-1-0.a \
+		%/libapi-ms-win-security-base-ansi-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-security-base-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-security-base-l1-2-0_windowsapp.a \
+		%/libapi-ms-win-security-base-l1-2-1.a \
+		%/libapi-ms-win-security-base-l1-2-2.a \
+		%/libapi-ms-win-security-cpwl-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-security-cryptoapi-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-security-isolatedcontainer-l1-1-0.a \
+		%/libapi-ms-win-security-lsalookup-ansi-l2-1-0.a \
+		%/libapi-ms-win-security-lsalookup-l2-1-0_windowsapp.a \
+		%/libapi-ms-win-security-lsapolicy-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-security-provider-ansi-l1-1-0.a \
+		%/libapi-ms-win-security-provider-l1-1-0.a \
+		%/libapi-ms-win-security-sddl-ansi-l1-1-0.a \
+		%/libapi-ms-win-security-sddl-l1-1-0.a \
+		%/libapi-ms-win-security-systemfunctions-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-service-core-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-service-management-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-service-winsvc-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-shcore-obsolete-l1-1-0_windowsapp.a \
+		%/libapi-ms-win-shcore-stream-winrt-l1-1-0.a \
+		%/libbcrypt_windowsapp.a \
+		%/libcabinet_windowsapp.a \
+		%/libchakrart_windowsapp.a \
+		%/libcoremessaging_windowsapp.a \
+		%/libcrypt32_windowsapp.a \
+		%/libd3d11_windowsapp.a \
+		%/libd3d12_windowsapp.a \
+		%/libd3dcompiler_47_windowsapp.a \
+		%/libdhcpcsvc6_windowsapp.a \
+		%/libdhcpcsvc_windowsapp.a \
+		%/libdiagnosticdataquery_windowsapp.a \
+		%/libdirectml_windowsapp.a \
+		%/libdnsapi_windowsapp.a \
+		%/libdxgi_windowsapp.a \
+		%/libesent_windowsapp.a \
+		%/libhid_windowsapp.a \
+		%/libhrtfapo_windowsapp.a \
+		%/libicu.a \
+		%/libinkobjcore_windowsapp.a \
+		%/libiphlpapi_windowsapp.a \
+		%/libmfplat_windowsapp.a \
+		%/libmfsensorgroup_windowsapp.a \
+		%/libmf_windowsapp.a \
+		%/libmmdevapi_windowsapp.a \
+		%/libmpr_windowsapp.a \
+		%/libmsajapi_windowsapp.a \
+		%/libmscms_windowsapp.a \
+		%/libmswsock_windowsapp.a \
+		%/libncrypt_windowsapp.a \
+		%/libnetutils_windowsapp.a \
+		%/libntdll_windowsapp.a \
+		%/liboleaut32_windowsapp.a \
+		%/libpowrprof_windowsapp.a \
+		%/libpropsys_windowsapp.a \
+		%/libpsapi_windowsapp.a \
+		%/librometadata.a \
+		%/librpcrt4_windowsapp.a \
+		%/libsrvcli_windowsapp.a \
+		%/libsspicli_windowsapp.a \
+		%/libuiautomationcore_windowsapp.a \
+		%/liburlmon_windowsapp.a \
+		%/libwebauthn_windowsapp.a \
+		%/libwebservices_windowsapp.a \
+		%/libwindows.ai.machinelearning.a \
+		%/libwindows.data.pdf.a \
+		%/libwindows.networking.a \
+		%/libwindowscodecs_windowsapp.a \
+		%/libwinhttp_windowsapp.a \
+		%/libwintrust_windowsapp.a \
+		%/libwkscli_windowsapp.a \
+		%/libwlanapi_windowsapp.a \
+		%/libws2_32_windowsapp.a \
+		%/libxaudio2_9_windowsapp.a
+	rm -f $@
+	cd $(dir $@) && $(AR) -M < $(abspath $<)
+	$(RANLIB) $@
+
+%/libwindowscoreheadless_apiset.a: lib-common/windowscoreheadless_apiset.mri \
+		%/libapi-ms-win-appmodel-runtime-l1-1-0.a \
+		%/libapi-ms-win-appmodel-runtime-l1-1-1.a \
+		%/libapi-ms-win-appmodel-runtime-l1-1-2.a \
+		%/libapi-ms-win-appmodel-runtime-l1-1-3.a \
+		%/libapi-ms-win-core-apiquery-l2-1-0.a \
+		%/libapi-ms-win-core-atoms-l1-1-0.a \
+		%/libapi-ms-win-core-backgroundtask-l1-1-0.a \
+		%/libapi-ms-win-core-calendar-l1-1-0.a \
+		%/libapi-ms-win-core-com-l1-1-0.a \
+		%/libapi-ms-win-core-com-l1-1-1.a \
+		%/libapi-ms-win-core-com-l1-1-2.a \
+		%/libapi-ms-win-core-com-l1-1-3.a \
+		%/libapi-ms-win-core-com-midlproxystub-l1-1-0.a \
+		%/libapi-ms-win-core-comm-l1-1-0.a \
+		%/libapi-ms-win-core-comm-l1-1-1.a \
+		%/libapi-ms-win-core-comm-l1-1-2.a \
+		%/libapi-ms-win-core-console-l1-1-0.a \
+		%/libapi-ms-win-core-console-l1-2-0.a \
+		%/libapi-ms-win-core-console-l1-2-1.a \
+		%/libapi-ms-win-core-console-l2-1-0.a \
+		%/libapi-ms-win-core-console-l2-2-0.a \
+		%/libapi-ms-win-core-console-l3-2-0.a \
+		%/libapi-ms-win-core-datetime-l1-1-0.a \
+		%/libapi-ms-win-core-datetime-l1-1-1.a \
+		%/libapi-ms-win-core-datetime-l1-1-2.a \
+		%/libapi-ms-win-core-debug-l1-1-0.a \
+		%/libapi-ms-win-core-debug-l1-1-1.a \
+		%/libapi-ms-win-core-debug-l1-1-2.a \
+		%/libapi-ms-win-core-debug-minidump-l1-1-0.a \
+		%/libapi-ms-win-core-delayload-l1-1-0.a \
+		%/libapi-ms-win-core-delayload-l1-1-1.a \
+		%/libapi-ms-win-core-enclave-l1-1-0.a \
+		%/libapi-ms-win-core-enclave-l1-1-1.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-0.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-1.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-2.a \
+		%/libapi-ms-win-core-errorhandling-l1-1-3.a \
+		%/libapi-ms-win-core-featurestaging-l1-1-0.a \
+		%/libapi-ms-win-core-featurestaging-l1-1-1.a \
+		%/libapi-ms-win-core-fibers-l1-1-0.a \
+		%/libapi-ms-win-core-fibers-l1-1-1.a \
+		%/libapi-ms-win-core-fibers-l2-1-0.a \
+		%/libapi-ms-win-core-fibers-l2-1-1.a \
+		%/libapi-ms-win-core-file-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-file-ansi-l2-1-0.a \
+		%/libapi-ms-win-core-file-fromapp-l1-1-0.a \
+		%/libapi-ms-win-core-file-l1-1-0.a \
+		%/libapi-ms-win-core-file-l1-2-0.a \
+		%/libapi-ms-win-core-file-l1-2-1.a \
+		%/libapi-ms-win-core-file-l1-2-2.a \
+		%/libapi-ms-win-core-file-l1-2-3.a \
+		%/libapi-ms-win-core-file-l2-1-0.a \
+		%/libapi-ms-win-core-file-l2-1-1.a \
+		%/libapi-ms-win-core-file-l2-1-2.a \
+		%/libapi-ms-win-core-file-l2-1-3.a \
+		%/libapi-ms-win-core-firmware-l1-1-0.a \
+		%/libapi-ms-win-core-handle-l1-1-0.a \
+		%/libapi-ms-win-core-heap-l1-1-0.a \
+		%/libapi-ms-win-core-heap-l2-1-0.a \
+		%/libapi-ms-win-core-heap-obsolete-l1-1-0.a \
+		%/libapi-ms-win-core-interlocked-l1-1-0.a \
+		%/libapi-ms-win-core-interlocked-l1-2-0.a \
+		%/libapi-ms-win-core-io-l1-1-0.a \
+		%/libapi-ms-win-core-io-l1-1-1.a \
+		%/libapi-ms-win-core-job-l1-1-0.a \
+		%/libapi-ms-win-core-job-l2-1-0.a \
+		%/libapi-ms-win-core-job-l2-1-1.a \
+		%/libapi-ms-win-core-kernel32-legacy-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-0.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-1.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-2.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-3.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-4.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-5.a \
+		%/libapi-ms-win-core-kernel32-legacy-l1-1-6.a \
+		%/libapi-ms-win-core-largeinteger-l1-1-0.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-0.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-1.a \
+		%/libapi-ms-win-core-libraryloader-l1-2-2.a \
+		%/libapi-ms-win-core-libraryloader-l2-1-0.a \
+		%/libapi-ms-win-core-localization-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-localization-l1-2-0.a \
+		%/libapi-ms-win-core-localization-l1-2-1.a \
+		%/libapi-ms-win-core-localization-l1-2-2.a \
+		%/libapi-ms-win-core-localization-l1-2-3.a \
+		%/libapi-ms-win-core-localization-l1-2-4.a \
+		%/libapi-ms-win-core-localization-l2-1-0.a \
+		%/libapi-ms-win-core-localization-obsolete-l1-2-0.a \
+		%/libapi-ms-win-core-memory-l1-1-0.a \
+		%/libapi-ms-win-core-memory-l1-1-1.a \
+		%/libapi-ms-win-core-memory-l1-1-2.a \
+		%/libapi-ms-win-core-memory-l1-1-3.a \
+		%/libapi-ms-win-core-memory-l1-1-4.a \
+		%/libapi-ms-win-core-memory-l1-1-5.a \
+		%/libapi-ms-win-core-memory-l1-1-6.a \
+		%/libapi-ms-win-core-memory-l1-1-7.a \
+		%/libapi-ms-win-core-namedpipe-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-namedpipe-ansi-l1-1-1.a \
+		%/libapi-ms-win-core-namedpipe-l1-1-0.a \
+		%/libapi-ms-win-core-namedpipe-l1-2-1.a \
+		%/libapi-ms-win-core-namedpipe-l1-2-2.a \
+		%/libapi-ms-win-core-namespace-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-namespace-l1-1-0.a \
+		%/libapi-ms-win-core-normalization-l1-1-0.a \
+		%/libapi-ms-win-core-path-l1-1-0.a \
+		%/libapi-ms-win-core-perfcounters-l1-1-0.a \
+		%/libapi-ms-win-core-privateprofile-l1-1-0.a \
+		%/libapi-ms-win-core-privateprofile-l1-1-1.a \
+		%/libapi-ms-win-core-processenvironment-ansi-l1-1-0.a \
 		%/libapi-ms-win-core-processenvironment-l1-1-0.a \
 		%/libapi-ms-win-core-processenvironment-l1-2-0.a \
+		%/libapi-ms-win-core-processsnapshot-l1-1-0.a \
 		%/libapi-ms-win-core-processthreads-l1-1-0.a \
 		%/libapi-ms-win-core-processthreads-l1-1-1.a \
 		%/libapi-ms-win-core-processthreads-l1-1-2.a \
 		%/libapi-ms-win-core-processthreads-l1-1-3.a \
-		%/libapi-ms-win-core-psapi-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-processthreads-l1-1-4.a \
+		%/libapi-ms-win-core-processtopology-l1-1-0.a \
+		%/libapi-ms-win-core-processtopology-obsolete-l1-1-0.a \
+		%/libapi-ms-win-core-processtopology-obsolete-l1-1-1.a \
 		%/libapi-ms-win-core-profile-l1-1-0.a \
+		%/libapi-ms-win-core-psapi-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-psapi-l1-1-0.a \
+		%/libapi-ms-win-core-psm-appnotify-l1-1-0.a \
+		%/libapi-ms-win-core-quirks-l1-1-0.a \
+		%/libapi-ms-win-core-quirks-l1-1-1.a \
 		%/libapi-ms-win-core-realtime-l1-1-0.a \
 		%/libapi-ms-win-core-realtime-l1-1-1.a \
+		%/libapi-ms-win-core-realtime-l1-1-2.a \
+		%/libapi-ms-win-core-registry-l1-1-0.a \
+		%/libapi-ms-win-core-registry-l1-1-1.a \
+		%/libapi-ms-win-core-registry-l1-1-2.a \
+		%/libapi-ms-win-core-registry-l2-1-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-1-0.a \
 		%/libapi-ms-win-core-rtlsupport-l1-2-0.a \
+		%/libapi-ms-win-core-rtlsupport-l1-2-1.a \
+		%/libapi-ms-win-core-shutdown-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-shutdown-l1-1-0.a \
+		%/libapi-ms-win-core-shutdown-l1-1-1.a \
+		%/libapi-ms-win-core-sidebyside-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-sidebyside-l1-1-0.a \
+		%/libapi-ms-win-core-slapi-l1-1-0.a \
+		%/libapi-ms-win-core-state-helpers-l1-1-0.a \
 		%/libapi-ms-win-core-string-l1-1-0.a \
+		%/libapi-ms-win-core-string-l2-1-0.a \
+		%/libapi-ms-win-core-string-l2-1-1.a \
+		%/libapi-ms-win-core-string-obsolete-l1-1-0.a \
+		%/libapi-ms-win-core-string-obsolete-l1-1-1.a \
+		%/libapi-ms-win-core-stringansi-l1-1-0.a \
 		%/libapi-ms-win-core-synch-ansi-l1-1-0.a \
+		%/libapi-ms-win-core-synch-l1-1-0.a \
 		%/libapi-ms-win-core-synch-l1-2-0.a \
 		%/libapi-ms-win-core-synch-l1-2-1.a \
+		%/libapi-ms-win-core-sysinfo-l1-1-0.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-0.a \
 		%/libapi-ms-win-core-sysinfo-l1-2-1.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-2.a \
 		%/libapi-ms-win-core-sysinfo-l1-2-3.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-4.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-5.a \
+		%/libapi-ms-win-core-sysinfo-l1-2-6.a \
+		%/libapi-ms-win-core-systemtopology-l1-1-0.a \
+		%/libapi-ms-win-core-systemtopology-l1-1-1.a \
 		%/libapi-ms-win-core-threadpool-l1-2-0.a \
+		%/libapi-ms-win-core-threadpool-legacy-l1-1-0.a \
 		%/libapi-ms-win-core-timezone-l1-1-0.a \
+		%/libapi-ms-win-core-timezone-l1-1-1.a \
+		%/libapi-ms-win-core-toolhelp-l1-1-0.a \
+		%/libapi-ms-win-core-toolhelp-l1-1-1.a \
+		%/libapi-ms-win-core-url-l1-1-0.a \
 		%/libapi-ms-win-core-util-l1-1-0.a \
+		%/libapi-ms-win-core-util-l1-1-1.a \
+		%/libapi-ms-win-core-version-l1-1-0.a \
+		%/libapi-ms-win-core-version-l1-1-1.a \
+		%/libapi-ms-win-core-versionansi-l1-1-0.a \
+		%/libapi-ms-win-core-versionansi-l1-1-1.a \
 		%/libapi-ms-win-core-windowsceip-l1-1-0.a \
 		%/libapi-ms-win-core-windowserrorreporting-l1-1-0.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-1.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-2.a \
+		%/libapi-ms-win-core-windowserrorreporting-l1-1-3.a \
+		%/libapi-ms-win-core-winrt-error-l1-1-0.a \
 		%/libapi-ms-win-core-winrt-error-l1-1-1.a \
 		%/libapi-ms-win-core-winrt-l1-1-0.a \
 		%/libapi-ms-win-core-winrt-registration-l1-1-0.a \
 		%/libapi-ms-win-core-winrt-robuffer-l1-1-0.a \
 		%/libapi-ms-win-core-winrt-roparameterizediid-l1-1-0.a \
 		%/libapi-ms-win-core-winrt-string-l1-1-0.a \
-		%/libapi-ms-win-core-xstate-l2-1-0.a \
-		%/libapi-ms-win-eventing-classicprovider-l1-1-0.a \
-		%/libapi-ms-win-eventing-consumer-l1-1-0.a \
-		%/libapi-ms-win-eventing-controller-l1-1-0.a \
-		%/libapi-ms-win-eventing-legacy-l1-1-0.a \
-		%/libapi-ms-win-eventing-provider-l1-1-0.a \
-		%/libapi-ms-win-gaming-tcui-l1-1-0.a \
-		%/libapi-ms-win-ro-typeresolution-l1-1-0.a \
-		%/libapi-ms-win-security-cryptoapi-l1-1-0.a \
-		%/libapi-ms-win-shcore-stream-winrt-l1-1-0.a \
-		%/libapi-ms-win-appmodel-runtime-l1-1-1.a \
-		%/libapi-ms-win-appmodel-runtime-l1-1-0.a \
-		%/libapi-ms-win-core-com-l1-1-0.a \
-		%/libapi-ms-win-core-comm-l1-1-1.a \
-		%/libapi-ms-win-core-comm-l1-1-2.a \
-		%/libapi-ms-win-core-console-l1-2-0.a \
-		%/libapi-ms-win-core-console-l2-1-0.a \
-		%/libapi-ms-win-core-console-l2-2-0.a \
-		%/libapi-ms-win-core-console-l3-2-0.a \
-		%/libapi-ms-win-core-debug-l1-1-0.a \
-		%/libapi-ms-win-core-enclave-l1-1-0.a \
-		%/libapi-ms-win-core-errorhandling-l1-1-0.a \
-		%/libapi-ms-win-core-featurestaging-l1-1-0.a \
-		%/libapi-ms-win-core-featurestaging-l1-1-1.a \
-		%/libapi-ms-win-core-file-ansi-l1-1-0.a \
-		%/libapi-ms-win-core-file-fromapp-l1-1-0.a \
-		%/libapi-ms-win-core-file-l1-1-0.a \
-		%/libapi-ms-win-core-file-l2-1-2.a \
-		%/libapi-ms-win-core-firmware-l1-1-0.a \
-		%/libapi-ms-win-core-heap-l2-1-0.a \
-		%/libapi-ms-win-core-heap-obsolete-l1-1-0.a \
-		%/libapi-ms-win-core-interlocked-l1-1-0.a \
-		%/libapi-ms-win-core-kernel32-legacy-ansi-l1-1-0.a \
-		%/libapi-ms-win-core-libraryloader-l1-2-1.a \
-		%/libapi-ms-win-core-localization-l1-2-0.a \
-		%/libapi-ms-win-core-localization-obsolete-l1-2-0.a \
-		%/libapi-ms-win-core-memory-l1-1-0.a \
-		%/libapi-ms-win-core-memory-l1-1-1.a \
-		%/libapi-ms-win-core-memory-l1-1-5.a \
-		%/libapi-ms-win-core-memory-l1-1-6.a \
-		%/libapi-ms-win-core-memory-l1-1-7.a \
-		%/libapi-ms-win-core-namespace-ansi-l1-1-0.a \
-		%/libapi-ms-win-core-namespace-l1-1-0.a \
-		%/libapi-ms-win-core-path-l1-1-0.a \
-		%/libapi-ms-win-core-processtopology-obsolete-l1-1-0.a \
-		%/libapi-ms-win-core-psapi-l1-1-0.a \
-		%/libapi-ms-win-core-psm-appnotify-l1-1-0.a \
-		%/libapi-ms-win-core-realtime-l1-1-2.a \
-		%/libapi-ms-win-core-slapi-l1-1-0.a \
-		%/libapi-ms-win-core-synch-l1-1-0.a \
-		%/libapi-ms-win-core-sysinfo-l1-1-0.a \
-		%/libapi-ms-win-core-sysinfo-l1-2-0.a \
-		%/libapi-ms-win-core-timezone-l1-1-1.a \
-		%/libapi-ms-win-core-url-l1-1-0.a \
-		%/libapi-ms-win-core-version-l1-1-0.a \
-		%/libapi-ms-win-core-versionansi-l1-1-0.a \
-		%/libapi-ms-win-core-windowserrorreporting-l1-1-1.a \
-		%/libapi-ms-win-core-windowserrorreporting-l1-1-2.a \
+		%/libapi-ms-win-core-winrt-string-l1-1-1.a \
 		%/libapi-ms-win-core-wow64-l1-1-0.a \
 		%/libapi-ms-win-core-wow64-l1-1-1.a \
+		%/libapi-ms-win-core-wow64-l1-1-2.a \
+		%/libapi-ms-win-core-wow64-l1-1-3.a \
+		%/libapi-ms-win-core-xstate-l2-1-0.a \
+		%/libapi-ms-win-core-xstate-l2-1-1.a \
 		%/libapi-ms-win-devices-config-l1-1-1.a \
 		%/libapi-ms-win-devices-config-l1-1-2.a \
+		%/libapi-ms-win-devices-query-l1-1-0.a \
+		%/libapi-ms-win-devices-query-l1-1-1.a \
+		%/libapi-ms-win-devices-swdevice-l1-1-0.a \
+		%/libapi-ms-win-devices-swdevice-l1-1-1.a \
+		%/libapi-ms-win-eventing-classicprovider-l1-1-0.a \
+		%/libapi-ms-win-eventing-consumer-l1-1-0.a \
+		%/libapi-ms-win-eventing-consumer-l1-1-1.a \
+		%/libapi-ms-win-eventing-controller-l1-1-0.a \
+		%/libapi-ms-win-eventing-legacy-l1-1-0.a \
+		%/libapi-ms-win-eventing-obsolete-l1-1-0.a \
+		%/libapi-ms-win-eventing-provider-l1-1-0.a \
+		%/libapi-ms-win-eventing-tdh-l1-1-0.a \
+		%/libapi-ms-win-eventing-tdh-l1-1-1.a \
 		%/libapi-ms-win-gaming-deviceinformation-l1-1-0.a \
-		%/libapi-ms-win-gaming-expandedresources-l1-1-0.a \
-		%/libapi-ms-win-gaming-tcui-l1-1-2.a \
-		%/libapi-ms-win-gaming-tcui-l1-1-3.a \
-		%/libapi-ms-win-gaming-tcui-l1-1-4.a \
+		%/libapi-ms-win-mm-time-l1-1-0.a \
+		%/libapi-ms-win-ntuser-sysparams-l1-1-0.a \
+		%/libapi-ms-win-oobe-notification-l1-1-0.a \
+		%/libapi-ms-win-perf-legacy-l1-1-0.a \
+		%/libapi-ms-win-power-base-l1-1-0.a \
+		%/libapi-ms-win-power-limitsmanagement-l1-1-0.a \
+		%/libapi-ms-win-power-setting-l1-1-0.a \
+		%/libapi-ms-win-power-setting-l1-1-1.a \
+		%/libapi-ms-win-ro-typeresolution-l1-1-0.a \
 		%/libapi-ms-win-ro-typeresolution-l1-1-1.a \
+		%/libapi-ms-win-security-appcontainer-l1-1-0.a \
+		%/libapi-ms-win-security-base-ansi-l1-1-0.a \
 		%/libapi-ms-win-security-base-l1-1-0.a \
 		%/libapi-ms-win-security-base-l1-2-0.a \
 		%/libapi-ms-win-security-base-l1-2-1.a \
+		%/libapi-ms-win-security-base-l1-2-2.a \
+		%/libapi-ms-win-security-cpwl-l1-1-0.a \
+		%/libapi-ms-win-security-credentials-l1-1-0.a \
+		%/libapi-ms-win-security-cryptoapi-l1-1-0.a \
 		%/libapi-ms-win-security-isolatedcontainer-l1-1-0.a \
+		%/libapi-ms-win-security-isolatedcontainer-l1-1-1.a \
 		%/libapi-ms-win-security-lsalookup-ansi-l2-1-0.a \
 		%/libapi-ms-win-security-lsalookup-l2-1-0.a \
+		%/libapi-ms-win-security-lsalookup-l2-1-1.a \
+		%/libapi-ms-win-security-lsapolicy-l1-1-0.a \
 		%/libapi-ms-win-security-provider-ansi-l1-1-0.a \
 		%/libapi-ms-win-security-provider-l1-1-0.a \
 		%/libapi-ms-win-security-sddl-ansi-l1-1-0.a \
 		%/libapi-ms-win-security-sddl-l1-1-0.a \
 		%/libapi-ms-win-security-systemfunctions-l1-1-0.a \
-		%/libapi-ms-win-shcore-obsolete-l1-1-0.a
+		%/libapi-ms-win-service-core-ansi-l1-1-0.a \
+		%/libapi-ms-win-service-core-ansi-l1-1-1.a \
+		%/libapi-ms-win-service-core-l1-1-0.a \
+		%/libapi-ms-win-service-core-l1-1-1.a \
+		%/libapi-ms-win-service-core-l1-1-2.a \
+		%/libapi-ms-win-service-core-l1-1-3.a \
+		%/libapi-ms-win-service-core-l1-1-4.a \
+		%/libapi-ms-win-service-management-l1-1-0.a \
+		%/libapi-ms-win-service-management-l2-1-0.a \
+		%/libapi-ms-win-service-winsvc-l1-1-0.a \
+		%/libapi-ms-win-shcore-obsolete-l1-1-0.a \
+		%/libapi-ms-win-shcore-path-l1-1-0.a \
+		%/libapi-ms-win-shcore-registry-l1-1-0.a \
+		%/libapi-ms-win-shcore-registry-l1-1-1.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-0.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-1.a \
+		%/libapi-ms-win-shcore-scaling-l1-1-2.a \
+		%/libapi-ms-win-shcore-stream-l1-1-0.a \
+		%/libapi-ms-win-shcore-stream-winrt-l1-1-0.a \
+		%/libapi-ms-win-shcore-sysinfo-l1-1-0.a \
+		%/libapi-ms-win-shcore-unicodeansi-l1-1-0.a \
+		%/libapi-ms-win-shell-shdirectory-l1-1-0.a \
+		%/libauthz.a \
+		%/libbcrypt.a \
+		%/libcabinet.a \
+		%/libchakrart.a \
+		%/libcrypt32.a \
+		%/libcryptbase.a \
+		%/libcryptnet.a \
+		%/libdfscli.a \
+		%/libdhcpcsvc.a \
+		%/libdnsapi.a \
+		%/libdsrole.a \
+		%/libdwrite.a \
+		%/libfltlib.a \
+		%/libhid.a \
+		%/libhrtfapo.a \
+		%/libiphlpapi.a \
+		%/liblogoncli.a \
+		%/libmmdevapi.a \
+		%/libmpr.a \
+		%/libmsajapi.a \
+		%/libmscms.a \
+		%/libmswsock.a \
+		%/libncrypt.a \
+		%/libnetutils.a \
+		%/libpowrprof.a \
+		%/libprofapi.a \
+		%/libpropsys.a \
+		%/librometadata.a \
+		%/librpcrt4.a \
+		%/libsamcli.a \
+		%/libschedcli.a \
+		%/libsrvcli.a \
+		%/libsspicli.a \
+		%/libuserenv.a \
+		%/libwebauthn.a \
+		%/libwebservices.a \
+		%/libwebsocket.a \
+		%/libwindows.ai.machinelearning.a \
+		%/libwindows.data.pdf.a \
+		%/libwindows.networking.a \
+		%/libwindowscodecs.a \
+		%/libwinhttp.a \
+		%/libwkscli.a \
+		%/libwlanapi.a \
+		%/libwldap32.a \
+		%/libwpprecorderum.a \
+		%/libxaudio2_9.a \
+		%/libxmllite.a
 	rm -f $@
 	cd $(dir $@) && $(AR) -M < $(abspath $<)
 	$(RANLIB) $@

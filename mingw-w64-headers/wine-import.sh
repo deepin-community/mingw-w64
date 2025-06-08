@@ -29,6 +29,7 @@ import_header() {
     sed -i 's/\bBOOL    /WINBOOL /g' $dstfile
     sed -i 's/\bBOOL\b/WINBOOL/g' $dstfile
     sed -i 's/DECLSPEC_HIDDEN//g' $dstfile
+    sed -i 's/\b__WINE_ALLOC_SIZE([0-9]) //g' $dstfile
 }
 
 import_idl() {
@@ -43,15 +44,14 @@ import_idl() {
 }
 
 # headers
+# Reverted: propkeydef.h, rpcsal.h
 for f in \
 	amaudio.h \
 	audevcod.h \
 	corerror.h \
 	d2dbasetypes.h \
 	d3d10_1shader.h \
-	d3d10effect.h \
 	d3d10misc.h \
-	d3d10shader.h \
 	d3d11shader.h \
 	d3d8caps.h \
 	d3d8.h \
@@ -114,10 +114,8 @@ for f in \
 	mscat.h \
 	msxml2did.h \
 	msxml6did.h \
-	propkeydef.h \
 	propkey.h \
 	propvarutil.h \
-	rpcsal.h \
 	t2embapi.h \
 	uiautomationcoreapi.h \
 	uiautomation.h \
@@ -146,7 +144,9 @@ for f in \
 	ctxtcall \
 	d3d10 \
 	d3d10_1 \
+	d3d10effect \
 	d3d10sdklayers \
+	d3d10shader \
 	d3d11 \
 	d3d11on12 \
 	d3d11_1 \
@@ -157,6 +157,7 @@ for f in \
 	d3d12 \
 	d3d12sdklayers \
 	d3d12shader \
+	d3d12video \
 	d3dcommon \
 	dcommon \
 	ddstream \
@@ -180,6 +181,7 @@ for f in \
 	dxgiformat \
 	dxgitype \
 	dxva2api \
+	dyngraph \
 	endpointvolume \
 	eventtoken \
 	evr9 \
@@ -188,6 +190,7 @@ for f in \
 	icftypes \
 	ivectorchangedeventargs \
 	mediaobj \
+	mfmediaengine \
 	mfreadwrite \
 	mftransform \
 	mmdeviceapi \
@@ -217,43 +220,6 @@ for f in \
 	wincodec \
 	wincodecsdk \
 	windowscontracts \
-	windows.devices.enumeration \
-	windows.devices.haptics \
-	windows.devices.power \
-	windows.foundation \
-	windows.foundation.collections \
-	windows.foundation.metadata \
-	windows.foundation.numerics \
-	windows.gaming.input \
-	windows.gaming.input.custom \
-	windows.gaming.input.forcefeedback \
-	windows.gaming.ui \
-	windows.globalization \
-	windows.graphics.capture \
-	windows.graphics.directx \
-	windows.graphics.directx.direct3d11 \
-	windows.graphics.effects \
-	windows.graphics.holographic \
-	windows.media \
-	windows.media.closedcaptioning \
-	windows.media.devices \
-	windows.media.speechrecognition \
-	windows.media.speechsynthesis \
-	windows.perception.spatial \
-	windows.perception.spatial.surfaces \
-	windows.security.credentials \
-	windows.security.cryptography \
-	windows.storage.streams \
-	windows.system \
-	windows.system.power \
-	windows.system.profile.systemmanufacturers \
-	windows.system.threading \
-	windows.system.userprofile \
-	windows.ui \
-	windows.ui.composition \
-	windows.ui.composition.interop \
-	windows.ui.core \
-	windows.ui.viewmanagement \
 	wmdrmsdk \
 	wmp \
 	wmprealestate \
@@ -263,6 +229,7 @@ for f in \
 	wmsecure \
 	wpcapi \
 	wuapi \
+	xamlom \
 	xapo \
 	xaudio2 \
 	xaudio2fx \
@@ -270,6 +237,11 @@ for f in \
 	xmldso \
 	xmllite; do
     import_idl $f.idl include
+done
+
+# Import all winrt IDLs
+for f in $WINE_DIR/include/windows.*.idl; do
+    import_idl $(basename $f) include
 done
 
 echo Import complete. You need to update headers generated from IDL files now:

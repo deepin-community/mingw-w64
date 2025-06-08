@@ -5,9 +5,6 @@
 ;
 LIBRARY "MSVCR120.dll"
 EXPORTS
-
-#include "msvcrt-common.def.in"
-
 ; public: __thiscall Concurrency::details::<0x1ULL>::<0x1ULL>(void(__cdecl *)(void))
 ??0?$_SpinWait@$00@details@Concurrency@@QAE@P6AXXZ@Z ; has WINAPI (@4)
 ; public: __thiscall Concurrency::details::<0x0ULL>::<0x0ULL>(void(__cdecl *)(void))
@@ -995,12 +992,10 @@ _filelengthi64
 _fileno
 _findclose
 _findfirst32
-_findfirst == _findfirst32
 _findfirst32i64
 _findfirst64
 _findfirst64i32
 _findnext32
-_findnext == _findnext32
 _findnext32i64
 _findnext64
 _findnext64i32
@@ -1034,8 +1029,6 @@ _fstat32
 _fstat32i64
 _fstat64
 _fstat64i32
-_fstat == _fstat32
-_fstati64 == _fstat32i64
 _ftell_nolock
 _ftelli64
 _ftelli64_nolock
@@ -1043,7 +1036,6 @@ _ftime32
 _ftime32_s
 _ftime64
 _ftime64_s
-_ftime == _ftime32
 _ftol
 _fullpath
 _futime32
@@ -1100,7 +1092,6 @@ _getws
 _getws_s
 _global_unwind2
 _gmtime32
-gmtime == _gmtime32
 _gmtime32_s
 _gmtime64
 _gmtime64_s
@@ -1250,7 +1241,6 @@ _loaddll
 _local_unwind2
 _local_unwind4
 _localtime32
-localtime == _localtime32
 _localtime32_s
 _localtime64
 _localtime64_s
@@ -1531,8 +1521,6 @@ _stat32
 _stat32i64
 _stat64
 _stat64i32
-_stat == _stat32
-_stati64 == _stat32i64
 _statusfp
 _statusfp2
 _strcoll_l
@@ -1547,7 +1535,6 @@ _stricmp_l
 _stricoll
 _stricoll_l
 _strlwr
-strlwr == _strlwr
 _strlwr_l
 _strlwr_s
 _strlwr_s_l
@@ -1598,7 +1585,6 @@ _telli64
 _tempnam
 _time32
 _time64
-time == _time32
 _timezone DATA
 _tolower
 _tolower_l
@@ -1708,7 +1694,6 @@ _wcsicmp_l
 _wcsicoll
 _wcsicoll_l
 _wcslwr
-wcslwr == _wcslwr
 _wcslwr_l
 _wcslwr_s
 _wcslwr_s_l
@@ -1764,12 +1749,10 @@ _wfdopen
 _wfindfirst32
 _wfindfirst32i64
 _wfindfirst64
-_wfindfirst == _wfindfirst32
 _wfindfirst64i32
 _wfindnext32
 _wfindnext32i64
 _wfindnext64
-_wfindnext == _wfindnext32
 _wfindnext64i32
 _wfopen
 _wfopen_s
@@ -1821,8 +1804,6 @@ _wstat32
 _wstat32i64
 _wstat64
 _wstat64i32
-_wstat == _wstat32
-_wstati64 == _wstat32i64
 _wstrdate
 _wstrdate_s
 _wstrtime
@@ -2007,7 +1988,6 @@ fmod
 fopen
 fopen_s
 fprintf
-__ms_fprintf == fprintf
 fprintf_s
 fputc
 fputs
@@ -2020,17 +2000,14 @@ freopen
 freopen_s
 frexp DATA
 fscanf
-__ms_fscanf == fscanf
 fscanf_s
 fseek
 fsetpos
 ftell
 fwprintf
-__ms_fwprintf == fwprintf
 fwprintf_s
 fwrite
 fwscanf
-__ms_fwscanf == fwscanf
 fwscanf_s
 getc
 getchar
@@ -2140,7 +2117,6 @@ norml
 perror
 pow
 printf
-__ms_printf == printf
 printf_s
 putc
 putchar
@@ -2175,7 +2151,6 @@ scalbn
 scalbnf
 scalbnl
 scanf
-__ms_scanf == scanf
 scanf_s
 setbuf
 setlocale
@@ -2184,12 +2159,10 @@ signal
 sin
 sinh
 sprintf
-__ms_sprintf == sprintf
 sprintf_s
 sqrt
 srand
 sscanf
-__ms_sscanf == sscanf
 sscanf_s
 strcat
 strcat_s
@@ -2227,7 +2200,6 @@ strtoumax
 strxfrm
 swprintf_s
 swscanf
-__ms_swscanf == swscanf
 swscanf_s
 system
 tan
@@ -2250,24 +2222,20 @@ truncl
 ungetc
 ungetwc
 vfprintf
-__ms_vfprintf == vfprintf
 vfprintf_s
 vfscanf
 vfscanf_s
 vfwprintf
-__ms_vfwprintf == vfwprintf
 vfwprintf_s
 vfwscanf
 vfwscanf_s
 vprintf
-__ms_vprintf == vprintf
 vprintf_s
 snwprintf == _snwprintf
 vsnwprintf == _vsnwprintf
 vscanf
 vscanf_s
 vsprintf
-__ms_vsprintf == vsprintf
 vsprintf_s
 vsscanf
 vsscanf_s
@@ -2275,7 +2243,6 @@ vswprintf_s
 vswscanf
 vswscanf_s
 vwprintf
-__ms_vwprintf == vwprintf
 vwprintf_s
 vwscanf
 vwscanf_s
@@ -2325,8 +2292,8 @@ wctype
 wmemcpy_s
 wmemmove_s
 wprintf
-__ms_wprintf == wprintf
 wprintf_s
 wscanf
-__ms_wscanf == wscanf
 wscanf_s
+
+#include "crt-aliases.def.in"

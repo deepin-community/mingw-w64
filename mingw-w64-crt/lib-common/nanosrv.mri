@@ -1,0 +1,30 @@
+CREATE libnanosrv.a
+ADDLIB libapi-ms-win-net-isolation-l1-1-0.a
+ADDLIB libapi-ms-win-net-isolation-l1-1-1.a
+ADDLIB libclfsw32.a
+ADDLIB libclusapi.a
+ADDLIB libcryptxml.a
+ADDLIB libdbgeng.a
+ADDLIB libdbghelp.a
+ADDLIB libdnsperf.a
+ADDLIB libesent.a
+ADDLIB libfaultrep.a
+ADDLIB libfwpuclnt.a
+ADDLIB libhbaapi.a
+ADDLIB libhttpapi.a
+ADDLIB libiscsidsc.a
+ADDLIB libktmw32.a
+ADDLIB libmprapi.a
+ADDLIB libntdsapi.a
+ADDLIB libpdh.a
+ADDLIB libsnmpapi.a
+ADDLIB libtbs.a
+ADDLIB libvirtdisk.a
+ADDLIB libvssapi.a
+ADDLIB libwebservices.a
+ADDLIB libwer.a
+ADDLIB libwevtapi.a
+ADDLIB libwintrust.a
+ADDLIB libwsmsvc.a
+SAVE
+END
